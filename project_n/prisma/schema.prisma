@@ -13,24 +13,78 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//Store sytem
 model Store {
-  id               Int         @id @default(autoincrement())
-  name             String
-  imageLogo        String?
-  imageBackgroud   String?  
-  scores           Float       @default(0)
-  productTotal     Int         @default(0)
-  follow           Int         @default(0)
-  follower         Int         @default(0)
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime?    @updatedAt 
-  userId           Int?     
-  storeStatusId    Int         @default(1)
-  StoreStatus      StoreStatus @relation(fields: [storeStatusId], references: [id])
+  id             Int         @id @default(autoincrement())
+  name           String
+  imageLogo      String?
+  imageBackgroud String?
+  scores         Float       @default(0)
+  productTotal   Int         @default(0)
+  follow         Int         @default(0)
+  follower       Int         @default(0)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime?   @updatedAt
+  userId         Int?
+  storeStatusId  Int         @default(1)
+  StoreStatus    StoreStatus @relation(fields: [storeStatusId], references: [id])
+  Product        Product[]
 }
 
 model StoreStatus {
   id    Int     @id @default(autoincrement())
   name  String  @unique
   store Store[]
+}
+
+//----------------------------------------------------------------------------------------------
+
+model Product {
+  id               Int                @id @default(autoincrement())
+  name             String
+  description      String
+  price            Int
+  //fk 
+  storeID          Int
+  store            Store              @relation(fields: [storeID], references: [id])
+  categoryID       Int
+  category         ProductCategory    @relation(fields: [categoryID], references: [id])
+  // discountID       Int
+  // discount         Discount    @relation(fields: [discountID], references: [id])
+  productStatusID       Int
+  productStatus         ProductStatus    @relation(fields: [productStatusID], references: [id])
+  
+  productInventory ProductInventory[]
+}
+
+model ProductInventory {
+  id        Int     @id @default(autoincrement())
+  quantity  Int
+  size      String
+  color     String
+  productID Int
+  product   Product @relation(fields: [productID], references: [id])
+}
+
+model ProductCategory {
+  id         Int       @id @default(autoincrement())
+  name       String
+  desciption String
+  Product    Product[]
+}
+
+model Discount {
+  id               Int     @id @default(autoincrement())
+  name             String
+  desciption       String
+  discount_persent Float
+  disconnt_value   Int
+  priceMinimum     Int
+  active           Boolean
+}
+
+model ProductStatus {
+  id   Int    @id @default(autoincrement())
+  name String
+  product Product[]
 }
