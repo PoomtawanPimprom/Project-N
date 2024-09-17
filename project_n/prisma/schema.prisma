@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Store {
+  id               Int         @id @default(autoincrement())
+  name             String
+  imageLogo        String?
+  imageBackgroud   String?  
+  scores           Float       @default(0)
+  productTotal     Int         @default(0)
+  follow           Int         @default(0)
+  follower         Int         @default(0)
+  registrationDate DateTime    @default(now())
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime?    @updatedAt 
+  userId           Int?     
+  storeStatusId    Int         @default(1)
+  StoreStatus      StoreStatus @relation(fields: [storeStatusId], references: [id])
+}
+
+model StoreStatus {
+  id    Int     @id @default(autoincrement())
+  name  String  @unique
+  store Store[]
+}
