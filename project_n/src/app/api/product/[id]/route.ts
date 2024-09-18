@@ -3,40 +3,39 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
+    const productID = Number(params.id)
     try {
-        const id = Number(params.id);
-        const data = await prisma.store.findUnique({
-            where: { id },
-        })
-        return Response.json(data)
-    }
-    catch (error) {
+        const productData = await prisma.product.findUnique({ where: { id: productID } })
+        return Response.json(productData)
+    } catch (error) {
         return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
+    const productID = Number(params.id)
     try {
-        const id = Number(params.id);
-        const { name } = await request.json();
-        const data = await prisma.store.update({
-            where: { id: id },
-            data: { name: name }
-        })
+        const { name, price, description } = await request.json();
+        const data = await prisma.product.update({
+            where: { id: productID },
+            data: {
+                name: name,
+                price: price,
+                description: description
+            }
+        });
         return Response.json(data)
-    }
-    catch (error) {
+    } catch (error) {
         return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
     }
+
 }
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-    const storeId = Number(params.id)
+    const productID = Number(params.id)
     try {
-        const data = await prisma.store.delete({
-            where: { id: storeId }
-        })
-        return Response.json("deleted successfully", { status: 200 })
+        const deleteData = await prisma.product.delete({ where: { id: productID } })
+        return Response.json("deleted successfully")
     } catch (error) {
         return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
     }
