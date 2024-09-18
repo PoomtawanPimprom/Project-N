@@ -41,8 +41,8 @@ model Product {
   //fk 
   storeID         Int
   store           Store           @relation(fields: [storeID], references: [id])
-  categoryID      Int
-  category        ProductCategory @relation(fields: [categoryID], references: [id])
+  categoryID      Int?
+  category        ProductCategory? @relation(fields: [categoryID], references: [id])
   // discountID       Int
   // discount         Discount    @relation(fields: [discountID], references: [id])
   productStatusID Int             @default(1)
