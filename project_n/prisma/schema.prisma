@@ -55,7 +55,7 @@ model ProductInventory {
   id        Int     @id @default(autoincrement())
   quantity  Int
   size      String
-  color     String
+  color     String?
   productID Int
   product   Product @relation(fields: [productID], references: [id])
 }

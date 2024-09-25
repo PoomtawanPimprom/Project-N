@@ -9,7 +9,7 @@ interface prop {
 const LikeButton = () => {
   return (
     <>
-      <button className="flex border h-10 w-10 rounded-full justify-center items-center">
+      <button className="flex bg-white border h-10 w-10 rounded-full justify-center items-center">
         <FaHeart/>
       </button>
     </>
