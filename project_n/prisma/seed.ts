@@ -2,13 +2,25 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient();
 
-const productstatusData = [
-    {id:1 ,name: "available"},
-    {id:2 ,name: "unavailable"},
+const productStatusData = [
+    { id: 1, name: "available" },
+    { id: 2, name: "unavailable" },
 ]
 
+const storeStatusData = [
+    { id: 1, name: "available" },
+    { id: 2, name: "unavailable" },
+]
+
+const categoryData = [
+    { id: 1, name: "tech", },
+    { id: 2, name: "sport", },
+];
+
 async function main() {
-    await prisma.productStatus.createMany({ data :productstatusData})
+    await prisma.productStatus.createMany({ data: productStatusData })
+    await prisma.storeStatus.createMany({ data: storeStatusData })
+    await prisma.category.createMany({ data: categoryData })
 }
 
 main()

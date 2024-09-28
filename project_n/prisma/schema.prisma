@@ -34,19 +34,19 @@ model StoreStatus {
 //----------------------------------------------------------------------------------------------
 
 model Product {
-  id              Int             @id @default(autoincrement())
+  id              Int           @id @default(autoincrement())
   name            String
   description     String
   price           Int
   //fk 
   storeID         Int
-  store           Store           @relation(fields: [storeID], references: [id])
-  categoryID      Int?
-  category        ProductCategory? @relation(fields: [categoryID], references: [id])
+  store           Store         @relation(fields: [storeID], references: [id])
+  categoryID      Int
+  category        Category      @relation(fields: [categoryID], references: [id])
   // discountID       Int
   // discount         Discount    @relation(fields: [discountID], references: [id])
-  productStatusID Int             @default(1)
-  productStatus   ProductStatus   @relation(fields: [productStatusID], references: [id])
+  productStatusID Int           @default(1)
+  productStatus   ProductStatus @relation(fields: [productStatusID], references: [id])
 
   productInventory ProductInventory[]
 }
@@ -60,10 +60,9 @@ model ProductInventory {
   product   Product @relation(fields: [productID], references: [id])
 }
 
-model ProductCategory {
+model Category {
   id         Int       @id @default(autoincrement())
   name       String
-  desciption String
   Product    Product[]
 }
 
