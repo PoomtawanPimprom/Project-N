@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
     try {
-        const { name, description, price, storeID, categoryID,  } = await request.json();
+        const { name, description, price, storeID, categoryID, } = await request.json();
         const createProductData = await prisma.product.create({
             data: {
                 name: name,
@@ -24,7 +24,8 @@ export async function POST(request: Request) {
             }
         });
         return Response.json(createProductData);
-    } catch (error) {
+    } catch (error: Error) {
+        console.error(error.message)
         return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }
