@@ -11,9 +11,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
         return Response.json(data)
     }
     catch (error) {
-        return new Response(error as BodyInit, {
-            status: 500,
-        })
+        return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }
 
@@ -28,9 +26,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         return Response.json(data)
     }
     catch (error) {
-        return new Response(error as BodyInit, {
-            status: 500,
-        })
+        return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }
 

@@ -14,7 +14,7 @@ export async function CreateStore(data: any) {
 
 // GET /api/store/${storeID}
 export async function getStoreByID(storeID: number) {
-    const res = await fetch(`http://localhost:3000/api/store/${storeID}`, {
+    const res = await fetch(`/api/store/${storeID}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
