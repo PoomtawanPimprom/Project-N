@@ -25,7 +25,7 @@ export async function getAllproduct() {
 }
 
 //GET /api/product/:id
-export async function getProductByProductId(id:number) {
+export async function getProductById(id:number) {
     const res = await fetch(`/api/product/${id}`, {
         method: "GET",
         headers:{
