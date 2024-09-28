@@ -16,13 +16,14 @@ export async function GET(request: Request, { params }: { params: { id: string }
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
     const productID = Number(params.id)
     try {
-        const { name, price, description } = await request.json();
+        const { name, price, description ,categoryId } = await request.json();
         const data = await prisma.product.update({
             where: { id: productID },
             data: {
                 name: name,
                 price: price,
-                description: description
+                description: description,
+                categoryID:categoryId
             }
         });
         return Response.json(data)
