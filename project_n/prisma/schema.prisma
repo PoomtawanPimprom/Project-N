@@ -7,6 +7,66 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  username  String
+  password  String
+  email     String
+  mobile    Int
+  birthdate DateTime
+  profile   String
+  saler     Boolean
+
+  //fk
+  genderId Int
+  gender   Gender @relation(fields: [genderId], references: [id])
+
+  roleId Int
+  role   Role @relation(fields: [roleId], references: [id])
+
+  userStatusId Int
+  userStatus   UserStatus @relation(fields: [userStatusId], references: [id])
+
+  userAddressId Int
+  UserAddress   UserAddress @relation(fields: [userAddressId], references: [id])
+}
+
+model Gender {
+  id   Int    @id @default(autoincrement())
+  name String
+  User User[]
+}
+
+model Role {
+  id   Int    @id @default(autoincrement())
+  name String
+  User User[]
+}
+
+model UserStatus {
+  id   Int    @id @default(autoincrement())
+  name String
+  User User[]
+}
+
+model UserAddress {
+  id          Int    @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  houseNo     String
+  moo         String
+  province    String
+  district    String
+  subDistrict String
+  postalCode  Int
+  mobile      Int
+
+  User User[]
+}
+
+//----------------------------------------------------------------------------------------------
+
 //Store sytem
 model Store {
   id             Int         @id @default(autoincrement())
@@ -61,9 +121,9 @@ model ProductInventory {
 }
 
 model Category {
-  id         Int       @id @default(autoincrement())
-  name       String
-  Product    Product[]
+  id      Int       @id @default(autoincrement())
+  name    String
+  Product Product[]
 }
 
 model Discount {
