@@ -1,5 +1,6 @@
 "use client";
 
+import ProductCard from "@/app/component/product/productCard/productCard";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -96,6 +97,7 @@ const ProductByIdPage = ({ params }: { params: { id: number } }) => {
           <div></div>
         </div>
       </div>
+      <ProductCard/>
     </>
   );
 };

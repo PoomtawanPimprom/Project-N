@@ -16,6 +16,17 @@ export async function createFavorite(data: any) {
     }
 }
 
+//GET /api/favorite/:productId/:userId
+export async function getFavoriteByProductIdAndUserId(productId:any, userId:any) {
+    const res = await fetch(`${PATH_API}/favorite/${productId}/${userId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+    });
+    return res.json();
+}
+
 //GET /api/favorite/:userId
 export async function getAllFavoriteByUserID(userId: number) {
     const res = await fetch(`${PATH_API}/favorite/${userId}`, {
@@ -28,7 +39,7 @@ export async function getAllFavoriteByUserID(userId: number) {
 }
 
 //DELETE /api/favorite/:favoriteId
-export async function deleteFavorite(favoriteId: number) {
+export async function deleteFavorite(favoriteId: any) {
     const res = await fetch(`${PATH_API}/favorite/${favoriteId}`, {
         method: "DELETE",
         headers: {
