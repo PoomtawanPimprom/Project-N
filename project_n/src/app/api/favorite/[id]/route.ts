@@ -27,7 +27,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     } catch (error: any) {
         console.error(error.message)
         if (error.code === "P2025") {
-            return new Response("user not found", { status: 404 });
+            return new Response("favoriteID not found", { status: 400 });
         }
 
         return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
