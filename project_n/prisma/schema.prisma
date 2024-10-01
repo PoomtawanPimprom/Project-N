@@ -30,6 +30,7 @@ model User {
 
   userAddressId Int
   UserAddress   UserAddress @relation(fields: [userAddressId], references: [id])
+  Favorite      Favorite[]
 }
 
 model Gender {
@@ -98,6 +99,8 @@ model Product {
   name            String
   description     String
   price           Int
+  image           String?
+  createdAt       DateTime      @default(now())
   //fk 
   storeID         Int
   store           Store         @relation(fields: [storeID], references: [id])
@@ -109,6 +112,7 @@ model Product {
   productStatus   ProductStatus @relation(fields: [productStatusID], references: [id])
 
   productInventory ProductInventory[]
+  Favorite         Favorite[]
 }
 
 model ProductInventory {
@@ -141,3 +145,16 @@ model ProductStatus {
   name    String
   product Product[]
 }
+
+//----------------------------------------------------------------------------------------------
+
+//Favorite system
+model Favorite {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  User      User    @relation(fields: [userId], references: [id])
+  productId Int
+  Product   Product @relation(fields: [productId], references: [id])
+}
+
+//----------------------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 import { FaCartPlus } from "react-icons/fa";
-import LikeButton from "../../button/likeButton";
+import LikeButton from "./likeButton";
 
 //icon
 import { BsThreeDots } from "react-icons/bs";
@@ -19,7 +19,7 @@ const ProductCard = () => {
             className="rounded-t-xl" 
             src="https://images.unsplash.com/photo-1725714834984-4f37a2406563?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
           <div className=" absolute right-2 top-2">
-            <LikeButton />
+            <LikeButton productId={1} userId={1} />
           </div>
         </div>
         <div className="card-info flex flex-col p-2">

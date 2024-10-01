@@ -24,7 +24,7 @@ export async function POST(request: Request) {
             }
         });
         return Response.json(createProductData);
-    } catch (error: Error) {
+    } catch (error: any) {
         console.error(error.message)
         return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
     }
