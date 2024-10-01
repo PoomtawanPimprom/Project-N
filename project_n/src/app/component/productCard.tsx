@@ -1,5 +1,5 @@
 import { FaCartPlus } from "react-icons/fa";
-import LikeButton from "../../button/likeButton";
+import LikeButton from "./likeButton";
 
 //icon
 import { BsThreeDots } from "react-icons/bs";
