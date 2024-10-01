@@ -10,7 +10,24 @@ export async function GET(request: Request, { params }: { params: { id: string }
         if (userId === null || "") {
             return Response.json("invalid user", { status: 404 })
         }
-        const data = await prisma.favorite.findMany({ where: { userId: userId } })
+        const data = await prisma.favorite.findMany({
+            where: { userId: userId },
+            include: { 
+                Product: { 
+                    select: { 
+                        name: true,
+                        image: true,
+                        price: true,
+                        store:{
+                            select:{
+                                name: true,
+                            }
+                        }
+                    },
+                    
+                } 
+            }
+        })
         return Response.json(data);
     } catch (error: any) {
         console.error(error.message)
