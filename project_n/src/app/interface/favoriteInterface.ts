@@ -1,5 +1,9 @@
+import { productInterface } from "./productInterface";
+
 export interface favoriteInterface {
     id: number;
-    productId: number;
     userId: number;
+    productId: number;
+    Product?: productInterface
+    
 }

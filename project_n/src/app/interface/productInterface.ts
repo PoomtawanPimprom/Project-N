@@ -7,6 +7,8 @@ export interface productInterface {
     name: string
     description: string
     price: number
+    image:string
+    createdAt:string
 
     //fk
     storeID: number
