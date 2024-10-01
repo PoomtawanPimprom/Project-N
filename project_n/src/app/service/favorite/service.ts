@@ -39,7 +39,7 @@ export async function getAllFavoriteByUserID(userId: number) {
 }
 
 //DELETE /api/favorite/:favoriteId
-export async function deleteFavorite(favoriteId: any) {
+export async function deleteFavoriteByid(favoriteId: any) {
     const res = await fetch(`${PATH_API}/favorite/${favoriteId}`, {
         method: "DELETE",
         headers: {
