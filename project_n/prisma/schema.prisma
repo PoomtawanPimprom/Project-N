@@ -111,16 +111,17 @@ model Product {
   productStatusID Int           @default(1)
   productStatus   ProductStatus @relation(fields: [productStatusID], references: [id])
 
-  productInventory ProductInventory[]
-  Favorite         Favorite[]
+  Inventory Inventory[]
+  Favorite  Favorite[]
 }
 
-model ProductInventory {
+model Inventory {
   id        Int     @id @default(autoincrement())
   quantity  Int
-  size      String
+  size      String?
   color     String?
   productID Int
+  createdAt DateTime @default(now())
   product   Product @relation(fields: [productID], references: [id])
 }
 

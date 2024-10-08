@@ -7,5 +7,5 @@ export interface inventoryInterface {
     color: String
     //fk
     productID: number
-    product: productInterface
+    product ?: productInterface
 }
