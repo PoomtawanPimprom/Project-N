@@ -1,6 +1,6 @@
 "use client";
 
-import ProductCard from "@/app/component/product/productCard/productCard";
+import ProductCard from "@/app/component/productCard";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
