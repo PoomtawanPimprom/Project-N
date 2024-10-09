@@ -31,6 +31,7 @@ model User {
   userAddressId Int
   UserAddress   UserAddress @relation(fields: [userAddressId], references: [id])
   Favorite      Favorite[]
+  Report        Report[]
 }
 
 model Gender {
@@ -113,16 +114,17 @@ model Product {
 
   Inventory Inventory[]
   Favorite  Favorite[]
+  Report    Report[]
 }
 
 model Inventory {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   quantity  Int
   size      String?
   color     String?
   productID Int
   createdAt DateTime @default(now())
-  product   Product @relation(fields: [productID], references: [id])
+  product   Product  @relation(fields: [productID], references: [id])
 }
 
 model Category {
@@ -156,6 +158,20 @@ model Favorite {
   User      User    @relation(fields: [userId], references: [id])
   productId Int
   Product   Product @relation(fields: [productId], references: [id])
+}
+
+//----------------------------------------------------------------------------------------------
+
+//manage report 
+model Report {
+  id        Int      @id @default(autoincrement())
+  comment   String
+  createdAt DateTime @default(now())
+  image     String
+  userId    Int
+  User      User     @relation(fields: [userId], references: [id])
+  productId Int
+  Product   Product  @relation(fields: [productId], references: [id])
 }
 
 //----------------------------------------------------------------------------------------------
