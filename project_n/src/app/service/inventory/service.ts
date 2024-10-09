@@ -1,5 +1,16 @@
 const PATH_API = "/api/inventory"
 
+//GET /api/inventory/prodect/:prodectId
+export async function getInventoryByProductId(prodectId:number) {
+    const res = await fetch(`${PATH_API}/product/${prodectId}`, {
+        method: "GET",
+        headers:{
+            "Content-Type": "application/json",
+        },
+    });
+    return res.json();
+}
+
 //GET /api/inventory/:prodectId
 export async function getInventoriesByProductId(productId:number,query:string){
     const res = await fetch(`${PATH_API}/${productId}?${query}`, {

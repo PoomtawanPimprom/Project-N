@@ -36,8 +36,8 @@ export async function getProductById(id:number) {
 }
 
 //GET /api/store/product/:storeId
-export async function getProductsByStoreId(storeId:number) {
-    const res = await fetch(`/api/store/product/${storeId}`, {
+export async function getProductsByStoreId(storeId:number,query?:string)  {
+    const res = await fetch(`/api/store/product/${storeId}?${query}`, {
         method: "GET",
         headers:{
             "Content-Type": "application/json",
