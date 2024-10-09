@@ -15,29 +15,55 @@ const createProductpage = () => {
 
   const [categoryData, setCategoryData] = useState<categoryInterface[]>([]);
 
+  //product
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState<number>(0);
-  const [quantity, setQuantity] = useState<number>(0);
   const [image, setImage] = useState("");
   const [category, setCategory] = useState<number>(0);
+
+  //inventory
+  const [inventory, setInventory] = useState<
+    { quantity: number; size: string; color: string }[]
+  >([{ quantity: 0, size: "", color: "" }]);
 
   const fetchDataCategory = async () => {
     const data = await getAllCategory();
     setCategoryData(data);
   };
 
+  const addInventoryRow = () => {
+    setInventory([...inventory, { quantity: 0, size: "", color: "" }]);
+  };
+
+  const updateInventoryRow = (
+    index: number,
+    field: string,
+    value: string | number
+  ) => {
+    const updatedInventory = inventory.map((item, i) =>
+      i === index ? { ...item, [field]: value } : item
+    );
+    setInventory(updatedInventory);
+  };
+
   const onSubmitCreateProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     const data = {
+      //product
       name: name,
       description: description,
       price: price,
       storeID: 1,
       categoryID: category,
+      image: image,
+
+      //inventory
+      inventory: inventory,
     };
     console.log(data);
     await CreateProdcut(data);
+    Router.push(`/store/inventory/${1}`);
   };
 
   useEffect(() => {
@@ -52,7 +78,7 @@ const createProductpage = () => {
             <p>เพิ่มสินค้า</p>
           </div>
           <div className="body flex flex-col h-dvh">
-            <div className="flex flex-col border border-black w-full h-[600px] rounded-xl p-4">
+            <div className="flex flex-col border border-black w-full rounded-xl p-4">
               <form action="" onSubmit={onSubmitCreateProduct}>
                 <div className=" my-4 space-y-2">
                   <p>ชื่อสินค้า</p>
@@ -84,15 +110,59 @@ const createProductpage = () => {
                     placeholder="โปรดระบุราคาสินค้า"
                   />
                 </div>
-                <div className=" my-4 space-y-2">
-                  <p>จำนวน</p>
-                  <input
-                    name="quantity"
-                    onChange={(e) => setQuantity(Number(e.target.value))}
-                    type="text"
-                    className="p-2 border border-black rounded-lg"
-                    placeholder="โปรดระบุจำนวนสินค้า"
-                  />
+                <div className="my-4 space-y-4">
+                  <p>สินค้าในสต็อก</p>
+                  {inventory.map((item, index) => (
+                    <div key={index} className="flex space-x-4">
+                      <div>
+                        <p>จำนวน</p>
+                        <input
+                          name={`quantity-${index}`}
+                          onChange={(e) =>
+                            updateInventoryRow(
+                              index,
+                              "quantity",
+                              Number(e.target.value)
+                            )
+                          }
+                          type="number"
+                          className="p-2 border border-black rounded-lg"
+                          placeholder="จำนวนสินค้า"
+                        />
+                      </div>
+                      <div>
+                        <p>ไซต์</p>
+                        <input
+                          name={`size-${index}`}
+                          onChange={(e) =>
+                            updateInventoryRow(index, "size", e.target.value)
+                          }
+                          type="text"
+                          className="p-2 border border-black rounded-lg"
+                          placeholder="ขนาดสินค้า"
+                        />
+                      </div>
+                      <div>
+                        <p>สี</p>
+                        <input
+                          name={`color-${index}`}
+                          onChange={(e) =>
+                            updateInventoryRow(index, "color", e.target.value)
+                          }
+                          type="text"
+                          className="p-2 border border-black rounded-lg"
+                          placeholder="สีสินค้า"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={addInventoryRow}
+                    className="p-2 bg-gray-300 rounded-lg"
+                  >
+                    เพิ่มตัวเลือก
+                  </button>
                 </div>
                 <div className=" my-4 space-y-2">
                   <p>รูปภาพสินค้า</p>

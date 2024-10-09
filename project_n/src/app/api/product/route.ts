@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
     try {
-        const { name, description, price, storeID, categoryID, } = await request.json();
+        const { name, description, price, storeID, categoryID, image, inventory } = await request.json();
         const createProductData = await prisma.product.create({
             data: {
                 name: name,
@@ -21,9 +21,23 @@ export async function POST(request: Request) {
                 price: price,
                 storeID: storeID,
                 categoryID: categoryID,
+                image: image
             }
         });
-        return Response.json(createProductData);
+        const createInventoryData = await Promise.all(
+            inventory.map((item: { quantity: number; size: string; color: string }) => {
+                return prisma.inventory.create({
+                    data: {
+                        quantity: item.quantity,
+                        size: item.size,
+                        color: item.color,
+                        productID: createProductData.id
+                    }
+                });
+            })
+        );
+
+        return Response.json("create success ");
     } catch (error: any) {
         console.error(error.message)
         return new Response(error instanceof Error ? error.message : String(error), { status: 500 })

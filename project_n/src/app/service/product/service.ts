@@ -35,6 +35,17 @@ export async function getProductById(id:number) {
     return res.json();
 }
 
+//GET /api/store/product/:storeId
+export async function getProductsByStoreId(storeId:number,query?:string)  {
+    const res = await fetch(`/api/store/product/${storeId}?${query}`, {
+        method: "GET",
+        headers:{
+            "Content-Type": "application/json",
+        },
+    });
+    return res.json();
+}
+
 //PUT /api/product/:id
 export async function updateProductbyID(id:number,data:any) {
     const res = await fetch(`/api/product/${id}`, {
