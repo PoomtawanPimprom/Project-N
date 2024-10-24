@@ -190,15 +190,18 @@ model Report {
   reportStatus   ReportStatus @relation(fields: [reportStatusId], references: [id])
 }
 
+
 model ReportCategory {
   id       Int      @id @default(autoincrement())
   category String
+
   Report   Report[]
 }
 
 model ReportStatus {
   id     Int      @id @default(autoincrement())
   name   String
+  
   Report Report[]
 }
 
