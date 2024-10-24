@@ -30,8 +30,10 @@ model User {
 
   userAddressId Int
   UserAddress   UserAddress @relation(fields: [userAddressId], references: [id])
-  Favorite      Favorite[]
-  Report        Report[]
+
+  Favorite Favorite[]
+  Report   Report[]
+  Store    Store[]
 }
 
 model Gender {
@@ -71,20 +73,24 @@ model UserAddress {
 
 //Store sytem
 model Store {
-  id             Int         @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   name           String
   imageLogo      String?
   imageBackgroud String?
-  scores         Float       @default(0)
-  productTotal   Int         @default(0)
-  follow         Int         @default(0)
-  follower       Int         @default(0)
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime?   @updatedAt
-  userId         Int?
-  storeStatusId  Int         @default(1)
-  StoreStatus    StoreStatus @relation(fields: [storeStatusId], references: [id])
-  Product        Product[]
+  scores         Float     @default(0)
+  productTotal   Int       @default(0)
+  follow         Int       @default(0)
+  follower       Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime? @updatedAt
+
+  userId        Int
+  user          User        @relation(fields: [userId], references: [id])
+
+  storeStatusId Int         @default(1)
+  storeStatus   StoreStatus @relation(fields: [storeStatusId], references: [id])
+
+  Product       Product[]
 }
 
 model StoreStatus {
@@ -154,10 +160,12 @@ model ProductStatus {
 //Favorite system
 model Favorite {
   id        Int     @id @default(autoincrement())
+  //fk
   userId    Int
-  User      User    @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
+  
   productId Int
-  Product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
 }
 
 //----------------------------------------------------------------------------------------------
@@ -168,10 +176,30 @@ model Report {
   comment   String
   createdAt DateTime @default(now())
   image     String?
-  userId    Int
-  User      User     @relation(fields: [userId], references: [id])
+
+  userId Int
+  User   User @relation(fields: [userId], references: [id])
+
   productId Int
-  Product   Product  @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+
+  reportCategoryId Int
+  reportCategory   ReportCategory @relation(fields: [reportCategoryId], references: [id])
+
+  reportStatusId Int
+  reportStatus   ReportStatus @relation(fields: [reportStatusId], references: [id])
+}
+
+model ReportCategory {
+  id       Int      @id @default(autoincrement())
+  category String
+  Report   Report[]
+}
+
+model ReportStatus {
+  id     Int      @id @default(autoincrement())
+  name   String
+  Report Report[]
 }
 
 //----------------------------------------------------------------------------------------------
