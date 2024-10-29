@@ -177,7 +177,6 @@ model Report {
   id        Int      @id @default(autoincrement())
   comment   String
   createdAt DateTime @default(now())
-  image     String?
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
