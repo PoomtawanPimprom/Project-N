@@ -1,30 +1,33 @@
+
 import React from "react";
 
-interface prop {
+interface ModalProps {
   open: boolean;
   onClose: () => void;
   children: React.ReactNode;
 }
 
-const Modal = (prop: prop) => {
+const Modal: React.FC<ModalProps> = ({ open, onClose, children }) => {
   return (
     <div
-      onClick={prop.onClose}
+      onClick={onClose}
       className={`fixed inset-0 flex justify-center items-center transition-colors ${
-        prop.open ? "visible bg-black/20" : " invisible"
+        open ? "visible bg-black/20" : "invisible"
       }`}
     >
-      Modal
       <div
         onClick={(e) => e.stopPropagation()}
         className={`bg-white rounded-xl shadow p-6 transition-all ${
-          prop.open ? " scale-100 opacity-100" : " scale-125 opacity-0"
+          open ? "scale-100 opacity-100" : "scale-125 opacity-0"
         }`}
       >
         <button 
-        onClick={prop.onClose}
-        className=" absolute top-2 right-2 p-1 rounded-lg text-gray-400 bg-white hover:bg-gray-50 hover:text-gray-600"> </button>   
-        {prop.children}
+          onClick={onClose}
+          className="absolute top-2 right-2 p-1 rounded-lg text-gray-400 bg-white hover:bg-gray-50 hover:text-gray-600"
+        >
+          X
+        </button>
+        {children}
       </div>
     </div>
   );
