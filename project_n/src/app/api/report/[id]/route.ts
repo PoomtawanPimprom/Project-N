@@ -10,7 +10,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
         const data = await prisma.report.findUnique({
             where: { id: reportId },
             include: {
-                Product: true
+                product: true
             }
         })
         return Response.json(data)
@@ -28,7 +28,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
             where: { id: reportId },
             data: {
                 comment,
-                image,
                 userId,
                 productId
             }
