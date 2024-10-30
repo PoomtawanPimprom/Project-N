@@ -2,9 +2,11 @@
 
 import { favoriteInterface } from "@/app/interface/favoriteInterface";
 import { deleteFavoriteByid, getAllFavoriteByUserID } from "@/app/service/favorite/service";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const favoriteByUserIdPage = ({ params }: { params: { id: number } }) => {
+  const router = useRouter();
   const userId = params.id;
   const [favoriteData, setFavoriteData] = useState<favoriteInterface[]>([]);
 
@@ -31,15 +33,17 @@ const favoriteByUserIdPage = ({ params }: { params: { id: number } }) => {
           </div>
           <div className="flex flex-col h-full rounded-xl border border-black my-2 p-4">
             {favoriteData.map((item, index) => (
-              <div className="flex flex-col border border-black rounded-xl p-2">
+              <div 
+              onClick={()=>router.push(`/product/${item.productId}`)}
+              className="flex flex-col border border-black rounded-xl p-2">
                 <div className="header flex text-2xl font-bold mb-1">
-                  <p>{item.Product?.store?.name}</p>
+                  <p>{item.product?.store?.name}</p>
                 </div>
                 <div className="body flex justify-between ">
-                  <div>{item.Product?.image}</div>
-                  <div>{item.Product?.name}</div>
+                  <div>{item.product?.image}</div>
+                  <div>{item.product?.name}</div>
                   <div>quatity</div>
-                  <div>{item.Product?.price}</div>
+                  <div>{item.product?.price}</div>
                   <div>
                     <button
                       onClick={async ()=>{

@@ -1,19 +1,30 @@
 "use client";
-
 import ProductCard from "@/app/component/productCard";
+import ReportButton from "@/app/component/reportButton";
+import { productInterface } from "@/app/interface/productInterface";
+import { getProductById } from "@/app/service/product/service";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import ModalReportForm from "../../report/component/modalReportForm";
 
 const ProductByIdPage = ({ params }: { params: { id: number } }) => {
-  const router = useRouter()
-  const [product, setProductId] = useState();
+  const router = useRouter();
+  const [product, setProduct] = useState<productInterface>();
   const [count, setCount] = useState(1);
 
+  //report system
+  const [openReportModal,setOpenReportModal] = useState(false)
+  
+  
+  const fetchData = async () => {
+    const data = await getProductById(params.id);
+    setProduct(data);
+  };
+
   useEffect(() => {
-    if (count <= 1) {
-      setCount(1);
-    }
-  }, [count]);
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className="flex flex-col items-center">
@@ -40,7 +51,8 @@ const ProductByIdPage = ({ params }: { params: { id: number } }) => {
                   </div>
                   <div className="flex w-1/5 justify-end ">
                     <div>
-                      <p>Report</p>
+                      <ReportButton userId={1} productId={params.id} onClick={() => setOpenReportModal(true)}/>
+                      <ModalReportForm productId={params.id} open={openReportModal} onClose={()=> setOpenReportModal(false)}/>
                     </div>
                   </div>
                 </div>
@@ -55,6 +67,7 @@ const ProductByIdPage = ({ params }: { params: { id: number } }) => {
                   <div className="flex border border-black  rounded-lg w-32 ">
                     <button
                       onClick={() => setCount(count - 1)}
+                      disabled={count === 1}
                       className="w-1/3 mx-2 justify-center items-center"
                     >
                       <p>-</p>
@@ -86,7 +99,12 @@ const ProductByIdPage = ({ params }: { params: { id: number } }) => {
               <div className="flex">info</div>
             </div>
           </div>
-          <div className="flex mt-2 cursor-pointer" onClick={()=>{router.push("/")}}>
+          <div
+            className="flex mt-2 cursor-pointer"
+            onClick={() => {
+              router.push("/");
+            }}
+          >
             <div className="flex flex-col w-full border p-2 rounded-xl">
               <div className="flex mb-2 text-2xl font-bold">
                 <p>ร้านค้า</p>
@@ -97,7 +115,6 @@ const ProductByIdPage = ({ params }: { params: { id: number } }) => {
           <div></div>
         </div>
       </div>
-      <ProductCard/>
     </>
   );
 };
