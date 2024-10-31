@@ -3,23 +3,29 @@ import LikeButton from "./likeButton";
 
 //icon
 import { BsThreeDots } from "react-icons/bs";
+import { useRouter } from "next/navigation";
+import { productInterface } from "../interface/productInterface";
 
 interface prop {
-  name: string;
-  image: string;
-  price: number;
+  product: productInterface
 }
 
-const ProductCard = () => {
+const ProductCard = (prop:prop) => {
+  const router = useRouter();
   return (
     <>
-      <div className="card flex flex-col h-[300px] w-[220px] border rounded-xl">
+      <div
+        onClick={() => router.push(`/product/${prop.product.id}`)}
+        className="card flex flex-col h-[300px] w-[220px] border rounded-xl"
+      >
         <div className="card-image relative flex h-3/5 border-b ">
           <img
-            className="rounded-t-xl" 
-            src="https://images.unsplash.com/photo-1725714834984-4f37a2406563?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
+            className="rounded-t-xl"
+            src={prop.product.image}
+            alt={prop.product.name}
+          />
           <div className=" absolute right-2 top-2">
-            <LikeButton productId={1} userId={1} />
+            <LikeButton productId={prop.product.id} userId={1} />
           </div>
         </div>
         <div className="card-info flex flex-col p-2">
@@ -27,9 +33,11 @@ const ProductCard = () => {
           <div className="care-price my-2">price</div>
           <div className="card-naviButton flex justify-end">
             <button className="flex rounded-full mr-2 border h-10 w-10 justify-center items-center">
+              {/* icon */}
               <FaCartPlus />
             </button>
             <button className="flex rounded-full mr-2 border h-10 w-10 justify-center items-center">
+              {/* icon */}
               <BsThreeDots />
             </button>
           </div>

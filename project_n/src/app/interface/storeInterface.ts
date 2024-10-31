@@ -1,4 +1,5 @@
-import { storeStatuInterface } from "./storeStatus";
+import { storeStatuInterface } from "./storeStatusInterface";
+import { userInterface } from "./userInterface";
 
 export interface storeInterface {
     id: number;
@@ -11,7 +12,10 @@ export interface storeInterface {
     follower: number;
     createdDate: string;
     updatedAt: string;
+    //fk
     userId: number;
+    user?:userInterface
+
     storeStatusId: number;
-    StoreStatus: storeStatuInterface;
+    storeStatus?: storeStatuInterface;
 }

@@ -3,7 +3,7 @@ import { productStatusInterface } from "./productStatusInterface";
 import { storeInterface } from "./storeInterface";
 
 export interface productInterface {
-    id?: number
+    id: number
     name: string
     description: string
     price: number

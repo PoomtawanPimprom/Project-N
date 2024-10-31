@@ -29,8 +29,11 @@ model User {
   userStatus   UserStatus @relation(fields: [userStatusId], references: [id])
 
   userAddressId Int
-  UserAddress   UserAddress @relation(fields: [userAddressId], references: [id])
-  Favorite      Favorite[]
+  userAddress   UserAddress @relation(fields: [userAddressId], references: [id])
+
+  Favorite Favorite[]
+  Report   Report[]
+  Store    Store[]
 }
 
 model Gender {
@@ -70,20 +73,24 @@ model UserAddress {
 
 //Store sytem
 model Store {
-  id             Int         @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   name           String
   imageLogo      String?
   imageBackgroud String?
-  scores         Float       @default(0)
-  productTotal   Int         @default(0)
-  follow         Int         @default(0)
-  follower       Int         @default(0)
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime?   @updatedAt
-  userId         Int?
-  storeStatusId  Int         @default(1)
-  StoreStatus    StoreStatus @relation(fields: [storeStatusId], references: [id])
-  Product        Product[]
+  scores         Float     @default(0)
+  productTotal   Int       @default(0)
+  follow         Int       @default(0)
+  follower       Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime? @updatedAt
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  storeStatusId Int         @default(1)
+  storeStatus   StoreStatus @relation(fields: [storeStatusId], references: [id])
+
+  Product Product[]
 }
 
 model StoreStatus {
@@ -94,12 +101,14 @@ model StoreStatus {
 
 //----------------------------------------------------------------------------------------------
 
+//Product system
 model Product {
   id              Int           @id @default(autoincrement())
   name            String
   description     String
   price           Int
   image           String?
+  sales           Int           @default(0)
   createdAt       DateTime      @default(now())
   //fk 
   storeID         Int
@@ -113,16 +122,17 @@ model Product {
 
   Inventory Inventory[]
   Favorite  Favorite[]
+  Report    Report[]
 }
 
 model Inventory {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   quantity  Int
   size      String?
   color     String?
   productID Int
   createdAt DateTime @default(now())
-  product   Product @relation(fields: [productID], references: [id])
+  product   Product  @relation(fields: [productID], references: [id])
 }
 
 model Category {
@@ -151,11 +161,48 @@ model ProductStatus {
 
 //Favorite system
 model Favorite {
-  id        Int     @id @default(autoincrement())
-  userId    Int
-  User      User    @relation(fields: [userId], references: [id])
+  id     Int  @id @default(autoincrement())
+  //fk
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
   productId Int
-  Product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+//----------------------------------------------------------------------------------------------
+
+//manage report 
+model Report {
+  id        Int      @id @default(autoincrement())
+  comment   String
+  createdAt DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  reportCategoryId Int
+  reportCategory   ReportCategory @relation(fields: [reportCategoryId], references: [id])
+
+  reportStatusId Int
+  reportStatus   ReportStatus @relation(fields: [reportStatusId], references: [id])
+}
+
+model ReportCategory {
+  id       Int    @id @default(autoincrement())
+  name String
+
+  Report Report[]
+}
+
+model ReportStatus {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  Report Report[]
 }
 
 //----------------------------------------------------------------------------------------------
