@@ -1,5 +1,6 @@
 const PATH_URL_REPORT = "/api/report"
 
+
 //GET /api/report
 export async function getAllReport (query:string) {
     const res = await fetch(`${PATH_URL_REPORT}?${query}`, {
