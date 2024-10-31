@@ -6,12 +6,48 @@ const prisma = new PrismaClient()
 // getAllReport
 export async function GET(request: NextRequest) {
     try {
+        const searchparams = request.nextUrl.searchParams
+        const search = searchparams.get("search") || ""
+        const sortReportCate = searchparams.get("sortReportCate") || ""
+        const sortDate = searchparams.get("sortDate") || "desc"
+
+        //condition
+        const whereCondition: any = {
+            AND: []
+        };
+
+        if (search) {
+            whereCondition.AND.push({
+                product: {
+                    id: Number(search)
+                    // id: {
+                    //     contains: search,
+                    //     mode: 'insensitive'
+                    // }
+                }
+            });
+        }
+
+        // ถ้ามีค่า sortReportCate ให้กรองตามหมวดหมู่ของรายงาน
+        if (sortReportCate) {
+            whereCondition.AND.push({
+                reportCategory: {
+                    id: Number(sortReportCate)
+                }
+            });
+        }
+
         const data = await prisma.report.findMany({
+            where:whereCondition,
             include: {
-                user:true,
+                user: true,
                 reportCategory: true,
                 product: true
-            }
+            },
+            orderBy: {
+                createdAt: sortDate === 'asc' ? 'asc' : 'desc', // จัดเรียงตามวันที่
+            },
+
         });
         return Response.json(data)
     } catch (error: any) {
