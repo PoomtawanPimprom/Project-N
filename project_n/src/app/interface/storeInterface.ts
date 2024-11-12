@@ -4,6 +4,7 @@ import { userInterface } from "./userInterface";
 export interface storeInterface {
     id: number;
     name: string;
+    description:string;
     imageLogo: string;
     imageBackgroud: string;
     scores:number;
