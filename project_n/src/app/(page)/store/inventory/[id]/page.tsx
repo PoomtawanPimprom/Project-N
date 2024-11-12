@@ -66,7 +66,6 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
   }, []);
 
   const handleFliterChange = () => {
-    console.log(category, search, sortDate);
     fetchData();
   };
 
