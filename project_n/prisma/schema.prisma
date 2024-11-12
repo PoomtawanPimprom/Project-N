@@ -75,6 +75,7 @@ model UserAddress {
 model Store {
   id             Int       @id @default(autoincrement())
   name           String
+  description    String?
   imageLogo      String?
   imageBackgroud String?
   scores         Float     @default(0)
@@ -107,7 +108,7 @@ model Product {
   name            String
   description     String
   price           Int
-  image           String?
+  image           String
   sales           Int           @default(0)
   createdAt       DateTime      @default(now())
   //fk 
@@ -192,7 +193,7 @@ model Report {
 }
 
 model ReportCategory {
-  id       Int    @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
   name String
 
   Report Report[]
