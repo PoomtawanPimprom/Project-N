@@ -7,36 +7,38 @@ import { useRouter } from "next/navigation";
 import { productInterface } from "../interface/productInterface";
 
 interface prop {
-  product: productInterface
+  product: productInterface;
 }
 
-const ProductCard = (prop:prop) => {
+const ProductCard = ({ product }: prop) => {
   const router = useRouter();
   return (
     <>
-      <div
-        onClick={() => router.push(`/product/${prop.product.id}`)}
-        className="card flex flex-col h-[300px] w-[220px] border rounded-xl"
-      >
-        <div className="card-image relative flex h-3/5 border-b ">
+      <div className="card flex flex-col w-[300px] border rounded-xl">
+        <div
+          className="card-image relative flex h-[300px] border-b "
+        >
           <img
-            className="rounded-t-xl"
-            src={prop.product.image}
-            alt={prop.product.name}
+            className="rounded-t-xl w-full "
+            src={product.image}
+            alt={product.name}
           />
           <div className=" absolute right-2 top-2">
-            <LikeButton productId={prop.product.id} userId={1} />
+            <LikeButton productId={product.id} userId={1} />
           </div>
         </div>
         <div className="card-info flex flex-col p-2">
-          <div className="care-name">Name</div>
-          <div className="care-price my-2">price</div>
+          <div className="care-name text-xl font-bold">{product.name}</div>
+          <div className="care-price my-1 text-lg text-gray-500">฿{product.price}</div>
           <div className="card-naviButton flex justify-end">
             <button className="flex rounded-full mr-2 border h-10 w-10 justify-center items-center">
               {/* icon */}
               <FaCartPlus />
             </button>
-            <button className="flex rounded-full mr-2 border h-10 w-10 justify-center items-center">
+            <button
+              onClick={() => router.push(`/product/${product.id}`)}
+              className="flex rounded-full mr-2 border h-10 w-10 justify-center items-center"
+            >
               {/* icon */}
               <BsThreeDots />
             </button>
