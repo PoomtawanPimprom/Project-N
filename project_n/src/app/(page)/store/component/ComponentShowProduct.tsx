@@ -23,16 +23,18 @@ const ShowProduct = ({ storeId }: prop) => {
     fetchData();
   }, []);
   return (
-    <div className="flex p-3">
-      <div className="flex flex-col w-full h-full bg-white border rounded-xl">
+    <div className="flex p-3 mx-auto">
+      <div className="flex flex-col w-[1400px] h-full bg-white border rounded-xl">
         <div className="header flex w-full p-2 text-3xl font-bold space-x-2 items-center">
           <FiBox />
           <p>รายการสินค้า</p>
         </div>
         <div className="header flex flex-col h-full w-full p-2">
-          <div className="grid h-full grid-cols-6 gap-3 grid-flow-row auto-rows-auto">
+          <div className="grid h-full  grid-cols-4 xl:grid-cols-5  2xl:grid-cols-5 gap-2 grid-flow-row auto-rows-auto items-center justify-center">
             {products.map((item, index) => (
-              <ProductCard product={item} key={index} />
+              <div className="flex mx-auto">
+                <ProductCard product={item} key={index} />
+              </div>
             ))}
           </div>
         </div>

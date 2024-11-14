@@ -3,8 +3,8 @@ import { IoPricetagOutline } from "react-icons/io5";
 
 const Discout = () => {
   return (
-    <div className="flex p-3">
-      <div className="flex flex-col w-full bg-white border  rounded-xl">
+    <div className="flex p-3 mx-auto">
+      <div className="flex flex-col w-[1400px] bg-white border  rounded-xl">
         <div className="header flex w-full p-2 text-3xl font-bold space-x-2 items-center">
           <IoPricetagOutline />
           <p>discount</p>
