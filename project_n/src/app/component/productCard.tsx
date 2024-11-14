@@ -14,9 +14,9 @@ const ProductCard = ({ product }: prop) => {
   const router = useRouter();
   return (
     <>
-      <div className="card flex flex-col w-[300px] border rounded-xl">
+      <div className="card flex flex-col w-[275px] border rounded-xl">
         <div
-          className="card-image relative flex h-[300px] border-b "
+          className="card-image relative flex h-[275px] border-b "
         >
           <img
             className="rounded-t-xl w-full "
