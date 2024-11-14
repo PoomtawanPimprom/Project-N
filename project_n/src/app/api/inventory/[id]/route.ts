@@ -21,7 +21,13 @@ export async function GET(Request: NextRequest, { params }: { params: { id: stri
                 search
                     ? {
                         OR: [
-                            { product: { name: { contains: search, mode: 'insensitive' } } },
+                            {
+                                product: {
+                                    name: {
+                                        contains: search,
+                                    }
+                                }
+                            },
                         ],
                     }
                     : {},
