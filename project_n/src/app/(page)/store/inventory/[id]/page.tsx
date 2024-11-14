@@ -3,9 +3,11 @@
 import { categoryInterface } from "@/app/interface/categoryInterface";
 import { inventoryInterface } from "@/app/interface/inventoryInterface";
 import { productInterface } from "@/app/interface/productInterface";
+
 import { getAllCategory } from "@/app/service/category/service";
 import { deleteInventoryByInventoryId, getInventoriesByProductId } from "@/app/service/inventory/service";
 import { getProductsByStoreId } from "@/app/service/product/service";
+
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -79,17 +81,12 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
 
   const handleDeleteSelected = async () => {
     try {
-      // ส่ง API เพื่อลบแต่ละ id ใน selectedIds
       await Promise.all(
         selectedIds.map(async (id) => {
           await deleteInventoryByInventoryId(id); // ลบทีละ id
         })
       );
-      
-      // หลังจากลบเสร็จ ให้รีเฟรชข้อมูล
       fetchData();
-      
-      // ล้าง selectedIds
       setSelectedIds([]);
     } catch (error) {
       console.error("Error deleting selected inventories:", error);
@@ -97,16 +94,16 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
   };
   return (
     <>
-      <div className="flex flex-col items-center justify-center">
-        <div className="flex flex-col w-4/5 h-lvh bg-red-100 p-4">
+      <div className="flex ">
+        <div className="flex flex-col w-4/5 h-lvh mx-auto border p-4">
           <div className="header flex my-2 text-4xl font-bold">
-            <p>Edit your Inventory</p>
+            <p>จัดการสินค้าในสต็อก</p>
           </div>
-          <div className="flex my-2">
+          <div className="flex my-2 ">
             <div className="flex space-x-2">
               <div>
                 <input
-                  className="p-2 rounded-lg"
+                  className="p-2 rounded-lg border"
                   type="text"
                   placeholder="search..."
                   onChange={(e) => setSearch(e.target.value)}
@@ -115,7 +112,7 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
               <div className="flex">
                 <select
                   value={category || 0}
-                  className="p-2 rounded-lg"
+                  className="p-2 rounded-lg border"
                   onChange={(e) => setCategory(e.target.value)}
                 >
                   <option value={0} disabled>
@@ -130,7 +127,7 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
               <div className="flex">
                 <select
                   value={sortDate || 0}
-                  className="p-2 rounded-lg"
+                  className="p-2 rounded-lg border  "
                   onChange={(e) => setSortDate(e.target.value)}
                 >
                   <option value={0} disabled>
@@ -163,7 +160,7 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
               </div>
             </div>
           </div>
-          <div className="relative overflow-x-auto sm:rounded-lg">
+          <div className="relative overflow-x-auto sm:rounded-lg border">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
