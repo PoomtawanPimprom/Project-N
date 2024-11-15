@@ -8,7 +8,7 @@ interface prop {
 const ButtonFollow = ({ userId, storeId }: prop) => {
   return (
     <>
-      <button className="flex bg-white rounded-xl p-3 justify-center items-center text-center">
+      <button className="flex max-h-[60px] bg-white rounded-xl p-3 justify-center items-center text-center hover:bg-gray-100 duration-200">
         <CiCirclePlus className="mx-1" />
         Follow
       </button>

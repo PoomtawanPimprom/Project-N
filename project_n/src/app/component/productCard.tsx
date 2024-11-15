@@ -31,13 +31,14 @@ const ProductCard = ({ product }: prop) => {
           <div className="care-name text-xl font-bold">{product.name}</div>
           <div className="care-price my-1 text-lg text-gray-500">฿{product.price}</div>
           <div className="card-naviButton flex justify-end">
-            <button className="flex rounded-full mr-2 border h-10 w-10 justify-center items-center">
+            <button 
+            className="flex rounded-full mr-2 border h-10 w-10 justify-center items-center hover:bg-gray-100">
               {/* icon */}
               <FaCartPlus />
             </button>
             <button
               onClick={() => router.push(`/product/${product.id}`)}
-              className="flex rounded-full mr-2 border h-10 w-10 justify-center items-center"
+              className="flex rounded-full mr-2 border h-10 w-10 justify-center items-center hover:bg-gray-100"
             >
               {/* icon */}
               <BsThreeDots />

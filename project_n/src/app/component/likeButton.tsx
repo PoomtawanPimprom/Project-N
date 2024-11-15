@@ -59,7 +59,7 @@ const LikeButton = (prop: propInterface) => {
     <>
       <button
         onClick={handleOnClick}
-        className="flex bg-white border h-10 w-10 rounded-full justify-center items-center"
+        className="flex bg-white border h-10 w-10 rounded-full justify-center items-center hover:bg-gray-100"
       >
         {isFavoritedStatus === true ? <FaHeart /> : <FaRegHeart />}
       </button>
