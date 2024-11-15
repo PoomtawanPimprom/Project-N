@@ -5,7 +5,10 @@ import { inventoryInterface } from "@/app/interface/inventoryInterface";
 import { productInterface } from "@/app/interface/productInterface";
 
 import { getAllCategory } from "@/app/service/category/service";
-import { deleteInventoryByInventoryId, getInventoriesByProductId } from "@/app/service/inventory/service";
+import {
+  deleteInventoryByInventoryId,
+  getInventoriesByProductId,
+} from "@/app/service/inventory/service";
 import { getProductsByStoreId } from "@/app/service/product/service";
 
 import { useRouter } from "next/navigation";
@@ -31,7 +34,7 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
       search,
       sortDate,
     }).toString();
-    const data = await getProductsByStoreId(storeId,query);
+    const data = await getProductsByStoreId(storeId, query);
     setProducts(data);
     const categoryData = await getAllCategory();
     setCategoryData(categoryData);
@@ -94,16 +97,16 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
   };
   return (
     <>
-      <div className="flex ">
-        <div className="flex flex-col w-4/5 h-lvh mx-auto border p-4">
-          <div className="header flex my-2 text-4xl font-bold">
+      <div className="flex dark:bg-black">
+        <div className="flex flex-col w-[1100px] h-lvh mx-auto border p-4 dark:bg-black dark:border-gray-600 dark:border-x">
+          <div className="header flex my-2 text-4xl font-bold dark:text-white ">
             <p>จัดการสินค้าในสต็อก</p>
           </div>
           <div className="flex my-2 ">
             <div className="flex space-x-2">
               <div>
                 <input
-                  className="p-2 rounded-lg border border-gray-400"
+                  className="p-2 rounded-lg border border-gray-400 dark:bg-zinc-800 dark:border-none dark:text-white focus:border-none "
                   type="text"
                   placeholder="search..."
                   onChange={(e) => setSearch(e.target.value)}
@@ -118,9 +121,9 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
                   <option value={0} disabled>
                     เลือกหมวดหมู่
                   </option>
-              
+
                   {categoryData.map((item, index) => (
-                    <option value={item.id} >{item.name}</option>
+                    <option value={item.id}>{item.name}</option>
                   ))}
                 </select>
               </div>
@@ -133,15 +136,16 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
                   <option value={0} disabled>
                     เรียงจาก
                   </option>
-                  <option value="desc">เก่าสุด</option>
-                  <option value="asc">ล่าสุด</option>
+                  <option value="asc">เก่าสุด</option>
+                  <option value="desc">ล่าสุด</option>
                 </select>
               </div>
               <div className="flex">
-                <button 
+                <button
                   className="py-2 px-4 rounded-lg bg-green text-white"
-                  type="submit" 
-                  onClick={handleFliterChange}>
+                  type="submit"
+                  onClick={handleFliterChange}
+                >
                   กรอง
                 </button>
               </div>
@@ -152,36 +156,38 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
                   disabled={selectedIds.length === 0}
                   onClick={handleDeleteSelected}
                   className={`py-2 px-4 rounded-lg  ${
-                    selectedIds.length === 0 ? "bg-gray-200 text-gray-700" : "bg-red-500 text-white"
+                    selectedIds.length === 0
+                      ? "bg-gray-200 text-gray-700 dark:bg-bg-dark dark:text-white"
+                      : "bg-red-500 text-white dark:text-white"
                   }`}
                 >
-                  {selectedIds.length}{" "}สินค้าที่ต้องการลบ
+                  {selectedIds.length} สินค้าที่ต้องการลบ
                 </button>
               </div>
             </div>
           </div>
-          <div className="relative overflow-x-auto sm:rounded-lg border">
+          <div className="relative overflow-x-auto sm:rounded-lg border dark:border-gray-600">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-2 py-3"></th>
                   <th scope="col" className="px-6 py-3">
-                    Product name
+                    ชื่อสินค้า
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Color
+                    สี
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    size
+                    ไซส์
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    inventory
+                    สินค้าในคลัง
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Price
+                    ราคา
                   </th>
                   <th scope="col" className="px-6 py-3 text-right">
-                    Edit
+                    แก้ไข
                   </th>
                 </tr>
               </thead>
@@ -200,7 +206,7 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
                     </td>
                     <th
                       scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap overflow-hidden dark:text-white"
                     >
                       {item.product?.name}
                     </th>
@@ -210,7 +216,9 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
                     <td className="px-6 py-4">{item.product?.price}</td>
                     <td className="px-6 py-4 text-right">
                       <button
-                        onClick={()=>router.push(`/product/edit/${item.product?.id}`)}
+                        onClick={() =>
+                          router.push(`/product/edit/${item.product?.id}`)
+                        }
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                       >
                         แก้ไข
