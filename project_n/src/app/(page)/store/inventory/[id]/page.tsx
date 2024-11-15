@@ -103,7 +103,7 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
             <div className="flex space-x-2">
               <div>
                 <input
-                  className="p-2 rounded-lg border"
+                  className="p-2 rounded-lg border border-gray-400"
                   type="text"
                   placeholder="search..."
                   onChange={(e) => setSearch(e.target.value)}
@@ -112,22 +112,22 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
               <div className="flex">
                 <select
                   value={category || 0}
-                  className="p-2 rounded-lg border"
+                  className="p-2 rounded-lg border border-gray-400"
                   onChange={(e) => setCategory(e.target.value)}
                 >
                   <option value={0} disabled>
                     เลือกหมวดหมู่
                   </option>
-                  <option value="">-</option>
+              
                   {categoryData.map((item, index) => (
-                    <option value={item.id}>{item.name}</option>
+                    <option value={item.id} >{item.name}</option>
                   ))}
                 </select>
               </div>
               <div className="flex">
                 <select
                   value={sortDate || 0}
-                  className="p-2 rounded-lg border  "
+                  className="p-2 rounded-lg border border-gray-400  "
                   onChange={(e) => setSortDate(e.target.value)}
                 >
                   <option value={0} disabled>
@@ -152,7 +152,7 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
                   disabled={selectedIds.length === 0}
                   onClick={handleDeleteSelected}
                   className={`py-2 px-4 rounded-lg  ${
-                    selectedIds.length === 0 ? "bg-gray-300" : "bg-red-500"
+                    selectedIds.length === 0 ? "bg-gray-200 text-gray-700" : "bg-red-500 text-white"
                   }`}
                 >
                   {selectedIds.length}{" "}สินค้าที่ต้องการลบ
@@ -213,7 +213,7 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
                         onClick={()=>router.push(`/product/edit/${item.product?.id}`)}
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                       >
-                        Edit
+                        แก้ไข
                       </button>
                     </td>
                   </tr>

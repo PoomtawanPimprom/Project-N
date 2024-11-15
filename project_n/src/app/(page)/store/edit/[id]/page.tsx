@@ -42,30 +42,31 @@ const UpdateSoterexport = ({ params }: { params: { id: string } }) => {
           <p className="text-5xl font-bold">แก้ไขข้อมูล</p>
         </div>
         <form onSubmit={handelOnSubmit}>
-          <div className="body h-full  px-4">
+          <div className="body h-full  px-4 pb-4">
             <div className="flex flex-col space-y-2">
-              <div className="">
+              <div className="flex text-xl font-bold">
                 <p>ชื่อร้านค้า</p>
               </div>
               <div className="flex flex-col w-1/3">
                 <input
                   name="name"
-                  className="p-2  rounded-xl  bg-gray-50 border"
+                  className="p-2  rounded-xl  bg-gray-50 border border-gray-500"
                   type="text"
                   value={name}
                   placeholder="ใส่ชื่อร้านค้า..."
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
-              <div className="">
+              <div className="flex text-xl font-bold">
                 <p>รายละเอียดร้านค้า</p>
               </div>
               <div className="flex flex-col w-1/3">
                 <textarea
                   name="description"
                   value={description}
+                  cols={50}
                   rows={4}
-                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-500 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="ใส่รายละเอียดร้านค้า..."
                   onChange={(e) => setDescription(e.target.value)}
                 />
@@ -111,7 +112,7 @@ const UpdateSoterexport = ({ params }: { params: { id: string } }) => {
                 </div>
               </div>
               <div>
-                <p className="text-xl font-bold ">
+                <p className="text-xl font-bold mb-1 ">
                   รูปพื้นหลังร้านค้าของคุณ
                 </p>
                 <div className="flex items-center justify-center w-full">
@@ -153,7 +154,7 @@ const UpdateSoterexport = ({ params }: { params: { id: string } }) => {
                 </div>
               </div>
               <div className="flex justify-end">
-                <button className="bg-green px-4 py-2 hover:text-white duration-200 rounded-xl">
+                <button className="bg-green px-4 py-2 text-white duration-200 rounded-xl">
                   ยืนยัน
                 </button>
               </div>

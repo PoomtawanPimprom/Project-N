@@ -13,16 +13,17 @@ const CreateStorePage = () => {
                 name="name"
                 placeholder="ชื่อร้านค้า..."
                 type="text"
-                className="p-3 rounded-xl border border-black"
+                className="p-3 rounded-xl border border-gray-500 bg-gray-50"
               />
             </div>
             <div className="mb-3">
               <p className="text-xl font-bold mb-1">รายละเอียดร้าน</p>
-              <input
+              <textarea
+              cols={40}
+              rows={5}
                 name="description"
                 placeholder="รายละเอียดร้านค้า..."
-                type="text"
-                className="p-3 rounded-xl border border-black"
+                className="p-3 rounded-xl border border-gray-500 bg-gray-50"
               />
             </div>
             <div>
@@ -106,7 +107,7 @@ const CreateStorePage = () => {
               </div>
             </div>
             <div className="flex justify-end">
-              <button className=" rounded-xl bg-green dark:bg-black py-2 px-6 font-bold text-black hover:text-white duration-200">สร้าง</button>
+              <button className=" rounded-xl bg-green dark:bg-black py-2 px-6 font-bold text-white  duration-200">สร้าง</button>
             </div>
           </div>
         </form>

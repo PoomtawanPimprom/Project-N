@@ -30,27 +30,27 @@ const ImageStore = ({ userId, ownerId, storeId, store }: prop) => {
   }, []);
   return (
     <div className="flex p-3 mx-auto">
-      <div className="flex flex-col w-[1400px] h-[500px] bg-[url('https://images.unsplash.com/photo-1657161540865-a46753494068?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] p-4 justify-end items-end mb-2 rounded-lg">
+      <div className=" relative flex flex-col w-[1400px] h-[500px] bg-[url('https://images.unsplash.com/photo-1657161540865-a46753494068?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] p-4 justify-end items-end mb-2 rounded-lg">
         <div className="flex w-full justify-between">
-          <div className="text-6xl text-white font-bold">
+          <div className=" text-7xl text-white font-bold">
             <p>{store?.name}</p>
           </div>
           <div className="flex space-x-3">
             {Owner && (
-              <div className="flex">
+              <div className="flex items-end">
                 <button
                   onClick={() => router.push(`/store/edit/${storeId}`)}
-                  className="flex items-center px-4 py-2 bg-white rounded-xl"
+                  className="flex max-h-[60px] items-center p-3 bg-white rounded-xl hover:bg-gray-100 duration-200"
                 >
                   <IoSettingsOutline className="mr-1" />
                   setting
                 </button>
               </div>
             )}
-            <div className="flex ">
+            <div className="flex items-end">
               <ButtonChat userId={1} storeId={storeId} />
             </div>
-            <div className="flex ">
+            <div className="flex items-end">
               <ButtonFollow userId={1} storeId={storeId} />
             </div>
           </div>
