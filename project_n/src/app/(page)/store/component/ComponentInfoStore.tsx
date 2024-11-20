@@ -1,19 +1,23 @@
-import { storeInterface } from "@/app/interface/storeInterface";
+import Image from "next/image";
 import { FaBoxes } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
 import { MdPeopleAlt } from "react-icons/md";
 
 interface prop {
-  store: storeInterface | undefined;
+  store: any;
 }
-const InfoStore = ({ store }: prop) => {
+const InfoStore = async ({ store }: prop) => {
   return (
     <div className="flex  h-full p-3 mx-auto">
       <div className=" grid w-[1400px] grid-cols-1 lg:grid-cols-5  rounded  lg:gap-3 ">
         <div className=" col-span-2 border h-[455px] rounded-xl p-3 bg-green text-white space-y-2 ">
           <div className="flex items-center space-x-2 h-[120px]">
             <div className="rounded-xl">
-              <img src="" alt="" className=" rounded-xl w-[120px] h-[120px]" />
+              <img
+                src={store.imageLogo}
+                alt={`logo ${store?.name} `}
+                className=" rounded-xl w-[120px] h-[120px]"
+              />
             </div>
             <div>
               <h1 className="text-6xl font-black mb-2">{store?.name}</h1>

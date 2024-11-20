@@ -5,9 +5,9 @@ import { deleteFavoriteByid, getAllFavoriteByUserID } from "@/app/service/favori
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const favoriteByUserIdPage = ({ params }: { params: { id: number } }) => {
+const favoriteByUserIdPage = async ({params}: { params: Promise<{ id: number }> }) => {
   const router = useRouter();
-  const userId = params.id;
+  const userId = (await params).id;
   const [favoriteData, setFavoriteData] = useState<favoriteInterface[]>([]);
 
   const fetchData = async () => {

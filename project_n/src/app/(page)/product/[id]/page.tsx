@@ -13,7 +13,8 @@ import StoreInfo from "../component/CompoStoreBox";
 import { getProductById } from "@/app/service/product/service";
 import { getInventoriesByProductId } from "@/app/service/inventory/service";
 
-const ProductByIdPage = ({ params }: { params: { id: number } }) => {
+const ProductByIdPage = async ({params}: { params: Promise<{ id: number }> }) => {
+  const productId = (await params).id;
   const [product, setProduct] = useState<productInterface>();
   const [size, setSize] = useState<string | undefined>();
   const [color, setColor] = useState<string | undefined>();
@@ -30,8 +31,8 @@ const ProductByIdPage = ({ params }: { params: { id: number } }) => {
   );
 
   const fetchData = async () => {
-    const Productdata = await getProductById(params.id);
-    const InvenData = await getInventoriesByProductId(params.id, "");
+    const Productdata = await getProductById(productId);
+    const InvenData = await getInventoriesByProductId(productId, "");
     setProduct(Productdata);
     setInventories(InvenData);
   };
@@ -62,8 +63,8 @@ const ProductByIdPage = ({ params }: { params: { id: number } }) => {
 
   return (
     <>
-      <div className="flex flex-col items-center">
-        <div className="flex flex-col border  w-[1000px] p-4 bg-green dark:bg-black">
+      <div className="flex flex-col items-center dark:bg-black">
+        <div className="flex flex-col border-x  w-[1000px] p-4  dark:bg-black dark:border-gray-400  ">
           <div className="flex text-5xl font-bold mb-3 w-full dark:text-white">
             {product?.name}
           </div>
@@ -77,82 +78,85 @@ const ProductByIdPage = ({ params }: { params: { id: number } }) => {
                 />
               </div>
               <div className="flex flex-col bg-white  border rounded-xl p-2">
-                <div className="flex w-full ">
-                  <div className="flex w-full justify-between ">
-                    <div className="flex items-center text-xl ">
-                      <p>โปรดเลือก</p>
-                    </div>
-                    <div className="flex  items-center">
-                      <div>
-                        <ReportButton
-                          userId={1}
-                          productId={params.id}
-                          onClick={() => setOpenReportModal(true)}
-                        />
-                        <ModalReportForm
-                          productId={params.id}
-                          open={openReportModal}
-                          onClose={() => setOpenReportModal(false)}
-                        />
+                <div>
+                  <div className="flex w-full ">
+                    <div className="flex w-full justify-between ">
+                      <div className="flex items-center text-xl ">
+                        <p>โปรดเลือก</p>
+                      </div>
+                      <div className="flex  items-center">
+                        <div>
+                          <ReportButton
+                            userId={1}
+                            productId={productId}
+                            onClick={() => setOpenReportModal(true)}
+                          />
+                          <ModalReportForm
+                            productId={productId}
+                            open={openReportModal}
+                            onClose={() => setOpenReportModal(false)}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
+                  {uniqueSizes.length > 0 && (
+                    <>
+                      <div>
+                        <p>ไซส์</p>
+                      </div>
+                      <div className="grid grid-cols-5 gap-2 border p-2 rounded-xl mt-2">
+                        {uniqueSizes.map((sizeItem, index) => (
+                          <button
+                            key={index}
+                            onClick={() =>
+                              setSize(
+                                size === sizeItem
+                                  ? undefined
+                                  : (sizeItem as string)
+                              )
+                            }
+                            className={`flex h-10 border rounded-xl justify-center items-center ${
+                              size === sizeItem ? "bg-green text-white" : ""
+                            }`}
+                          >
+                            {sizeItem}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                  {uniqueColors.length > 0 && (
+                    <>
+                      <div>สี</div>
+                      <div className="grid grid-cols-5 gap-2 border p-2 rounded-xl mt-2">
+                        {uniqueColors.map((colorItem, index) => (
+                          <button
+                            key={index}
+                            onClick={() =>
+                              setColor(
+                                color === colorItem
+                                  ? undefined
+                                  : (colorItem as string)
+                              )
+                            }
+                            className={`flex h-10 border rounded-xl justify-center items-center ${
+                              color === colorItem ? "bg-green text-white" : ""
+                            }`}
+                          >
+                            {colorItem}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                  {availableQuantity !== null && (
+                    <div className="mt-2">
+                      <p>จำนวนสินค้าที่เหลือ: {availableQuantity}</p>
+                    </div>
+                  )}
                 </div>
-                {uniqueSizes.length > 0 && (
-                  <>
-                    <div>
-                      <p>ไซส์</p>
-                    </div>
-                    <div className="grid grid-cols-5 gap-2 border p-2 rounded-xl mt-2">
-                      {uniqueSizes.map((sizeItem, index) => (
-                        <button
-                          key={index}
-                          onClick={() =>
-                            setSize(
-                              size === sizeItem
-                                ? undefined
-                                : (sizeItem as string)
-                            )
-                          }
-                          className={`flex h-10 border rounded-xl justify-center items-center ${
-                            size === sizeItem ? "bg-green text-white" : ""
-                          }`}
-                        >
-                          {sizeItem}
-                        </button>
-                      ))}
-                    </div>
-                  </>
-                )}
-                {uniqueColors.length > 0 && (
-                  <>
-                    <div>สี</div>
-                    <div className="grid grid-cols-5 gap-2 border p-2 rounded-xl mt-2">
-                      {uniqueColors.map((colorItem, index) => (
-                        <button
-                          key={index}
-                          onClick={() =>
-                            setColor(
-                              color === colorItem
-                                ? undefined
-                                : (colorItem as string)
-                            )
-                          }
-                          className={`flex h-10 border rounded-xl justify-center items-center ${
-                            color === colorItem ? "bg-green text-white" : ""
-                          }`}
-                        >
-                          {colorItem}
-                        </button>
-                      ))}
-                    </div>
-                  </>
-                )}
-                {availableQuantity !== null && (
-                  <div className="mt-2">
-                    <p>จำนวนสินค้าที่เหลือ: {availableQuantity}</p>
-                  </div>
-                )}
+                
                 <div className="flex flex-col h-1/6 justify-end">
                   <div className="flex  justify-between my-2 h-10">
                     <div className="flex border border-black  rounded-lg w-32 ">

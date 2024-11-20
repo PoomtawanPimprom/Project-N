@@ -19,6 +19,7 @@ const ShowProduct = ({ storeId }: prop) => {
     const data = await getProductsByStoreId(storeId);
     setProducts(data);
   };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -32,8 +33,8 @@ const ShowProduct = ({ storeId }: prop) => {
         <div className="header flex flex-col h-full w-full p-2">
           <div className="grid h-full  grid-cols-4 xl:grid-cols-5  2xl:grid-cols-5 gap-2 grid-flow-row auto-rows-auto items-center justify-center">
             {products.map((item, index) => (
-              <div className="flex mx-auto">
-                <ProductCard product={item} key={index} />
+              <div className="flex mx-auto" key={index}>
+                <ProductCard product={item} />
               </div>
             ))}
           </div>

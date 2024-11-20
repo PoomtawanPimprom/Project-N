@@ -46,7 +46,7 @@ const StoreInfo = ({ store }: prop) => {
         <div className="flex flex-row mt-2 justify-end  lg:mt-0 ">
           <button
             onClick={() => router.push(`/store/${store?.id}`)}
-            className="flex py-2 px-4 h-[40px] bg-green   dark:bg-black font-bold text-white rounded-xl"
+            className="flex py-2 px-4 h-[40px] bg-green   dark:bg-black font-bold text-white rounded-xl dark:hover:bg-white dark:hover:text-black duration-150"
           >
             เข้าชมร้าน
           </button>

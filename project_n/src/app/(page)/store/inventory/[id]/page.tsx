@@ -12,9 +12,10 @@ import {
 import { getProductsByStoreId } from "@/app/service/product/service";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 
-const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
+const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
+  const params = use(props.params);
   const router = useRouter();
   const storeId = Number(params.id);
   const [products, setProducts] = useState<productInterface[]>([]);
@@ -121,7 +122,7 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
                   <option value={0} disabled>
                     เลือกหมวดหมู่
                   </option>
-
+                  <option value={""}>-</option>
                   {categoryData.map((item, index) => (
                     <option value={item.id}>{item.name}</option>
                   ))}
@@ -136,6 +137,7 @@ const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
                   <option value={0} disabled>
                     เรียงจาก
                   </option>
+                  
                   <option value="asc">เก่าสุด</option>
                   <option value="desc">ล่าสุด</option>
                 </select>

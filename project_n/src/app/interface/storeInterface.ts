@@ -5,14 +5,14 @@ export interface storeInterface {
     id: number;
     name: string;
     description:string;
-    imageLogo: string;
-    imageBackgroud: string;
+    imageLogo?: string | null;
+    imageBackgroud?: string | null;
     scores:number;
     productTotal: number;
     follow: number;
     follower: number;
     createdDate: string;
-    updatedAt: string;
+    updatedAt?: string;
     //fk
     userId: number;
     user?:userInterface

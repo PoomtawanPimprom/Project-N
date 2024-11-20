@@ -7,13 +7,14 @@ import ButtonChat from "./buttonChat";
 import ButtonFollow from "./buttonFollow";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { storeInterface } from "@/app/interface/storeInterface";
+
+import { MdOutlineInventory2 } from "react-icons/md";
 
 interface prop {
   userId: number;
   ownerId: number | undefined;
   storeId: number;
-  store: storeInterface | undefined;
+  store: any;
 }
 
 const ImageStore = ({ userId, ownerId, storeId, store }: prop) => {
@@ -37,15 +38,26 @@ const ImageStore = ({ userId, ownerId, storeId, store }: prop) => {
           </div>
           <div className="flex space-x-3">
             {Owner && (
-              <div className="flex items-end">
-                <button
-                  onClick={() => router.push(`/store/edit/${storeId}`)}
-                  className="flex max-h-[60px] items-center p-3 bg-white rounded-xl hover:bg-gray-100 duration-200"
-                >
-                  <IoSettingsOutline className="mr-1" />
-                  setting
-                </button>
-              </div>
+              <>
+                <div className="flex items-end">
+                  <button
+                    onClick={() => router.push(`/store/inventory/${storeId}`)}
+                    className="flex max-h-[60px] items-center p-3 bg-white rounded-xl hover:bg-gray-100 duration-200"
+                  >
+                    <MdOutlineInventory2  className="mr-1" />
+                    inventory
+                  </button>
+                </div>
+                <div className="flex items-end">
+                  <button
+                    onClick={() => router.push(`/store/edit/${storeId}`)}
+                    className="flex max-h-[60px] items-center p-3 bg-white rounded-xl hover:bg-gray-100 duration-200"
+                  >
+                    <IoSettingsOutline className="mr-1" />
+                    setting
+                  </button>
+                </div>
+              </>
             )}
             <div className="flex items-end">
               <ButtonChat userId={1} storeId={storeId} />

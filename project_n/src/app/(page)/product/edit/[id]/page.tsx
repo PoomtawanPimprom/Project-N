@@ -14,10 +14,10 @@ import {
   updateProductbyID,
 } from "@/app/service/product/service";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 
-const editProductpage = ({ params }: { params: { id: number } }) => {
-  const ProductId = params.id;
+const editProductpage = async ({params}: { params: Promise<{ id: number }> }) => {
+  const ProductId = (await params).id;
   const router = useRouter();
   const [categoryData, setCategoryData] = useState<categoryInterface[]>([]);
 
