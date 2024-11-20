@@ -7,6 +7,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
         const id = Number(params.id);
         const data = await prisma.store.findUnique({
             where: { id },
+            include:{user:true}
         })
         return Response.json(data)
     }
@@ -18,10 +19,15 @@ export async function GET(request: Request, { params }: { params: { id: string }
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
     try {
         const id = Number(params.id);
-        const { name } = await request.json();
+        const { name,description, imageLogo, imageBackgroud } = await request.json();
         const data = await prisma.store.update({
             where: { id: id },
-            data: { name: name }
+            data: {
+                name,
+                description,
+                imageLogo,
+                imageBackgroud
+            }
         })
         return Response.json(data)
     }

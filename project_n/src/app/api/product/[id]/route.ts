@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 export async function GET(request: Request, { params }: { params: { id: string } }) {
     const productID = Number(params.id)
     try {
-        const productData = await prisma.product.findUnique({ where: { id: productID } })
+        const productData = await prisma.product.findUnique({ where: { id: productID }, include: { store:true} })
         return Response.json(productData)
     } catch (error) {
         return new Response(error instanceof Error ? error.message : String(error), { status: 500 })

@@ -2,7 +2,7 @@
 import { favoriteInterface } from "@/app/interface/favoriteInterface";
 import {
   createFavorite,
-  deleteFavorite,
+  deleteFavoriteByid,
   getFavoriteByProductIdAndUserId,
 } from "@/app/service/favorite/service";
 import React, { useEffect, useState } from "react";
@@ -45,7 +45,7 @@ const LikeButton = (prop: propInterface) => {
 
   const handleOnClick = async () => {
     if (isFavoritedStatus == true) {
-      await deleteFavorite(favoriteData[0].id);
+      await deleteFavoriteByid(favoriteData[0].id);
     } else {
       const data = {
         userId: prop.userId,
@@ -59,7 +59,7 @@ const LikeButton = (prop: propInterface) => {
     <>
       <button
         onClick={handleOnClick}
-        className="flex bg-white border h-10 w-10 rounded-full justify-center items-center"
+        className="flex bg-white border h-10 w-10 rounded-full justify-center items-center hover:bg-gray-100"
       >
         {isFavoritedStatus === true ? <FaHeart /> : <FaRegHeart />}
       </button>
