@@ -9,7 +9,7 @@ interface prop {
 const InfoStore = async ({ store }: prop) => {
   return (
     <div className="flex  h-full p-3 mx-auto">
-      <div className=" grid w-[1400px] grid-cols-1 lg:grid-cols-5  rounded  lg:gap-3 ">
+      <div className=" grid 2xl:w-[1400px] grid-cols-1 lg:grid-cols-5  rounded  lg:gap-3 ">
         <div className=" col-span-2 border h-[455px] rounded-xl p-3 bg-green text-white space-y-2 ">
           <div className="flex items-center space-x-2 h-[120px]">
             <div className="rounded-xl">
