@@ -6,7 +6,7 @@ import { RxAvatar } from 'react-icons/rx'
 import { FiSearch } from 'react-icons/fi'
 import { IoMdMore } from 'react-icons/io'
 
-function navbar() {
+function Navbar() {
 
   const [isMenuMore, setIsMenuMore] = useState(false);
   return (
@@ -45,4 +45,4 @@ function navbar() {
   )
 }
 
-export default navbar
+export default Navbar
