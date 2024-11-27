@@ -16,13 +16,9 @@ export default function StoreLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div className="">
-          <Navbar />
-        </div>
-        {children}
-      </body>
-    </html>
+    <section>
+    <Navbar />
+    {children}
+  </section>
   );
 }
