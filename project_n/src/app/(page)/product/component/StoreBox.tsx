@@ -1,16 +1,14 @@
+import Link from "next/link";
 
-import { storeInterface } from "@/app/interface/storeInterface";
-import { useRouter } from "next/navigation";
 import { FaBoxes } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
 import { MdPeopleAlt } from "react-icons/md";
 
 interface prop {
-  store: storeInterface | undefined;
+  store: any;
 }
 
-const StoreInfo = ({ store }: prop) => {
-  const router = useRouter();
+const StoreInfo = async ({ store }: prop) => {
   return (
     <div className="flex justify-center">
       <div className="flex flex-col w-[450px] bg-white lg:flex-row lg:justify-between lg:w-full border p-4 rounded-xl dark:bg-bg-dark dark:border-none">
@@ -44,12 +42,12 @@ const StoreInfo = ({ store }: prop) => {
           </div>
         </div>
         <div className="flex flex-row mt-2 justify-end  lg:mt-0 ">
-          <button
-            onClick={() => router.push(`/store/${store?.id}`)}
+          <Link
+            href={`/store/${store?.id}`}
             className="flex py-2 px-4 h-[40px] bg-green   dark:bg-black font-bold text-white rounded-xl dark:hover:bg-white dark:hover:text-black duration-150"
           >
             เข้าชมร้าน
-          </button>
+          </Link>
         </div>
       </div>
     </div>

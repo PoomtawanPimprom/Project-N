@@ -1,10 +1,9 @@
-import { productInterface } from "@/app/interface/productInterface";
 
 interface prop {
-  product: productInterface | undefined;
+  product:any;
 }
 
-const Desription = ({ product }: prop) => {
+const Description = async ({ product }: prop) => {
   return (
     <div className="flex justify-center ">
       <div className="flex flex-col  border p-4 w-[450px] lg:w-full bg-white rounded-xl  dark:bg-bg-dark dark:text-white dark:border-none">
@@ -17,4 +16,4 @@ const Desription = ({ product }: prop) => {
   );
 };
 
-export default Desription;
+export default Description;
