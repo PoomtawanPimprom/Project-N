@@ -5,8 +5,12 @@ export interface storeInterface {
     id: number;
     name: string;
     description:string;
-    imageLogo?: string | null;
-    imageBackgroud?: string | null;
+
+    imageLogoFileName?: string | null;
+    imageLogoURL?: string | null
+    imageBgFileName?: string | null;
+    imageBackgroundURL?: string | null
+
     scores:number;
     productTotal: number;
     follow: number;
