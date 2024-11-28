@@ -13,7 +13,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
         const data = await prisma.favorite.findMany({
             where: { userId: userId },
             include: { 
-                Product: { 
+                product: { 
                     select: { 
                         name: true,
                         image: true,
