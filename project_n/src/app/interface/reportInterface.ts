@@ -7,7 +7,7 @@ export interface reportInterface {
     id: number;
     comment: string;
     createdAt: string;
-    image: string;
+    
     //fk
     userId: number;
     user?: userInterface;
