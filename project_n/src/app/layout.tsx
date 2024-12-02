@@ -20,8 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <main>{children}</main>
+      <body className={inter.className }>
+        <main className="font-noto">{children}</main>
         <Toaster />
       </body>
     </html>
