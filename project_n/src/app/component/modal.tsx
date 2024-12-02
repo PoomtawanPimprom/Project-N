@@ -1,5 +1,5 @@
 
-import React from "react";
+import { X } from "lucide-react";
 
 interface ModalProps {
   open: boolean;
@@ -21,12 +21,12 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, children }) => {
           open ? "scale-100 opacity-100" : "scale-125 opacity-0"
         }`}
       >
-        <button 
+        <X 
+        size={32}
           onClick={onClose}
-          className="absolute top-2 right-2 p-1 rounded-lg text-gray-400 bg-white hover:bg-gray-50 hover:text-gray-600"
-        >
-          X
-        </button>
+          className="absolute top-2 right-2 p-1 rounded-full text-gray-400 bg-white hover:bg-gray-100 hover:text-gray-600"
+        />
+
         {children}
       </div>
     </div>
