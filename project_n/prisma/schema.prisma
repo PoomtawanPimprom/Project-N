@@ -73,21 +73,21 @@ model UserAddress {
 
 //Store sytem
 model Store {
-  id             Int       @id @default(autoincrement())
-  name           String
-  description    String?
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
 
-  imageLogoURL      String?
+  imageLogoURL       String?
   imageLogoFileName  String?
   imageBackgroundURL String?
   imageBgFileName    String?
 
-  scores         Float     @default(0)
-  productTotal   Int       @default(0)
-  follow         Int       @default(0)
-  follower       Int       @default(0)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime? @updatedAt
+  scores       Float     @default(0)
+  productTotal Int       @default(0)
+  follow       Int       @default(0)
+  follower     Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
@@ -167,10 +167,11 @@ model ProductStatus {
 
 //Favorite system
 model Favorite {
-  id     Int  @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
   //fk
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
 
   productId Int
   product   Product @relation(fields: [productId], references: [id])
