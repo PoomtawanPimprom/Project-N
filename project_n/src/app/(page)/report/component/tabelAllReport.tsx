@@ -3,6 +3,7 @@ import { reportInterface } from "@/app/interface/reportInterface";
 import { getAllReportByUserId } from "@/app/service/report/service";
 import { useEffect, useState } from "react";
 import ModalInfoReport from "./modalInfoReport";
+import TaskStatus from "./TaskStatus";
 
 interface prop {
   userId: number;
@@ -29,6 +30,8 @@ const TabelAllReport = ({ userId }: prop) => {
     return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
   };
 
+
+
   const fetchData = async () => {
     const data = await getAllReportByUserId(1);
     setReports(data);
@@ -38,24 +41,21 @@ const TabelAllReport = ({ userId }: prop) => {
     fetchData();
   }, []);
   return (
-    <div className="flex flex-col w-full h-full p-4 ">
-      <div className="mt-2 text-3xl">
-        <p>รายงานของฉัน</p>
-      </div>
-      <div className=" mt-4 relative w-full h-full overflow-x-auto rounded-lg">
-        <table className=" w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-baserp text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <div className="flex flex-col w-full h-full px-4 mx-auto ">
+      <div className=" mt-4 relative w-full h-full overflow-x-auto border  rounded-lg">
+        <table className=" w-full text-sm text-left rtl:text-right  rounded-lg text-gray-500 dark:text-gray-400">
+          <thead className="text-baserp text-gray-700 uppercase border-b bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
                 ข้อความ
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 ">
                 เมื่อ
               </th>
               <th scope="col" className="px-6 py-3">
                 ชื่อสินค้า
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className=" px-6 py-3 flex justify-center">
                 สถานะการรายงาน
               </th>
               <th scope="col" className="px-6 py-3">
@@ -69,26 +69,26 @@ const TabelAllReport = ({ userId }: prop) => {
           <tbody className="">
             {reports.map((item, index) => (
               <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td className="px-6 py-4">{item.comment}</td>
-                <td className="px-6 py-4">
+                <td className="px-6 py-2">{item.comment}</td>
+                <td className="px-6 py-2">
                   {convertFormatDate(item.createdAt)}
                 </td>
-                <td className="px-6 py-4">{item.product?.name}</td>
-                <td className="px-6 py-4 ">{item.reportStatus.name}</td>
-                <td className="px-6 py-4">{item.reportCategory?.name}</td>
-                <td className="flex px-6 py-4 justify-center">
+                <td className="px-6 py-2">{item.product?.name}</td>
+                <td className="px-6 py-2 "><TaskStatus status={item.reportStatus.name}/></td>
+                <td className="px-6 py-2">{item.reportCategory?.name}</td>
+                <td className=" px-6 py-2 flex justify-center">
                   <button
                     onClick={() => {
                       setOpenModal(true);
                       setMessage(item.comment);
                     }}
-                    className=" rounded-xl text-white px-6 py-2 bg-green"
+                    className=" rounded-xl text-white px-6 py-2 bg-green-main"
                   >
                     ดู
                   </button>
                 </td>
                 <ModalInfoReport
-                  message={message}
+                  reportData={item}
                   open={openModal}
                   OnClose={() => setOpenModal(false)}
                 />
