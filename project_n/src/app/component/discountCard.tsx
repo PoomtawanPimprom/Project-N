@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LuTimer } from "react-icons/lu";
 import { MdContentCopy } from "react-icons/md";
 
