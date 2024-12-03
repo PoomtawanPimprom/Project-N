@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "@/app/layout/navbar";
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -16,13 +15,9 @@ export default function StoreLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div className="">
-          <Navbar />
-        </div>
-        {children}
-      </body>
-    </html>
+    <section>
+      <Navbar />
+      {children}
+    </section>
   );
 }
