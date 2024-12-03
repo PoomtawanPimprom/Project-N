@@ -5,9 +5,10 @@ import LikeButton from "./likeButton";
 import { BsThreeDots } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import { productInterface } from "../interface/productInterface";
+import Image from "next/image";
 
 interface prop {
-  product: productInterface;
+  product: productInterface | any;
 }
 
 const ProductCard = ({ product }: prop) => {
@@ -18,9 +19,11 @@ const ProductCard = ({ product }: prop) => {
         <div
           className="card-image relative flex h-[275px] border-b "
         >
-          <img
+          <Image
+            width={275}
+            height={275}
             className="rounded-t-xl w-full "
-            src={product.image}
+            src={product.image.image1}
             alt={product.name}
           />
           <div className=" absolute right-2 top-2">
