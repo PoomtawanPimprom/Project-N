@@ -17,3 +17,9 @@ npx prisma db seed
 ```
 npx prisma migrate dev
 ```
+
+
+# Run Docker Compose
+```
+docker-compose up -d --build
+``` 
