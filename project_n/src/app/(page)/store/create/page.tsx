@@ -1,8 +1,14 @@
 "use client";
 
 import { CreateStore } from "@/app/service/store/service";
+import { useToast } from "@/hooks/use-toast";
 import { storage } from "@/lib/firebase/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -11,19 +17,17 @@ import { v4 } from "uuid";
 
 const CreateStorePage = () => {
   const router = useRouter();
-  const [isMounted, setIsMounted] = useState(false);
+  const { toast } = useToast();
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [imageLogo, setImageLogo] = useState<File | null>(null);
   const [imageBackground, setImageBackground] = useState<File | null>(null);
+
   const [logoPreview, setLogoPreview] = useState<string>("");
   const [bgPreview, setBgPreview] = useState<string>("");
-  const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const [uploading, setUploading] = useState(false);
 
   // Cleanup function for preview URLs
   useEffect(() => {
@@ -72,14 +76,15 @@ const CreateStorePage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUploading(true);
-
+    const logoFileName = v4();
+    const BgFileName = v4();
     try {
       let logoUrl = "";
       let bgUrl = "";
 
       if (imageLogo && imageBackground) {
-        const storageLogoRef = ref(storage, `store/logo/${v4()}`);
-        const storageBgRef = ref(storage, `store/background/${v4()}`);
+        const storageLogoRef = ref(storage, `store/logo/${logoFileName}`);
+        const storageBgRef = ref(storage, `store/background/${BgFileName}`);
 
         await uploadBytes(storageBgRef, imageBackground);
         await uploadBytes(storageLogoRef, imageLogo);
@@ -91,23 +96,53 @@ const CreateStorePage = () => {
       const data = {
         name,
         description,
-        imageLogo: logoUrl,
-        imageBackgroud: bgUrl,
+
+        imageLogoURL: logoUrl,
+        imageLogoFileName: logoFileName,
+        imageBackgroundURL: bgUrl,
+        imageBgFileName: BgFileName,
         userId: 1,
       };
-
+      console.log(data);
       await CreateStore(data);
-      router.push("/stores");
+      toast({
+        description: "Create store successful!",
+      });
     } catch (error) {
-      console.error("Error uploading or submitting data", error);
+      const deleteLogoRef = ref(storage, `store/logo/${logoFileName}`);
+      const deleteBgRef = ref(storage, `store/background/${BgFileName}`);
+
+      deleteObject(deleteLogoRef)
+        .then(() => {
+          console.log("delete logo successful");
+        })
+        .catch((error: any) => {
+          console.log(error.message);
+        });
+      deleteObject(deleteBgRef)
+        .then(() => {
+          console.log("delete Background successful");
+        })
+        .catch((error: any) => {
+          console.log(error.message);
+        });
+      if (error instanceof Error) {
+        console.error("Error uploading or submitting data", error);
+        toast({
+          variant: "destructive",
+          description: error.message,
+        });
+      } else {
+        console.error("Unexpected error", error);
+        toast({
+          variant: "destructive",
+          description: "An unexpected error occurred.",
+        });
+      }
     } finally {
       setUploading(false);
     }
   };
-
-  if (!isMounted) {
-    return null;
-  }
 
   return (
     <div className="flex px-4">
@@ -181,11 +216,11 @@ const CreateStorePage = () => {
                       </p>
                     </div>
                     <input
-                    disabled={imageLogo ? true : false}
+                      disabled={imageLogo ? true : false}
                       required
+                      accept="image/*"
                       name="image-logo"
                       id="image-logo"
-                      accept="image/*"
                       type="file"
                       className="hidden"
                       onChange={handleLogoFileChange}
@@ -249,7 +284,7 @@ const CreateStorePage = () => {
                       </p>
                     </div>
                     <input
-                    disabled={imageBackground ? true : false}
+                      disabled={imageBackground ? true : false}
                       required
                       name="image-background"
                       id="image-background"
@@ -288,8 +323,8 @@ const CreateStorePage = () => {
           <div className="flex justify-end gap-4">
             <button
               type="submit"
-              disabled={uploading }
-              className="rounded-xl bg-green  py-2 px-6 font-bold text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={uploading}
+              className="rounded-xl bg-green-main  py-2 px-6 font-bold text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {uploading ? "กำลังสร้าง..." : "สร้าง"}
             </button>
