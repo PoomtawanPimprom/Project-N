@@ -50,7 +50,7 @@ const TabelAllReport = ({ userId }: prop) => {
                 ข้อความ
               </th>
               <th scope="col" className="px-6 py-3 ">
-                เมื่อ
+              รายงานเมื่อ
               </th>
               <th scope="col" className="px-6 py-3">
                 ชื่อสินค้า
@@ -71,10 +71,10 @@ const TabelAllReport = ({ userId }: prop) => {
               <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td className="px-6 py-2">{item.comment}</td>
                 <td className="px-6 py-2">
-                  {convertFormatDate(item.createdAt)}
+                  {new Date(item.createdAt).toLocaleDateString("th-TH")}
                 </td>
                 <td className="px-6 py-2">{item.product?.name}</td>
-                <td className="px-6 py-2 "><TaskStatus status={item.reportStatus.name}/></td>
+                <td className="px-6 py-2 "><TaskStatus status={item.reportStatus!.name}/></td>
                 <td className="px-6 py-2">{item.reportCategory?.name}</td>
                 <td className=" px-6 py-2 flex justify-center">
                   <button

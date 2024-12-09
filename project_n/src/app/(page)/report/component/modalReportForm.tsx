@@ -3,6 +3,7 @@ import Modal from "@/app/component/modal";
 import { reportCategoryInterface } from "@/app/interface/reportCategoryInterface";
 import { createReport } from "@/app/service/report/service";
 import { getAllReportCategoies } from "@/app/service/reportCategory/service";
+import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -13,22 +14,45 @@ interface prop {
 }
 
 const ModalReportForm = ({ productId, open, onClose }: prop) => {
-  const router = useRouter();
+  const { toast } = useToast();
   const [reportCate, setReportCate] = useState<reportCategoryInterface[]>([]);
   const [comment, setComment] = useState("");
   const [selectCate, setSelectCate] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data = {
-      comment,
-      userId: 1,
-      productId: Number(productId),
-      reportCategoryId: Number(selectCate),
-      reportStatusId: 1,
-    };
-    await createReport(data);
-    router.push(`/report/myreport`);
+    try {
+      setLoading(true);
+      const data = {
+        comment,
+        userId: 1,
+        productId: Number(productId),
+        reportCategoryId: Number(selectCate),
+        reportStatusId: 1,
+      };
+      await createReport(data);
+      toast({
+        description: "Create store successful!",
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Error uploading or submitting data", error);
+        toast({
+          variant: "destructive",
+          description: error.message,
+        });
+      } else {
+        console.error("Unexpected error", error);
+        toast({
+          variant: "destructive",
+          description: "An unexpected error occurred.",
+        });
+      }
+    } finally {
+      setLoading(false);
+      onClose();
+    }
   };
 
   const fetchData = async () => {
@@ -84,8 +108,9 @@ const ModalReportForm = ({ productId, open, onClose }: prop) => {
                 <div>
                   <button
                     type="submit"
+                    disabled={loading}
                     onClick={handleSubmit}
-                    className="px-4 py-2 bg-green text-white rounded-xl font-semibold"
+                    className="px-4 py-2 bg-green-main text-white rounded-xl font-semibold"
                   >
                     ส่ง
                   </button>
