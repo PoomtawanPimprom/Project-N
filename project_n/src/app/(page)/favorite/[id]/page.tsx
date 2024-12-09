@@ -1,8 +1,4 @@
 import prisma from "@/lib/prisma/db";
-import { revalidatePath } from "next/cache";
-import Image from "next/image";
-import Link from "next/link";
-import { actionDelete } from "./action";
 import ProductInfoCard from "./ProductInfoCard";
 
 const favoriteByUserIdPage = async ({ params }: { params: { id: number } }) => {

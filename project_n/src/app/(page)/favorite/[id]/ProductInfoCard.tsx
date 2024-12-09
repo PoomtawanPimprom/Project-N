@@ -4,6 +4,7 @@ import Image from "next/image";
 import { actionDelete } from "./action";
 import { format } from "date-fns";
 import Link from "next/link";
+import { Trash2 } from "lucide-react";
 
 type ProductInfoCardprop = {
   userId: number;
@@ -49,10 +50,10 @@ export default function ProductInfoCard({ userId, data }: ProductInfoCardprop) {
             <form action={actionDeleteWithUserId}>
               <button
                 name="deleteButton"
-                className="px-4 py-2 font-bold rounded-xl bg-red-500 hover:bg-red-700  text-white"
+                className="flex px-4 py-2 font-bold rounded-xl bg-red-500 hover:bg-red-700  text-white"
                 value={data.id}
               >
-                ลบ
+                <Trash2  className="mr-2"/>ลบ
               </button>
             </form>
           </div>
