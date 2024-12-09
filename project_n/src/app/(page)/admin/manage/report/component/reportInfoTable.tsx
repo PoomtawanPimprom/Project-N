@@ -68,7 +68,7 @@ const ReportInfoTable = () => {
   }, []);
   return (
     <>
-      <div className="filter flex mt-2 mb-2 space-x-4">
+      <div className="filter flex mt-2 mb-2 space-x-2">
           <div>
             <input
               type="text"
@@ -105,7 +105,7 @@ const ReportInfoTable = () => {
             </select>
           </div>
           <div>
-            <button className=" bg-green text-white px-4 py-2 rounded-xl" onClick={handlefilter}>
+            <button className=" bg-green-main text-white px-4 py-2 rounded-xl hover:bg-green-900" onClick={handlefilter}>
               ค้นหา
             </button>
           </div>
@@ -120,19 +120,19 @@ const ReportInfoTable = () => {
                   ข้อความ
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  เมื่อ
+                  รายงานเมื่อ
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  โดย
+                  ผู้รายงาน
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  รหัสสินค้า
+                  ชื่อสินค้า
                 </th>
                 <th scope="col" className="px-6 py-3">
                   หัวข้อรายงาน
                 </th>
                 <th scope="col" className="px-6 py-3 text-right">
-                  เพิ่มเติม
+                  ดูรายละเอียดเพิ่มเติม
                 </th>
               </tr>
             </thead>
@@ -141,14 +141,14 @@ const ReportInfoTable = () => {
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   
                   <td className="px-6 py-4">{item.comment}</td>
-                  <td className="px-6 py-4">{item.createdAt}</td>
+                  <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString("th-TH")}</td>
                   <td className="px-6 py-4">{item.user?.name}</td>
-                  <td className="px-6 py-4">{item.product?.id}</td>
-                  <td className="px-6 py-4">{item.reportCategory.name}</td>
+                  <td className="px-6 py-4">{item.product?.name}</td>
+                  <td className="px-6 py-4">{item.reportCategory?.name}</td>
                   <td className="px-6 py-4 text-right">
                     <button
                       onClick={() =>
-                        router.push(`/admin/manage/report/${item.product?.id}`)
+                        router.push(`/admin/manage/report/${item.id}`)
                       }
                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                     >
