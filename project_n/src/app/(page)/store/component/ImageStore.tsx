@@ -9,12 +9,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { MdOutlineInventory2 } from "react-icons/md";
+import Image from "next/image";
 
 interface prop {
   userId: number;
   ownerId: number | undefined;
-  storeId: number;
   store: any;
+  storeId: number;
 }
 
 const ImageStore = ({ userId, ownerId, storeId, store }: prop) => {
@@ -29,11 +30,19 @@ const ImageStore = ({ userId, ownerId, storeId, store }: prop) => {
   useEffect(() => {
     checkOwner();
   }, []);
+
   return (
-    <div className="flex p-3 mx-auto">
-      <div className=" relative flex flex-col 2xl:w-[1400px] h-[500px] bg-[url('https://images.unsplash.com/photo-1657161540865-a46753494068?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] p-4 justify-end items-end mb-2 rounded-lg">
-        <div className="flex w-full justify-between">
-          <div className=" text-7xl text-white font-bold">
+    <div className="flex mx-auto">
+      <div className="flex flex-col relative md:w-[747px] lg:w-[1000px] xl:w-[1400px] h-[500px] justify-end items-end md:mt-2 md:rounded-lg">
+        <Image
+          src={store.imageBackgroundURL}
+          width={1400}
+          height={500}
+          alt={store.name}
+          className=" w-full h-full object-cover  md:rounded-lg"
+        />
+        <div className="absolute bottom-1 flex w-[1400px] justify-between p-1">
+          <div className="text-7xl text-white font-bold">
             <p>{store?.name}</p>
           </div>
           <div className="flex space-x-3">
@@ -44,7 +53,7 @@ const ImageStore = ({ userId, ownerId, storeId, store }: prop) => {
                     onClick={() => router.push(`/store/inventory/${storeId}`)}
                     className="flex max-h-[60px] items-center p-3 bg-white rounded-xl hover:bg-gray-100 duration-200"
                   >
-                    <MdOutlineInventory2  className="mr-1" />
+                    <MdOutlineInventory2 className="mr-1" />
                     inventory
                   </button>
                 </div>

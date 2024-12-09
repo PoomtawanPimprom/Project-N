@@ -1,3 +1,4 @@
+import { Package2, Star, Users } from "lucide-react";
 import Image from "next/image";
 import { FaBoxes } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
@@ -8,47 +9,42 @@ interface prop {
 }
 const InfoStore = async ({ store }: prop) => {
   return (
-    <div className="flex  h-full p-3 mx-auto">
-      <div className=" grid 2xl:w-[1400px] grid-cols-1 lg:grid-cols-5  rounded  lg:gap-3 ">
-        <div className=" col-span-2 border h-[455px] rounded-xl p-3 bg-green text-white space-y-2 ">
-          <div className="flex items-center space-x-2 h-[120px]">
+    <div className="flex h-full mx-auto">
+      <div className=" w-full md:w-[747px] lg:w-[1000px] xl:w-[1400px]  rounded  lg:gap-3 ">
+        <div className=" grid grid-cols-1 grid-rows-2 md:grid-rows-1 md:grid-cols-3  sm:gap-2  rounded-xl text-white">
+          {/* 1 */}
+          <div className="flex items-start w-full p-2 col-span-2 gap-2 mb-2 sm:mb-0 bg-green-main rounded-xl">
             <div className="rounded-xl">
-              <img
-                src={store.imageLogo}
+              <Image
+                width={120}
+                height={120}
+                src={store.imageLogoURL}
                 alt={`logo ${store?.name} `}
-                className=" rounded-xl w-[120px] h-[120px]"
+                className=" rounded-xl"
               />
             </div>
             <div>
-              <h1 className="text-6xl font-black mb-2">{store?.name}</h1>
+              <p className="text-4xl sm:text-6xl font-black ">{store?.name}</p>
+              <p className="text-xl font-medium ">{store?.description}</p>
             </div>
           </div>
-          <div className="flex flex-col space-y-2 ">
-            <div>
-              <p className="text-xl ">{store?.description}</p>
-            </div>
-            <div className="flex flex-col font-semibold ">
+          {/* 2 */}
+          <div className="flex flex-col  w-full col-span-1 space-x-1 p-2 text-black rounded-xl border">
+            <div className="flex h-full flex-col font-semibold justify-between">
               <div className="flex   items-center">
-                <FaStar className="text-black mr-1 dark:text-white " />
+                <Star  className=" mr-1 " />
                 review : {store?.scores}
               </div>
-              <div className="hidden lg:flex items-center">
-                <FaBoxes className="  text-black mr-1 dark:text-white" />
+              <div className="flex items-center">
+                <Package2  className=" mr-1 "/>
                 total product : {store?.productTotal}
               </div>
-              <div className="flex items-center ">
-                <MdPeopleAlt className="text-black mr-1 dark:text-white" />
+              <div  className="flex items-center ">
+                <Users className=" mr-1 " />
                 follower : {store?.follower}
               </div>
             </div>
           </div>
-        </div>
-        <div className=" col-span-3  border  rounded-xl mb-1 ">
-          <img
-            className="h-[455px] w-[1400px] rounded-xl "
-            src="https://images.unsplash.com/photo-1699004817375-907e7f5887de?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt=""
-          />
         </div>
       </div>
     </div>

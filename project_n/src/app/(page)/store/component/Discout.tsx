@@ -1,12 +1,12 @@
 import DiscountCard from "@/app/component/discountCard";
-import { IoPricetagOutline } from "react-icons/io5";
+import { Tag } from "lucide-react";
 
 const Discout = () => {
   return (
-    <div className="flex p-3 mx-auto">
-      <div className="flex flex-col 2xl:w-[1400px] bg-white border  rounded-xl">
+    <div className="flex  mx-auto">
+      <div className="flex flex-col md:w-[747px] lg:w-[1000px] xl:w-[1400px] bg-white border  rounded-xl">
         <div className="header flex w-full p-2 text-3xl font-bold space-x-2 items-center">
-          <IoPricetagOutline />
+        <Tag />
           <p>discount</p>
         </div>
         <div className="flex h-full p-2 items-center"><DiscountCard/></div>

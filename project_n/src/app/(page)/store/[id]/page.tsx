@@ -13,12 +13,12 @@ export default async function StorePage({params}: {params: { id: number };}) {
   });
   return (
     <>
-      <div className="flex flex-col w-full  bg-white ">
+      <div className="flex flex-col w-full space-y-2  bg-white ">
         <ImageStore
           userId={1}
           ownerId={store?.user?.id}
-          storeId={storeId}
           store={store}
+          storeId={storeId}
         />
         <InfoStore store={store} />
         <Discout />

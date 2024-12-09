@@ -6,7 +6,7 @@ import { getProductsByStoreId } from "@/app/service/product/service";
 import { useEffect, useState } from "react";
 
 //icon
-import { FiBox } from "react-icons/fi";
+import { Box } from "lucide-react";
 
 interface prop {
   storeId: number;
@@ -24,10 +24,10 @@ const ShowProduct = ({ storeId }: prop) => {
     fetchData();
   }, []);
   return (
-    <div className="flex  p-3 mx-auto">
-      <div className="flex flex-col w-full xl:w-[1400px] h-full bg-white border rounded-xl">
+    <div className="flex   mx-auto">
+      <div className="flex flex-col md:w-[747px] lg:w-[1000px] xl:w-[1400px] h-full bg-white border rounded-xl">
         <div className="header flex w-full p-2 text-3xl font-bold space-x-2 items-center">
-          <FiBox />
+        <Box />
           <p>รายการสินค้า</p>
         </div>
         <div className="header flex flex-col h-full w-full p-2">
