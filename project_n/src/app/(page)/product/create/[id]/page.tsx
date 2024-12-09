@@ -7,7 +7,7 @@ import { getAllCategory } from "@/app/service/category/service";
 import { CreateProdcut } from "@/app/service/product/service";
 import { useToast } from "@/hooks/use-toast";
 import { storage } from "@/lib/firebase/firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -84,8 +84,11 @@ const createProductpage = ({ params }: { params: { id: number } }) => {
 
   const onSubmitCreateProduct = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form submitted. Setting loading to true...");
+    let uploadedImages: { index: number; url: string; ref: any }[] = [];
     try {
       setLoading(true);
+      console.log("Loading state after setting:", loading);
       if (!name || !description || price <= 0 || category === 0) {
         setError("กรุณากรอกข้อมูลสินค้าทั้งหมดให้ครบถ้วน");
         setLoading(false);
@@ -94,12 +97,13 @@ const createProductpage = ({ params }: { params: { id: number } }) => {
 
       const imageUrls: { [key: string]: string } = {};
 
-      const uploadedImages = await Promise.all(
+      uploadedImages = await Promise.all(
         images.map(async (image, index) => {
-          const storageRef = ref(storage, `products/${storeId}/${v4()}`);
+          const productName = v4();
+          const storageRef = ref(storage, `products/${storeId}/${productName}`);
           await uploadBytes(storageRef, image);
           const url = await getDownloadURL(storageRef);
-          return { index: index + 1, url };
+          return { index: index + 1, url, ref: storageRef }; // เก็บ reference สำหรับลบ
         })
       );
 
@@ -118,7 +122,24 @@ const createProductpage = ({ params }: { params: { id: number } }) => {
       };
       console.log(data);
       await CreateProdcut(data);
+      toast({
+        description: "สร้างสินค้าเรียบร้อยแล้ว",
+      });
     } catch (error) {
+      
+      if (uploadedImages.length > 0) {
+        await Promise.all(
+          uploadedImages.map(async ({ ref }) => {
+            try {
+              await deleteObject(ref);
+              console.log("Deleted file from Firebase:", ref.fullPath);
+            } catch (deleteError) {
+              console.error("Error deleting file:", ref.fullPath, deleteError);
+            }
+          })
+        );
+      }
+
       if (error instanceof Error) {
         console.error("Error uploading or submitting data", error);
         toast({
@@ -132,9 +153,7 @@ const createProductpage = ({ params }: { params: { id: number } }) => {
       }
     } finally {
       setLoading(false);
-      toast({
-        description: "สร้างสินค้าเรียบร้อยแล้ว",
-      });
+
       // Router.push(`/store/inventory/${1}`); โ
     }
   };
@@ -345,7 +364,7 @@ const createProductpage = ({ params }: { params: { id: number } }) => {
                     disabled={loading}
                     className="flex px-4 py-2 bg-green-main rounded-xl text-white  font-bold"
                   >
-                    Submit
+                    {loading ? "กำลังบันทึก": "บันทึก"}
                   </button>
                 </div>
               </form>
