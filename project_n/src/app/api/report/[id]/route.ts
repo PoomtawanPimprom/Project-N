@@ -10,7 +10,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
         const data = await prisma.report.findUnique({
             where: { id: reportId },
             include: {
-                product: true
+                product:{ select: { id: true, name: true } },
+                user:{ select: { id: true, name: true } },
+                reportCategory:true,
             }
         })
         return Response.json(data)
