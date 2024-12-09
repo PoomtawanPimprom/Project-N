@@ -6,7 +6,7 @@ import { userInterface } from "./userInterface";
 export interface reportInterface {
     id: number;
     comment: string;
-    createdAt: string;
+    createdAt: Date;
     
     //fk
     userId: number;
@@ -16,8 +16,8 @@ export interface reportInterface {
     product?: productInterface;
 
     reportCategoryId: number;
-    reportCategory: reportCategoryInterface
+    reportCategory?: reportCategoryInterface
 
     reportStatusId: number;
-    reportStatus: reportStatusInterface;
+    reportStatus?: reportStatusInterface;
 }
