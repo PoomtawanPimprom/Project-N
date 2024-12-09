@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 interface prop {
-  product: any;
+  product: productInterface| any;
 }
 
 export default function ProductImage({ product }: prop) {
@@ -31,7 +31,7 @@ export default function ProductImage({ product }: prop) {
 
   return (
     <div className="flex flex-col w-full justify-start">
-      <div className="flex  relative aspect-square w-full">
+      <div className="flex  relative h-[450px] sm:w-[450px]  sm:h-[450px] xl:w-[500px] xl:h-[500px]">
         <div className="absolute inset-0 flex items-center justify-between px-4 z-10">
           <button
             onClick={prevImage}
@@ -51,7 +51,8 @@ export default function ProductImage({ product }: prop) {
           alt={`${product.name} - Image ${currentImage + 1}`}
           width={500}
           height={500}
-          className="object-cover rounded-lg"
+          layout="fixed"
+          className="rounded-lg"
           priority
         />
       </div>

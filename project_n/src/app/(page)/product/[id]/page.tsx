@@ -14,14 +14,12 @@ const ProductByIdPage = async ({params}: { params: { id: number } }) => {
   const inventories = await prisma.inventory.findMany({
     where:{productID: productId},
   })
+
   return (
     <>
       <div className="flex flex-col items-center dark:bg-black">
-        <div className="flex flex-col border-x  w-[1000px] p-4  dark:bg-black dark:border-gray-400  ">
-          <div className="flex text-5xl font-bold mb-3 w-full dark:text-white">
-            {product?.name}
-          </div>
-          <div className="grid grid-cols-1 grid-flow-row auto-rows-auto gap-2 w-full">
+        <div className="flex flex-col border-x  p-4  dark:bg-black dark:border-gray-400  ">
+          <div className="grid grid-cols-1 grid-flow-row auto-rows-auto  gap-2 w-full">
             <div className="grid grid-cols-1 lg:grid-cols-2 grid-rows-1 gap-2 mx-auto ">
               <ProductImage product={product}/>
               <SelectToCart product={product} inventory={inventories} productId={productId}/>
