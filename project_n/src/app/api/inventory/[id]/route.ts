@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { request } from 'http';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient()
 
@@ -45,30 +45,51 @@ export async function GET(Request: NextRequest, { params }: { params: { id: stri
                 createdAt: sortDate === 'asc' ? 'asc' : 'desc', // จัดเรียงตามวันที่
             },
         });
-        return Response.json(data)
+        return NextResponse.json(data)
     } catch (error: any) {
         console.error(error.message)
-        return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
+        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }
 
 // updateInventoryByInventoryId
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
     try {
-        const { quantity, size, color } = await request.json();
+        const { quantity, size, color, productId } = await request.json();
         const inventoryId = Number(params.id);
-        const data = await prisma.inventory.update({
+        const productID = Number(productId);
+
+        const existingInventory = await prisma.inventory.findUnique({
             where: { id: inventoryId },
-            data: {
-                quantity: quantity,
-                size: size,
-                color: color
-            }
         });
-        return Response.json(data)
+
+        let data;
+
+        if (existingInventory) {
+            // หากมีใน db ให้ทำการ update
+            data = await prisma.inventory.update({
+                where: { id: inventoryId },
+                data: {
+                    quantity: quantity,
+                    size: size,
+                    color: color,
+                },
+            });
+        } else {
+            // หากไม่มีใน db ให้ทำการ create
+            data = await prisma.inventory.create({
+                data: {
+                    quantity: quantity,
+                    size: size,
+                    color: color,
+                    productID:productID
+                }
+            });
+        }
+        return NextResponse.json({message:" update success"})
     } catch (error: any) {
         console.error(error.message)
-        return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
+        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }
 
