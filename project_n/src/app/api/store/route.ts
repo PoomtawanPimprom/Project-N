@@ -5,18 +5,22 @@ const prisma = new PrismaClient()
 
 export async function POST(request: Request) {
     try {
-        const { name, userId, imageLogo, imageBackgroud, description } = await request.json();
+        const { name, userId, description, imageLogoURL, imageLogoFileName, imageBackgroundURL, imageBgFileName } = await request.json();
         const newStore = await prisma.store.create({
             data: {
                 name,
                 description,
-                imageLogo,
-                imageBackgroud,
                 userId,
+
+                imageLogoURL,
+                imageLogoFileName,
+                imageBackgroundURL,
+                imageBgFileName,
             }
         });
         return Response.json(newStore)
-    } catch (error) {
+    } catch (error:any) {
+        console.error(error.message)
         return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }
