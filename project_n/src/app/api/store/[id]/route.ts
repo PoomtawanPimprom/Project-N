@@ -19,19 +19,23 @@ export async function GET(request: Request, { params }: { params: { id: string }
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
     try {
         const id = Number(params.id);
-        const { name,description, imageLogo, imageBackgroud } = await request.json();
+        const { name,description, imageLogoURL, imageLogoFileName, imageBackgroundURL, imageBgFileName  } = await request.json();
         const data = await prisma.store.update({
             where: { id: id },
             data: {
                 name,
                 description,
-                imageLogo,
-                imageBackgroud
+
+                imageLogoURL,
+                imageLogoFileName,
+                imageBackgroundURL,
+                imageBgFileName,
             }
         })
         return Response.json(data)
     }
-    catch (error) {
+    catch (error:any) {
+        console.log(error.message)
         return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }
