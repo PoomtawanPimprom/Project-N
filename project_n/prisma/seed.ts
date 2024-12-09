@@ -43,7 +43,8 @@ const reportCategoryData = [
 
 const reportStatusData = [
     { id: 1, name: "ส่งแล้ว" },
-    { id: 2, name: "รับทราบเรื่องแล้ว" },
+    { id: 2, name: "รับเรื่องแล้ว" },
+    { id: 3, name: "เรียบร้อยแล้ว" }
 ]
 
 const userAddressData =
