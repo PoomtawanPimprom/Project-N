@@ -57,7 +57,8 @@ const userAddressData =
     district: "String",
     subDistrict: "String",
     postalCode: 123,
-    mobile: 1324
+    mobile: 1324,
+    userId: 1
 }
     ;
 
@@ -98,18 +99,25 @@ const productData =
 }
 
 async function main() {
-    await prisma.productStatus.createMany({ data: productStatusData })
-    await prisma.storeStatus.createMany({ data: storeStatusData })
-    await prisma.category.createMany({ data: categoryData })
-    await prisma.gender.createMany({ data: gednerData })
-    await prisma.userStatus.createMany({ data: userStatusData })
-    await prisma.role.createMany({ data: roleData })
-    await prisma.reportCategory.createMany({ data: reportCategoryData })
-    await prisma.reportStatus.createMany({ data: reportStatusData })
-    await prisma.userAddress.create({ data: userAddressData });
-    await prisma.user.create({ data: userData });
-    await prisma.store.create({ data: storeData });
-    await prisma.product.create({ data: productData });
+    try {
+
+        await prisma.productStatus.createMany({ data: productStatusData })
+        await prisma.storeStatus.createMany({ data: storeStatusData })
+        await prisma.category.createMany({ data: categoryData })
+        await prisma.gender.createMany({ data: gednerData })
+        await prisma.userStatus.createMany({ data: userStatusData })
+        await prisma.role.createMany({ data: roleData })
+        await prisma.reportCategory.createMany({ data: reportCategoryData })
+        await prisma.reportStatus.createMany({ data: reportStatusData })
+        await prisma.userAddress.create({ data: userAddressData });
+        await prisma.user.create({ data: userData });
+        await prisma.store.create({ data: storeData });
+        await prisma.product.create({ data: productData });
+    }
+    catch (error) {
+        console.log(error)
+    }
+
 }
 
 main()
