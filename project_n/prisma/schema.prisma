@@ -63,8 +63,9 @@ model UserAddress {
   province    String
   district    String
   subDistrict String
-  postalCode  Int
-  mobile      Int
+  postalCode  String
+  mobile      String
+  userId      Int
 
   User User[]
 }
