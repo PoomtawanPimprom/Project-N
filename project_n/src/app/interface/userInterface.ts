@@ -1,3 +1,4 @@
+import { userAddressInterface } from "./userAddressInterface"
 
 export interface userInterface{
     id:number
@@ -20,5 +21,5 @@ export interface userInterface{
     // userStatus?: userStatusInterface
     
     userAddressId:number
-    // userAddress?: userAddressInterface
+    userAddress?: userAddressInterface
 }
