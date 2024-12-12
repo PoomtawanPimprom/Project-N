@@ -108,10 +108,15 @@ const paymentStatusData = [
     { id: 2, name: "ชำระแล้ว" },
 ]
 
+const paymentMethodData = [
+    {id: 1,name: "QR Promptpay" },
+    {id: 2,name: "เก็บเงินปลายทาง" },
+    {id: 3,name: "บัตรเครดิต/บัตรเดบิต" },
+]
 
 async function main() {
-
     try {
+        await prisma.paymentMethod.createMany({ data: paymentMethodData })
         await prisma.paymentStatus.createMany({ data: paymentStatusData })
         await prisma.orderStatus.createMany({ data: orderStatusData })
         await prisma.productStatus.createMany({ data: productStatusData })
