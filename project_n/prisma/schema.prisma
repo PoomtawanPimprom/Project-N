@@ -31,9 +31,10 @@ model User {
   userAddressId Int
   userAddress   UserAddress @relation(fields: [userAddressId], references: [id])
 
-  Favorite Favorite[]
-  Report   Report[]
-  Store    Store[]
+  Favorite    Favorite[]
+  Report      Report[]
+  Store       Store[]
+  OrderDetail OrderDetail[]
 }
 
 model Gender {
@@ -129,6 +130,7 @@ model Product {
   Inventory Inventory[]
   Favorite  Favorite[]
   Report    Report[]
+  OderItem  OderItem[]
 }
 
 model Inventory {
@@ -214,3 +216,61 @@ model ReportStatus {
 }
 
 //----------------------------------------------------------------------------------------------
+
+//payment system
+model OderItem {
+  id            Int         @id @default(autoincrement())
+  orderDetailId Int
+  orderDetail   OrderDetail @relation(fields: [orderDetailId], references: [id])
+  productId     Int
+  product       Product     @relation(fields: [productId], references: [id])
+  quantity      Int
+}
+
+model OrderDetail {
+  id        Int      @id @default(autoincrement())
+  total     Float
+  createdAt DateTime @default(now())
+
+  userId        Int
+  user          User        @relation(fields: [userId], references: [id])
+  paymentId     Int
+  payment       Payment     @relation(fields: [paymentId], references: [id])
+  transportId   Int
+  transport     Transport   @relation(fields: [transportId], references: [id])
+  orderStatusId Int
+  orderStatus   OrderStatus @relation(fields: [orderStatusId], references: [id])
+
+  OderItem OderItem[]
+}
+
+model OrderStatus {
+  id          Int           @id @default(autoincrement())
+  name        String
+  OrderDetail OrderDetail[]
+}
+
+model Transport {
+  id             Int           @id @default(autoincrement())
+  providerName   String
+  transportPrice Float
+  OrderDetail    OrderDetail[]
+}
+
+model Payment {
+  id              Int           @id @default(autoincrement())
+  orderId         Int
+  amout           Float
+  moneySlip       String?
+  createAt        DateTime      @default(now())
+  updatedAt       DateTime?     @updatedAt
+  paymentStatusId Int
+  paymentStatus   PaymentStatus @relation(fields: [paymentStatusId], references: [id])
+  OrderDetail     OrderDetail[]
+}
+
+model PaymentStatus {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Payment Payment[]
+}
