@@ -56,8 +56,8 @@ const userAddressData =
     province: "String",
     district: "String",
     subDistrict: "String",
-    postalCode: 123,
-    mobile: 1324,
+    postalCode: "123",
+    mobile: "1324",
     userId: 1
 }
     ;
@@ -79,14 +79,12 @@ const userData =
     userAddressId: 1
 }
 
-
 const storeData =
 {
     id: 1,
     name: "test1",
     userId: 1,
 }
-
 
 const productData =
 {
@@ -98,9 +96,24 @@ const productData =
     categoryID: 1
 }
 
-async function main() {
-    try {
+const orderStatusData = [
+    { id: 1, name: "กำลังส่ง" },
+    { id: 2, name: "กำลังดำเนินการ" },
+    { id: 3, name: "ดำเนินการเสร็จสิ้น" },
+    { id: 4, name: "ยกเลิกรายการ" },
+]
 
+const paymentStatusData = [
+    { id: 1, name: "ยังไม่ได้ชำระ" },
+    { id: 2, name: "ชำระแล้ว" },
+]
+
+
+async function main() {
+
+    try {
+        await prisma.paymentStatus.createMany({ data: paymentStatusData })
+        await prisma.orderStatus.createMany({ data: orderStatusData })
         await prisma.productStatus.createMany({ data: productStatusData })
         await prisma.storeStatus.createMany({ data: storeStatusData })
         await prisma.category.createMany({ data: categoryData })
