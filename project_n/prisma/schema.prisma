@@ -130,7 +130,7 @@ model Product {
   Inventory Inventory[]
   Favorite  Favorite[]
   Report    Report[]
-  OderItem  OderItem[]
+  OrderItem  OrderItem[]
 }
 
 model Inventory {
@@ -218,7 +218,7 @@ model ReportStatus {
 //----------------------------------------------------------------------------------------------
 
 //payment system
-model OderItem {
+model OrderItem {
   id            Int         @id @default(autoincrement())
   orderDetailId Int
   orderDetail   OrderDetail @relation(fields: [orderDetailId], references: [id])
@@ -241,7 +241,7 @@ model OrderDetail {
   orderStatusId Int
   orderStatus   OrderStatus @relation(fields: [orderStatusId], references: [id])
 
-  OderItem OderItem[]
+  OrderItem OrderItem[]
 }
 
 model OrderStatus {
@@ -266,7 +266,16 @@ model Payment {
   updatedAt       DateTime?     @updatedAt
   paymentStatusId Int
   paymentStatus   PaymentStatus @relation(fields: [paymentStatusId], references: [id])
-  OrderDetail     OrderDetail[]
+  paymentMethodId Int
+  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+
+  OrderDetail OrderDetail[]
+}
+
+model PaymentMethod {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Payment Payment[]
 }
 
 model PaymentStatus {
