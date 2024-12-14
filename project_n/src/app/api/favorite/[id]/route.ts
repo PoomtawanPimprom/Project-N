@@ -1,10 +1,11 @@
 import { PrismaClient } from '@prisma/client'
+import { NextRequest, NextResponse } from 'next/server'
 
 const prisma = new PrismaClient()
 
 
 //getAllFavoriteByUserID
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
     try {
         const userId = Number(params.id)
         if (userId === null || "") {
@@ -28,25 +29,25 @@ export async function GET(request: Request, { params }: { params: { id: string }
                 } 
             }
         })
-        return Response.json(data);
+        return NextResponse.json(data);
     } catch (error: any) {
         console.error(error.message)
-        return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
+        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }
 
 //deleteByFavoriteID
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
     const favoriteID = Number(params.id)
     try {
         const data = await prisma.favorite.delete({ where: { id: favoriteID } })
-        return Response.json("delete success ", { status: 200 })
+        return NextResponse.json("delete success ", { status: 200 })
     } catch (error: any) {
         console.error(error.message)
         if (error.code === "P2025") {
-            return new Response("favoriteID not found", { status: 400 });
+            return new NextResponse("favoriteID not found", { status: 400 });
         }
 
-        return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
+        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }
