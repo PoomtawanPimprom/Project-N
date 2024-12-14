@@ -1,6 +1,5 @@
 import { Prisma, PrismaClient } from '@prisma/client'
 import { NextRequest, NextResponse } from 'next/server';
-import { FaAws } from 'react-icons/fa';
 
 const prisma = new PrismaClient()
 
