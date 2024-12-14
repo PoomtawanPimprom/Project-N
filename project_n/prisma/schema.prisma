@@ -8,28 +8,28 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  username  String
-  password  String
-  email     String
-  mobile    Int
-  birthdate DateTime
-  profile   String
-  saler     Boolean
+  id        Int       @id @default(autoincrement())
+  name      String?
+  username  String  @unique
+  password  String?
+  email     String    @unique
+  mobile    Int?
+  birthdate DateTime?
+  profile   String?
+  saler     Boolean   @default(false)
 
   //fk
-  genderId Int
-  gender   Gender @relation(fields: [genderId], references: [id])
+  genderId Int?
+  gender   Gender? @relation(fields: [genderId], references: [id])
 
-  roleId Int
+  roleId Int  @default(1)
   role   Role @relation(fields: [roleId], references: [id])
 
-  userStatusId Int
+  userStatusId Int        @default(1)
   userStatus   UserStatus @relation(fields: [userStatusId], references: [id])
 
-  userAddressId Int
-  userAddress   UserAddress @relation(fields: [userAddressId], references: [id])
+  userAddressId Int?
+  userAddress   UserAddress? @relation(fields: [userAddressId], references: [id])
 
   Favorite    Favorite[]
   Report      Report[]
@@ -130,7 +130,7 @@ model Product {
   Inventory Inventory[]
   Favorite  Favorite[]
   Report    Report[]
-  OrderItem  OrderItem[]
+  OrderItem OrderItem[]
 }
 
 model Inventory {
