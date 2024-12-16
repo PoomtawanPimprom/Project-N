@@ -1,14 +1,72 @@
 "use client";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { userInterface } from '@/app/interface/userInterface';
 import Image from 'next/image'
 import tree from '../../../../public/pngtree.png'
-import { BsPersonVcard } from 'react-icons/bs'
-import { MdPayment } from 'react-icons/md'
-import { IoIosGift } from 'react-icons/io'
-import { FaRegHeart } from 'react-icons/fa'
 import MenuLeft from './menuleft'
+import { getUserById, updateUserById } from '@/app/service/profile/service';
 
 function profile() {
+    const [userData, setUserData] = useState<userInterface>({
+        id: 0,
+        name: "",
+        username: "",
+        password: "",
+        email: "",
+        mobile: 0,
+        birthdate: new Date(),
+        profile: "",
+        saler: false,
+        genderId: 0,
+        roleId: 0,
+        userStatusId: 0,
+        userAddressId: 0,
+    });
+
+
+    const fetchUserData = async () => {
+        const userData = await getUserById(3);
+        setUserData(userData);
+        setUserData({
+            ...userData,
+            birthdate: new Date(userData.birthdate),
+        });
+    }
+
+    useEffect(() => {
+        fetchUserData();
+    }, []);
+
+    const onSubmitUpdate = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            console.log(userData)
+            await updateUserById(userData.id, {
+                name: userData.name,
+                username: userData.username,
+                password: userData.password,
+                email: userData.email,
+                mobile: userData.mobile,
+                birthdate: userData.birthdate,
+                profile: userData.profile,
+                saler: userData.saler,
+                genderId: userData.genderId,
+                roleId: userData.roleId,
+                userStatusId: userData.userStatusId,
+                userAddressId: userData.userAddressId,
+            });
+    
+            alert("Profile updated successfully!");
+        } catch (error: any) {
+            console.error("Failed to update profile:", error.message);
+            alert(`Failed to update profile: ${error.message}`);
+        }
+    };
+    
+
+
+
+
 
     return (
         <section id="profile">
@@ -19,7 +77,7 @@ function profile() {
                 {/* Content right */}
                 <div className="flex flex-col gap-6 lg:w-3/4 z-50">
                     {/* Form Section */}
-                    <form action="" className="bg-white border-0 shadow-md border-black p-6 rounded-lg space-y-4 sm:border sm:shadow-none">
+                    <form  onSubmit={onSubmitUpdate}  action="" className="bg-white border-0 shadow-md border-black p-6 rounded-lg space-y-4 sm:border sm:shadow-none">
                         <div className="space-y-1">
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                                 อีเมล
@@ -27,58 +85,53 @@ function profile() {
                             <input
                                 type="email"
                                 id="email"
+                                value={userData.email}
+                                onChange={(e) => {
+                                    setUserData((prevData) => ({
+                                        ...prevData,
+                                        email: e.target.value,
+                                    }));
+                                }}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/2"
                             />
                         </div>
                         <div className="space-y-1">
-                            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                            <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">
                                 เบอร์โทรศัพท์
                             </label>
                             <input
                                 type="text"
-                                id="phone"
+                                id="mobile"
+                                value={userData.mobile}
+                                onChange={(e) => {
+                                    setUserData((prevData) => ({
+                                        ...prevData,
+                                        mobile: Number(e.target.value),
+                                    }));
+                                }}
                                 className="w-1/2 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/3"
                             />
                         </div>
                         <div className="space-y-1">
-                            <label className="block text-sm font-medium text-gray-700">Gender</label>
-                            <div className="flex items-center space-x-4">
-                                <label className="flex items-center space-x-2">
-                                    <input
-                                        type="radio"
-                                        name="gender"
-                                        value="male"
-                                        className="h-4 w-4 text-gray-600 border-gray-300 focus:ring-gray-500"
-                                    />
-                                    <span>Male</span>
-                                </label>
-                                <label className="flex items-center space-x-2">
-                                    <input
-                                        type="radio"
-                                        name="gender"
-                                        value="female"
-                                        className="h-4 w-4 text-gray-600 border-gray-300 focus:ring-gray-500"
-                                    />
-                                    <span>Female</span>
-                                </label>
-                                <label className="flex items-center space-x-2">
-                                    <input
-                                        type="radio"
-                                        name="gender"
-                                        value="other"
-                                        className="h-4 w-4 text-gray-600 border-gray-300 focus:ring-gray-500"
-                                    />
-                                    <span>Other</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div className="space-y-1">
-                            <label htmlFor="dob" className="block text-sm font-medium text-gray-700">
+                            <label htmlFor="birthdate" className="block text-sm font-medium text-gray-700">
                                 Date of Birth
                             </label>
                             <input
                                 type="date"
-                                id="dob"
+                                id="birthdate"
+                                name="birthdate"
+
+                                value={
+                                    userData.birthdate instanceof Date
+                                        ? userData.birthdate.toISOString().split("T")[0] // แปลง Date เป็น YYYY-MM-DD
+                                        : ""
+                                }
+                                onChange={(e) => {
+                                    setUserData((prevData) => ({
+                                        ...prevData,
+                                        birthdate: new Date(e.target.value), // แปลงค่าใน input กลับเป็น Date
+                                    }));
+                                }}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/3"
                             />
                         </div>

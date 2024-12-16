@@ -11,7 +11,8 @@ import {
 
 import React from 'react';
 import MenuLeft from '../menuleft';
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/components/ui/separator"
+
 
 export default function editAddress() {
     return (
