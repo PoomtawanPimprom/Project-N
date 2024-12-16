@@ -4,12 +4,12 @@ import { NextRequest, NextResponse } from 'next/server';
 const prisma = new PrismaClient()
 
 export async function GET() {
-    const posts = await prisma.user.findMany()
+    const posts = await prisma.user.findMany();
     return Response.json(posts)
 }
 
 export async function POST(request: NextRequest) {
-    try {
+    try { 
         const {
             name,
             username,
@@ -41,7 +41,6 @@ export async function POST(request: NextRequest) {
                 userAddressId
             }
         });
-
         return new NextResponse("User created successfully", { status: 201 });
     } catch (e: any) {
         console.error(e);
@@ -66,24 +65,3 @@ export async function POST(request: NextRequest) {
     }
 }
 
-
-export async function PUT(request: NextRequest, { param } : { param: { id: string}}){
-    try {
-        const { 
-            name,
-            username,
-            password,
-            email,
-            mobile,
-            birthdate,
-            profile,
-            saler,
-            genderId,
-            roleId,
-            userStatusId,
-            userAddressId
-        } = await request.json();
-    } catch (e) {
-
-    }
-}
