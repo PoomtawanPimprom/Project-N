@@ -1,4 +1,7 @@
 import { userAddressInterface } from "./userAddressInterface"
+import { genderInterface } from "./genderInterface"
+import { roleInterface } from "./roleInterface"
+import { userStatusInterface } from "./userStatusInterface"
 
 export interface userInterface{
     id:number
@@ -12,13 +15,13 @@ export interface userInterface{
     saler     :boolean
 
     genderId:number
-    // gender?: genderInterface
+    gender?: genderInterface
     
     roleId:number
-    // role?: roleInterface
+    role?: roleInterface
 
     userStatusId:number
-    // userStatus?: userStatusInterface
+    userStatus?: userStatusInterface
     
     userAddressId:number
     userAddress?: userAddressInterface
