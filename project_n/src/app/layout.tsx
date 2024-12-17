@@ -3,6 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
+import SessionProvider from "./component/SessionProvider";
+import { getServerSession } from "next-auth";
+import Navbar from "./layout/navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -13,15 +16,21 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession();
   return (
     <html lang="en">
-      <body className={inter.className }>
-        <main className="font-noto">{children}</main>
+      <body className={inter.className}>
+        <main className="font-noto">
+          <SessionProvider session={session}>
+            <Navbar/>
+            {children}
+            </SessionProvider>
+        </main>
         <Toaster />
       </body>
     </html>
