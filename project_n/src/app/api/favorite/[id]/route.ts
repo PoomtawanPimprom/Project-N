@@ -9,7 +9,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     try {
         const userId = Number(params.id)
         if (userId === null || "") {
-            return Response.json("invalid user", { status: 404 })
+            return NextResponse.json("invalid user", { status: 404 })
         }
         const data = await prisma.favorite.findMany({
             where: { userId: userId },
@@ -41,7 +41,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     const favoriteID = Number(params.id)
     try {
         const data = await prisma.favorite.delete({ where: { id: favoriteID } })
-        return NextResponse.json("delete success ", { status: 200 })
+        return NextResponse.json({message:"ลบสำสิ้น"}, { status: 200 })
     } catch (error: any) {
         console.error(error.message)
         if (error.code === "P2025") {

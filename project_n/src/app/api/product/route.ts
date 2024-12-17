@@ -1,17 +1,18 @@
 import { PrismaClient } from '@prisma/client'
+import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient()
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
     try {
         const data = await prisma.product.findMany();
-        return Response.json(data)
+        return NextResponse.json(data)
     } catch (error) {
-        return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
+        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
     try {
         const { name, description, price, storeID, categoryID, image, inventory } = await request.json();
         const createProductData = await prisma.product.create({
@@ -37,9 +38,9 @@ export async function POST(request: Request) {
             })
         );
 
-        return Response.json("create success ");
+        return NextResponse.json("create success ");
     } catch (error: any) {
         console.error(error.message)
-        return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
+        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }

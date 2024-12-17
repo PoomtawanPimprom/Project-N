@@ -1,13 +1,14 @@
 import { PrismaClient } from '@prisma/client'
+import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient()
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
     try {
         const data = await prisma.category.findMany();
-        return Response.json(data)
+        return NextResponse.json(data)
     } catch (error) {
-        return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
+        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
 
     }
 }

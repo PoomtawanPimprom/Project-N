@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient()
 
@@ -38,9 +38,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             }
         })
         
-        return Response.json(data)
+        return NextResponse.json(data)
     } catch (error: any) {
         console.error(error.message)
-        return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
+        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }

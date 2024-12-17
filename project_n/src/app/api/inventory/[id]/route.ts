@@ -1,13 +1,12 @@
 import { PrismaClient } from '@prisma/client'
-import { request } from 'http';
 import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient()
 
 // getInventoriesByProductId
-export async function GET(Request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(NextRequest: NextRequest, { params }: { params: { id: string } }) {
     try {
-        const searchparams = Request.nextUrl.searchParams
+        const searchparams = NextRequest.nextUrl.searchParams
         const search = searchparams.get("search") || ""
         const category = searchparams.get("category") || ""
         const sortDate = searchparams.get("sortDate") || "desc"
@@ -94,13 +93,13 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 //  deleteInvenByInvenId
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
     const inventoryId = Number(params.id);
     try {
         await prisma.inventory.delete({ where: { id: inventoryId } })
-        return Response.json("delete success");
+        return NextResponse.json("delete success");
     } catch (error: any) {
         console.error(error.message)
-        return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
+        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }

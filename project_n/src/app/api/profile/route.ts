@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 
 export async function GET() {
     const posts = await prisma.user.findMany();
-    return Response.json(posts)
+    return NextResponse.json(posts)
 }
 
 export async function POST(request: NextRequest) {

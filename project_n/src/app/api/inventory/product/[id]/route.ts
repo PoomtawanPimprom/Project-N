@@ -1,16 +1,15 @@
 import { PrismaClient } from '@prisma/client'
-import { request } from 'http';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient()
 
-export async function GET(Request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(NextRequest: NextRequest, { params }: { params: { id: string } }) {
     try {
         const productId = Number(params.id);
         const data = await prisma.inventory.findFirst({ where: { productID: productId } })
-        return Response.json(data)
+        return NextResponse.json(data)
     } catch (error: any) {
         console.error(error.message)
-        return new Response(error instanceof Error ? error.message : String(error), { status: 500 })
+        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
     }
 }
