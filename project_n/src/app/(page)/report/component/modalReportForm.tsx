@@ -1,10 +1,12 @@
 "use client";
 import Modal from "@/app/component/modal";
+import ShowError from "@/app/component/ShowError";
 import { reportCategoryInterface } from "@/app/interface/reportCategoryInterface";
 import { createReport } from "@/app/service/report/service";
 import { getAllReportCategoies } from "@/app/service/reportCategory/service";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
+import { renderError, ReportSchema, validateWithZod } from "@/lib/zod/Schema";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 interface prop {
@@ -15,20 +17,25 @@ interface prop {
 
 const ModalReportForm = ({ productId, open, onClose }: prop) => {
   const { toast } = useToast();
+  const { data: session, status } = useSession();
   const [reportCate, setReportCate] = useState<reportCategoryInterface[]>([]);
+
   const [comment, setComment] = useState("");
   const [selectCate, setSelectCate] = useState("");
+
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setLoading(true);
+      validateWithZod(ReportSchema, { comment, selectCate });
       const data = {
         comment,
-        userId: 1,
-        productId: Number(productId),
-        reportCategoryId: Number(selectCate),
+        userId: session?.user.id,
+        productId: productId,
+        reportCategoryId: selectCate,
         reportStatusId: 1,
       };
       await createReport(data);
@@ -36,19 +43,8 @@ const ModalReportForm = ({ productId, open, onClose }: prop) => {
         description: "Create store successful!",
       });
     } catch (error) {
-      if (error instanceof Error) {
-        console.error("Error uploading or submitting data", error);
-        toast({
-          variant: "destructive",
-          description: error.message,
-        });
-      } else {
-        console.error("Unexpected error", error);
-        toast({
-          variant: "destructive",
-          description: "An unexpected error occurred.",
-        });
-      }
+      const err = renderError(error);
+      setError(err.message);
     } finally {
       setLoading(false);
       onClose();
@@ -95,6 +91,7 @@ const ModalReportForm = ({ productId, open, onClose }: prop) => {
                   className="p-2 border border-gray-200 rounded-lg focus:border-none"
                 />
               </div>
+              <ShowError error={error}/>
               <div className="flex justify-end space-x-2">
                 <div>
                   <button
