@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
 // createReport
 export async function POST(request: NextRequest) {
     try {
-        const { comment, image, userId, productId, reportCategoryId, reportStatusId } = await request.json();
+        const { comment, userId, productId, reportCategoryId, reportStatusId } = await request.json();
         const result = await prisma.report.create({
             data: {
                 comment,
