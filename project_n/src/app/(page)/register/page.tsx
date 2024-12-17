@@ -1,4 +1,5 @@
 "use client";
+import ShowError from "@/app/component/ShowError";
 import { createUser } from "@/app/service/register/service";
 import { useToast } from "@/hooks/use-toast";
 import { RegisterSchema, renderError, validateWithZod } from "@/lib/zod/Schema";
@@ -36,11 +37,11 @@ function Register() {
 
   return (
     <div className="bg-gray-100 flex justify-center items-center h-screen">
-      <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
-        <h1 className="text-2xl font-semibold mb-4">Register</h1>
-        <form onSubmit={onSumbit}>
+      <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2 ">
+        <h1 className="text-2xl font-semibold mb-2">Register</h1>
+        <form  className="space-y-2" onSubmit={onSumbit}>
           {/* <!-- Username Input --> */}
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="username" className="block text-gray-600">
               Username
             </label>
@@ -54,7 +55,7 @@ function Register() {
             />
           </div>
           {/* <!-- Password Input --> */}
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="password" className="block text-gray-600">
               Password
             </label>
@@ -67,7 +68,7 @@ function Register() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="email" className="block text-gray-600">
               email
             </label>
@@ -80,14 +81,8 @@ function Register() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          {error ? (
-            
-            <div className="mb-2 text-red-500 font-semibold">
-              {error.split(", ").map((item,index)=>(
-                <p key={index}>{item}</p>
-              ))}
-            </div>
-          ) : null}
+
+          <ShowError classname="mb-2" error={error} />
 
           {/* <!-- Login Button --> */}
           <button

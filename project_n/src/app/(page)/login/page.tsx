@@ -1,4 +1,5 @@
 "use client";
+import ShowError from "@/app/component/ShowError";
 import { LoginSchema, renderError, validateWithZod } from "@/lib/zod/Schema";
 import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
@@ -50,11 +51,11 @@ const LoginPage = () => {
         />
       </div>
       {/* <!-- Right: Login Form --> */}
-      <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
-        <h1 className="text-2xl font-semibold mb-4">Login</h1>
-        <form onSubmit={onSubmit}>
+      <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2 ">
+        <h1 className="text-2xl font-semibold mb-2">Login</h1>
+        <form onSubmit={onSubmit} className="space-y-2">
           {/* <!-- Username Input --> */}
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="username" className="block text-gray-600">
               Username
             </label>
@@ -68,7 +69,7 @@ const LoginPage = () => {
             />
           </div>
           {/* <!-- Password Input --> */}
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="password" className="block text-gray-600">
               Password
             </label>
@@ -96,13 +97,9 @@ const LoginPage = () => {
             </div>
           </div>
           {/* error */}
-          <div className="mb-2 text-base font-semibold text-red-500">
-            {error.split(", ").map((item,index)=>(
-              <p key={index}>{item}</p>
-            ))}
-          </div>
+          <ShowError classname="mb-2" error={error} />
           {/* <!-- Remember Me Checkbox --> */}
-          <div className="mb-4 flex items-center">
+          <div className=" flex items-center">
             <input
               type="checkbox"
               id="remember"
