@@ -1,28 +1,32 @@
 "use client";
 import { favoriteInterface } from "@/app/interface/favoriteInterface";
 import Image from "next/image";
-import { actionDelete } from "./action";
 import { format } from "date-fns";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
+import { deleteFavoriteByid } from "@/app/service/favorite/service";
+import { revalidatePath } from "next/cache";
 
 type ProductInfoCardprop = {
   userId: number;
-  data: favoriteInterface | any;
+  data: favoriteInterface;
 };
 
 export default function ProductInfoCard({ userId, data }: ProductInfoCardprop) {
-  const actionDeleteWithUserId = actionDelete.bind(null, userId);
-
+  const onSubmitDelete = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const res = await deleteFavoriteByid(data.id)
+    revalidatePath(`/favorite/${userId}`);
+  }
   return (
     <div className="flex w-64 sm:w-[24rem] md:w-[26rem] lg:w-[48rem] mx-auto border border-gray-500 rounded-xl p-2 justify-between">
       <div className="flex rounded-xl ">
         <Image
           className="flex rounded-xl"
-          alt={data.name}
+          alt={data.product!.name}
           width={150}
           height={150}
-          src={data.product!.image.image1}
+          src={data.product!.image[0]}
         />
       </div>
       <div className="flex flex-col w-full ml-2 ">
@@ -47,7 +51,7 @@ export default function ProductInfoCard({ userId, data }: ProductInfoCardprop) {
             </div>
           </div>
           <div className="flex">
-            <form action={actionDeleteWithUserId}>
+            <form onSubmit={onSubmitDelete}>
               <button
                 name="deleteButton"
                 className="flex px-4 py-2 font-bold rounded-xl bg-red-500 hover:bg-red-700  text-white"

@@ -1,9 +1,25 @@
 import prisma from "@/lib/prisma/db";
 import ProductInfoCard from "./ProductInfoCard";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-const favoriteByUserIdPage = async ({ params }: { params: { id: number } }) => {
-  const userId = Number(params.id);
-  const favoriteData = await prisma.favorite.findMany({
+import { favoriteInterface } from "@/app/interface/favoriteInterface";
+import { redirect } from "next/navigation";
+
+export default async function favoriteByUserIdPage() {
+  // in case client component
+  // const { data: session, status } = useSession()
+  // {session.user.name}
+
+  //in case server component
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  const userId = Number(session?.user.id);
+  const favoriteData = (await prisma.favorite.findMany({
     where: { userId: userId },
     include: {
       product: {
@@ -19,8 +35,7 @@ const favoriteByUserIdPage = async ({ params }: { params: { id: number } }) => {
         },
       },
     },
-  });
-  
+  })) as favoriteInterface[];
 
   return (
     <>
@@ -31,13 +46,11 @@ const favoriteByUserIdPage = async ({ params }: { params: { id: number } }) => {
           </div>
           <div className="flex flex-col space-y-2 px-4">
             {favoriteData.map((item, index) => (
-              <ProductInfoCard key={index} userId={userId} data={item}/>
+              <ProductInfoCard key={index} userId={userId} data={item} />
             ))}
           </div>
         </div>
       </div>
     </>
   );
-};
-
-export default favoriteByUserIdPage;
+}
