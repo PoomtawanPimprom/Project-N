@@ -3,7 +3,7 @@ import { userInterface } from "./userInterface";
 
 export interface favoriteInterface {
     id: number;
-    createdAt:string
+    createdAt: Date
     //fk
     userId: number;
     user?:userInterface
