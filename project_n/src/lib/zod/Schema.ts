@@ -3,6 +3,7 @@ import { z, ZodSchema } from "zod";
 
 export function validateWithZod<T>(schema: ZodSchema<T>, data: unknown) {
     const result = schema.safeParse(data);
+    //case error
     if (!result.success) {
         const errors = result.error?.errors.map((error) => error.message);
         throw new Error(errors.join(", "));
