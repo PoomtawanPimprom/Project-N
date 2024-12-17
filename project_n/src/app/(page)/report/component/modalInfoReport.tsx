@@ -10,21 +10,6 @@ type prop = {
 };
 
 const ModalInfoReport = ({ reportData, open, OnClose }: prop) => {
-  const convertFormatDate = (dataString: string) => {
-    if (dataString === "") {
-      return "Invalid Date";
-    }
-    const date = new Date(dataString);
-
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const seconds = date.getSeconds().toString().padStart(2, "0");
-
-    return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
-  };
   return (
     <Modal open={open} onClose={OnClose}>
       <div className="w-96 space-y-6">
@@ -37,7 +22,7 @@ const ModalInfoReport = ({ reportData, open, OnClose }: prop) => {
             <p className="flex items-center gap-2 justify-between">
               <p className="font-bold text-base">ส่งคำร้องเรียนเมื่อ : </p>
               <p className="text-base ">
-                {convertFormatDate(reportData?.createdAt!)}
+                {new Date(reportData?.createdAt!).toLocaleString()}
               </p>
             </p>
           </div>
@@ -56,13 +41,13 @@ const ModalInfoReport = ({ reportData, open, OnClose }: prop) => {
           <div>
             <p className="flex items-center gap-2 justify-between">
               <p className="font-bold text-base">ประเภทของคำร้องเรียน :</p>
-              <p className="text-base"> {reportData?.reportCategory.name}</p>
+              <p className="text-base"> {reportData?.reportCategory?.name}</p>
             </p>
           </div>
           <div>
             <p className="flex items-center gap-2 justify-between">
               <p className="font-bold text-base">สถานะของคำร้องเรียน :</p>
-              <p className="text-base"> {reportData?.reportStatus.name}</p>
+              <p className="text-base"> {reportData?.reportStatus?.name}</p>
             </p>
           </div>
         </div>
