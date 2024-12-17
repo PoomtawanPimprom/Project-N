@@ -14,9 +14,9 @@ import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { v4 } from "uuid";
 
-const createProductpage = ({ params }: { params: { id: number } }) => {
+const createProductpage = ({ params }: { params: { storeId: number } }) => {
   const { toast } = useToast();
-  const storeId = params.id;
+  const storeId = params.storeId;
   //data
   const [categoryData, setCategoryData] = useState<categoryInterface[]>([]);
 

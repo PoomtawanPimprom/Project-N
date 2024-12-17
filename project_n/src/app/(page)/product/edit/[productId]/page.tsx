@@ -25,8 +25,8 @@ interface ProductImage {
   [key: string]: string;
 }
 
-const editProductpage = ({ params }: { params: { id: number } }) => {
-  const ProductId = params.id;
+const editProductpage = ({ params }: { params: { productId: number } }) => {
+  const ProductId = params.productId;
   const { toast } = useToast();
   const router = useRouter();
   //modal
@@ -220,8 +220,6 @@ const editProductpage = ({ params }: { params: { id: number } }) => {
     }
   };
   
-  
-
   const onclickDeleteProduct = async () => {
     setOpenDeleteModal(true);
   };

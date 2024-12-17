@@ -4,8 +4,8 @@ import ProductImage from "../component/ProductImage";
 import SelectToCart from "../component/SelectToCart";
 import prisma from "@/lib/prisma/db";
 
-const ProductByIdPage = async ({params}: { params: { id: number } }) => {
-  const productId = Number(params.id);
+const ProductByIdPage = async ({params}: { params: { productId: number } }) => {
+  const productId = Number(params.productId);
   const product = await prisma.product.findUnique({
     where:{id:productId},
     include : {store : true}
