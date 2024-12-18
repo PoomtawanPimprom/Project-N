@@ -10,7 +10,7 @@ export interface userInterface{
     password  :string
     email     :string
     mobile    :number
-    birthdate :Date
+    birthdate? :Date   //Optional   
     profile   :string
     saler     :boolean
 
