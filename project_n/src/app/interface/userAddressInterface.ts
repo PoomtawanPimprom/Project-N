@@ -1,4 +1,4 @@
-
+import { userInterface } from "./userInterface"
 export interface userAddressInterface {
     id: number
     firstName: string
@@ -10,5 +10,7 @@ export interface userAddressInterface {
     subDistrict: string
     postalCode: string
     mobile: string
+    
     userId:number
+    user?: userInterface
 }
