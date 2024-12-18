@@ -25,12 +25,9 @@ function profile() {
 
 
     const fetchUserData = async () => {
-        const userData = await getUserById(3);
-        setUserData(userData);
-        setUserData({
-            ...userData,
-            birthdate: new Date(userData.birthdate),
-        });
+        const res = await getUserById(3);
+        setUserData(res);
+        console.log(res);
     }
 
     useEffect(() => {
@@ -85,7 +82,7 @@ function profile() {
                             <input
                                 type="email"
                                 id="email"
-                                value={userData.email}
+                                defaultValue={userData.email}
                                 onChange={(e) => {
                                     setUserData((prevData) => ({
                                         ...prevData,
