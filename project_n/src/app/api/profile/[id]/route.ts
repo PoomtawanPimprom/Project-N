@@ -51,9 +51,6 @@ export async function PUT(request: NextRequest, { params } : { params: { id: str
 export async function DELETE(request: NextRequest, { params } : { params: { id: string}}){
     try {
         const userID = Number(params.id);
-        // await prisma.user.deleteMany({
-        //     where: { userId: userID },
-        // });
         await prisma.user.delete({ where: { id: userID } });
         return new NextResponse("User delete successfully", { status: 201 });
     } catch (e: any) {
