@@ -8,7 +8,7 @@ export interface productInterface {
     description: string
     price: number
     image:string[]
-    createdAt:string
+    createdAt:Date
 
     //fk
     storeID: number
