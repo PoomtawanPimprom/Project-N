@@ -78,7 +78,7 @@ model UserAddress {
 //Store sytem
 model Store {
   id          Int     @id @default(autoincrement())
-  name        String
+  name        String  @unique
   description String?
 
   imageLogoURL       String?
