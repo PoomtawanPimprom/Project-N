@@ -8,11 +8,12 @@ export async function POST(request: NextRequest) {
         const { name, userId, description, imageLogoURL, imageLogoFileName, imageBackgroundURL, imageBgFileName } = await request.json();
 
         const checkStoreExit = await prisma.store.findFirst({
-            where:{name: name}
+            where: { name: name }
         })
         if (checkStoreExit) {
             return NextResponse.json({ message: 'ชื่อร้านค้าถูกใช้งานแล้ว' }, { status: 400 })
         }
+
         const newStore = await prisma.store.create({
             data: {
                 name,
@@ -26,9 +27,13 @@ export async function POST(request: NextRequest) {
             }
         });
         return NextResponse.json(newStore)
-    } catch (error:any) {
-        console.error(error.message)
-        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
+    } catch (error: any) {
+        console.error(error.message || error);
+
+        console.error("Unexpected error:", error);
+        return NextResponse.json({
+            message: error instanceof Error ? error.message : "Unexpected error occurred."
+        }, { status: 500 });
     }
 }
 
