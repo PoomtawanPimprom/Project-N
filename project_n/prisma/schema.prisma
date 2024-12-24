@@ -8,18 +8,18 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String?
-  username  String  @unique
-  password  String?
-  email     String    @unique
-  mobile    Int?
-  birthdate DateTime?
-  profile   String?
-  saler     Boolean   @default(false)
+  id            Int       @id @default(autoincrement())
+  name          String?
+  username      String    @unique
+  password      String?
+  email         String    @unique
+  mobile        Int?
+  birthdate     DateTime?
+  profile       String?
+  saler         Boolean   @default(false)
   resetToken    String?   @unique
   resetTokenExp DateTime?
-  
+
   //fk
   genderId Int?
   gender   Gender? @relation(fields: [genderId], references: [id])
@@ -81,9 +81,9 @@ model Store {
   name        String  @unique
   description String?
 
-  imageLogoURL       String?
+  imageLogoURL       String? @db.Text
   imageLogoFileName  String?
-  imageBackgroundURL String?
+  imageBackgroundURL String? @db.Text
   imageBgFileName    String?
 
   scores       Float     @default(0)
