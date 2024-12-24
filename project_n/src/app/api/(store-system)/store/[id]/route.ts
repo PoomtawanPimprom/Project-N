@@ -8,7 +8,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         const id = Number(params.id);
         const data = await prisma.store.findUnique({
             where: { id },
-            include:{user:true}
+            include: { user: true }
         })
         return NextResponse.json(data)
     }
@@ -20,7 +20,18 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
     try {
         const id = Number(params.id);
-        const { name,description, imageLogoURL, imageLogoFileName, imageBackgroundURL, imageBgFileName  } = await request.json();
+        const { name, description, imageLogoURL, imageLogoFileName, imageBackgroundURL, imageBgFileName } = await request.json();
+        if (!imageLogoURL || !imageLogoFileName || !imageBackgroundURL || !imageBgFileName) {
+            const data = await prisma.store.update({
+                where: { id: id },
+                data: {
+                    name,
+                    description,
+                }
+            })
+            return NextResponse.json(data)
+        }
+
         const data = await prisma.store.update({
             where: { id: id },
             data: {
@@ -35,7 +46,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         })
         return NextResponse.json(data)
     }
-    catch (error:any) {
+    catch (error: any) {
         console.log(error.message)
         return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
     }
