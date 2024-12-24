@@ -5,15 +5,21 @@ export function validateWithZod<T>(schema: ZodSchema<T>, data: unknown) {
     const result = schema.safeParse(data);
     //case error
     if (!result.success) {
-        const errors = result.error?.errors.map((error) => error.message);
-        throw new Error(errors.join(", "));
+        const errors = result.error.errors.reduce((acc, error) => {
+            const field = error.path[0] as string; // ใช้ path[0] เป็นชื่อฟิลด์
+            acc[field] = { message: error.message }; // เก็บข้อความข้อผิดพลาด
+            return acc;
+          }, {} as { [key: string]: { message: string } });
+      
+          // โยนข้อผิดพลาดเป็นออบเจ็กต์
+          throw { fieldErrors: errors };
     }
     return result.data;
 }
 
 export const renderError = (error: unknown): { message: string } => {
     return { message: error instanceof Error ? error.message : "An Error!!!" };
-  };
+};
 
 // schema
 //========================================================
@@ -27,6 +33,33 @@ export const RegisterSchema = z.object({
 
 //login
 export const LoginSchema = z.object({
-    username: z.string().min(1,"โปรดกรอก username"),
-    password: z.string().min(1,"โปรดกรอก password"),
-  })
+    username: z.string().min(1, "โปรดกรอก username"),
+    password: z.string().min(1, "โปรดกรอก password"),
+})
+
+//report
+export const ReportSchema = z.object({
+    comment: z.string().min(1, "ข้อความรายงานควรมากกว่า 1 ตัวอักษร").max(200, "ข้อความรายงานไม่ควรเกิน 1 ตัวอักษร"),
+    selectCate: z.number().min(1, "โปรดเลือกหมวดหมู่"),
+})
+
+//store
+export const StoreSchema = z.object({
+    name: z
+        .string()
+        .min(1, "โปรดกรอกชื่อร้านค้า")
+        .max(50, "ชื่อร้านค้าควรไม่มากกว่า 50 ตัวอักษร"),
+    description: z
+        .string()
+        .min(1, "โปรดกรอกรายละเอียดร้านค้า")
+        .max(200, "รายละเอียดร้านค้าควรไม่มากกว่า 200 ตัวอักษร ")
+        .optional(),
+
+    imageLogoURL: z.string().optional(),
+    imageLogoFileName: z.string().optional(),
+
+    imageBackgroundURL: z.string().optional(),
+    imageBgFileName: z.string().optional(),
+});
+
+//product
