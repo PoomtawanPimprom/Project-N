@@ -5,13 +5,13 @@ import { userStatusInterface } from "./userStatusInterface"
 
 export interface userInterface{
     id:number
-    name      :string
+    name      ?:string
     username  :string
     password  :string
-    email     :string
-    mobile    :number
+    email     ?:string
+    mobile    ?:number
     birthdate? :Date   //Optional   
-    profile   :string
+    profile   ?:string
     saler     :boolean
 
     genderId:number
