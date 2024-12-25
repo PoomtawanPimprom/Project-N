@@ -1,9 +1,13 @@
 "use client";
 
+import Form from "@/app/component/Form";
+import Input from "@/app/component/Input";
+import ShowError from "@/app/component/ShowError";
 import { storeInterface } from "@/app/interface/storeInterface";
 import { getStoreByID, updateStoreById } from "@/app/service/store/service";
 import { useToast } from "@/hooks/use-toast";
 import { storage } from "@/lib/firebase/firebase";
+import { renderError, StoreSchema, validateWithZod } from "@/lib/zod/Schema";
 
 import {
   deleteObject,
@@ -20,88 +24,76 @@ import { v4 } from "uuid";
 const UpdateStorePage = ({ params }: { params: { id: number } }) => {
   const { toast } = useToast();
   const storeID = params.id;
-  const router = useRouter();
-  const [uploading, setUploading] = useState(false);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  //new image
   const [imageLogo, setImageLogo] = useState<any>();
   const [imageBackgroud, setImageBackgroud] = useState<any>();
 
-  //image
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<{
+    [key: string]: { message: string };
+  } | null>(null);
+
+  //old
+  //file name
   const [oldLogoImageFileName, setOldLogoImageFileName] = useState<
     string | null | undefined
   >(undefined);
   const [oldBgImageFileName, setOldBgImageFileName] = useState<
     string | null | undefined
   >(undefined);
-
-  const [logoPreview, setLogoPreview] = useState<any>("");
-  const [bgPreview, setBgPreview] = useState<any>("");
+  //old image preview
+  const [oldLogo, setOldLogo] = useState<any>("");
+  const [oldBg, setOldBg] = useState<any>("");
 
   const handleLogoFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     if (file) {
-      if (logoPreview) URL.revokeObjectURL(logoPreview);
+      if (oldLogo) URL.revokeObjectURL(oldLogo);
       console.log(imageLogo);
       setImageLogo(file);
-      setLogoPreview(URL.createObjectURL(file));
+      setOldLogo(URL.createObjectURL(file));
     }
   };
   const handleBgFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     if (file) {
-      if (bgPreview) URL.revokeObjectURL(bgPreview);
+      if (oldBg) URL.revokeObjectURL(oldBg);
       console.log(imageBackgroud);
       setImageBackgroud(file);
-      setBgPreview(URL.createObjectURL(file));
+      setOldBg(URL.createObjectURL(file));
     }
   };
 
   const handleCancelLogo = () => {
-    if (logoPreview) URL.revokeObjectURL(logoPreview);
+    if (oldLogo) URL.revokeObjectURL(oldLogo);
     setImageLogo(null);
-    setLogoPreview("");
+    setOldLogo("");
     const input = document.getElementById("image-logo") as HTMLInputElement;
     if (input) input.value = "";
   };
 
   const handleCancelBackground = () => {
-    if (bgPreview) URL.revokeObjectURL(bgPreview);
+    if (oldBg) URL.revokeObjectURL(oldBg);
     setImageBackgroud(null);
-    setBgPreview("");
+    setOldBg("");
     const input = document.getElementById(
       "image-background"
     ) as HTMLInputElement;
     if (input) input.value = "";
   };
 
-  const getFileNameFromURL = (
-    url: string | null | undefined
-  ): string | null => {
-    if (!url) return null;
-
-    try {
-      const decodedURL = decodeURIComponent(url);
-      const parts = decodedURL.split("/");
-      const fileName = parts[parts.length - 1].split("?")[0];
-      return fileName;
-    } catch (error) {
-      console.error("Error extracting file name:", error);
-      return null;
-    }
-  };
-
   useEffect(() => {
     return () => {
-      if (logoPreview) URL.revokeObjectURL(logoPreview);
-      if (bgPreview) URL.revokeObjectURL(bgPreview);
+      if (oldLogo) URL.revokeObjectURL(oldLogo);
+      if (oldBg) URL.revokeObjectURL(oldBg);
     };
-  }, [logoPreview, bgPreview]);
+  }, [oldLogo, oldBg]);
 
   const handelOnSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const newImagelogoFileName = v4();
     const newImageBgFileName = v4();
 
@@ -112,8 +104,14 @@ const UpdateStorePage = ({ params }: { params: { id: number } }) => {
 
       if (imageLogo && imageBackgroud) {
         if (oldLogoImageFileName && oldBgImageFileName) {
-          const storageOldLogoRef = ref(storage,`store/logo/${oldLogoImageFileName}`);
-          const storageOldBgRef = ref(storage,`store/background/${oldBgImageFileName}`);
+          const storageOldLogoRef = ref(
+            storage,
+            `store/logo/${oldLogoImageFileName}`
+          );
+          const storageOldBgRef = ref(
+            storage,
+            `store/background/${oldBgImageFileName}`
+          );
 
           await deleteObject(storageOldLogoRef);
           await deleteObject(storageOldBgRef);
@@ -137,21 +135,28 @@ const UpdateStorePage = ({ params }: { params: { id: number } }) => {
         name,
         description,
 
-        imageLogoURL: logoUrl,
-        imageLogoFileName: newImagelogoFileName,
-        imageBackgroundURL: bgUrl,
-        imageBgFileName: newImageBgFileName,
+        imageLogoURL: imageLogo ? logoUrl : "",
+        imageLogoFileName: imageLogo ? newImagelogoFileName : "",
+        imageBackgroundURL: imageBackgroud ? bgUrl : "",
+        imageBgFileName: imageBackgroud ? newImageBgFileName : "",
       };
+      validateWithZod(StoreSchema, data);
       await updateStoreById(storeID, data);
       toast({
-        description: "บันทึกข้อมูลสำเร็จ"
-      })
+        description: "บันทึกข้อมูลสำเร็จ",
+      });
       // router.push(`/store/${storeID}`);
-    
-    } catch (error) {
+    } catch (error: any) {
+      toast({
+        variant:"destructive",
+        description:"บันทึกไม่สำเร็จ"
+      })
       //delete images on firebase
       const deleteLogoRef = ref(storage, `store/logo/${newImagelogoFileName}`);
-      const deleteBgRef = ref(storage,`store/background/${newImageBgFileName}`);
+      const deleteBgRef = ref(
+        storage,
+        `store/background/${newImageBgFileName}`
+      );
       deleteObject(deleteLogoRef)
         .then(() => {
           console.log("delete logo successful");
@@ -166,20 +171,9 @@ const UpdateStorePage = ({ params }: { params: { id: number } }) => {
         .catch((error: any) => {
           console.log(error.message);
         });
-
-      //handle error
-      if (error instanceof Error) {
-        console.error("Error uploading or submitting data", error);
-        toast({
-          description: error.message,
-        });
-      } else {
-        console.error("Unexpected error", error);
-        toast({
-          description: "An unexpected error occurred.",
-        });
+      if (error.fieldErrors) {
+        setError(error.fieldErrors); // ตั้งค่าข้อผิดพลาดโดยตรง
       }
-
     } finally {
       setUploading(false);
     }
@@ -190,9 +184,10 @@ const UpdateStorePage = ({ params }: { params: { id: number } }) => {
     console.log(data);
     setDescription(data.description);
     setName(data.name);
-    setLogoPreview(data.imageLogoURL);
-    setBgPreview(data.imageBackgroundURL);
+    setOldLogo(data.imageLogoURL);
+    setOldBg(data.imageBackgroundURL);
 
+    //set old-image file name
     setOldLogoImageFileName(data.imageLogoFileName); // ใช้ฟังก์ชันดึงชื่อไฟล์
     setOldBgImageFileName(data.imageBgFileName); // ใช้ฟังก์ชันดึงชื่อไฟล์
   };
@@ -212,47 +207,41 @@ const UpdateStorePage = ({ params }: { params: { id: number } }) => {
           <div className="text-5xl font-bold">แก้ไขข้อมูล</div>
         </div>
         <div>
-          <form onSubmit={handelOnSubmit}>
+          <Form onSubmit={handelOnSubmit}>
             <div className="body h-full  px-4 pb-4">
               <div className="flex flex-col space-y-2">
-                <div className="flex text-xl font-bold">
-                  <div>ชื่อร้านค้า</div>
-                </div>
-                <div className="flex flex-col w-1/3">
-                  <input
-                    name="name"
-                    className="p-2  rounded-xl  bg-gray-50 border border-gray-500"
-                    type="text"
-                    value={name}
-                    placeholder="ใส่ชื่อร้านค้า..."
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                <div className="flex text-xl font-bold">
-                  <div>รายละเอียดร้านค้า</div>
-                </div>
-                <div className="flex flex-col w-1/3">
-                  <textarea
-                    name="description"
-                    value={description}
-                    cols={50}
-                    rows={4}
-                    className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-500 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="ใส่รายละเอียดร้านค้า..."
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                </div>
+                <Input
+                  required={true}
+                  name="name"
+                  value={name}
+                  onChange={setName}
+                  label="ชื่อร้านค้าของคุณ"
+                  placeholder="ชื่อร้านค้า..."
+                  type=""
+                  error={error?.name}
+                />
+                <Input
+                  required={true}
+                  name="description"
+                  value={description}
+                  onChange={setDescription}
+                  label="รายละเอียดร้าน"
+                  placeholder="รายละเอียดร้านค้า..."
+                  type="textarea"
+                  error={error?.description}
+                />
+
                 <div>
                   <p className="text-xl font-bold mb-1">
                     รูปโลโก้ร้านค้าของคุณ
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex items-center justify-center w-full">
+                    <div className="flex items-start justify-start w-full">
                       <label
                         htmlFor="image-logo"
-                        className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+                        className="flex flex-col items-center justify-center h-[400px] w-[400px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
                       >
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <div className="flex flex-col h-[400px] w-[400px] items-center justify-center pt-5 pb-6">
                           <svg
                             className="w-8 h-8 mb-4 text-gray-500"
                             aria-hidden="true"
@@ -279,7 +268,7 @@ const UpdateStorePage = ({ params }: { params: { id: number } }) => {
                           </p>
                         </div>
                         <input
-                          disabled={logoPreview ? true : false}
+                          disabled={oldLogo ? true : false}
                           required
                           accept="image/*"
                           name="image-logo"
@@ -290,15 +279,15 @@ const UpdateStorePage = ({ params }: { params: { id: number } }) => {
                         />
                       </label>
                     </div>
-                    {logoPreview && (
-                      <div className=" flex items-center justify-center">
-                        <div className="flex relative">
+                    {oldLogo && (
+                      <div className="flex items-start justify-start">
+                        <div className="flex relative w-[400px] h-[400px]">
                           <Image
-                            src={logoPreview}
-                            width={400}
-                            height={400}
+                            src={oldLogo}
+                            fill
+                            priority
                             alt="Logo preview"
-                            className="  rounded-lg"
+                            className="object-cover  rounded-lg"
                           />
                           <button
                             type="button"
@@ -318,12 +307,12 @@ const UpdateStorePage = ({ params }: { params: { id: number } }) => {
                     รูปพื้นหลังร้านค้าของคุณ
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex items-center justify-center w-full">
+                    <div className="flex items-start justify-start w-full">
                       <label
                         htmlFor="image-background"
-                        className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+                        className="flex flex-col items-center justify-center h-[400px] w-[400px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
                       >
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <div className="flex flex-col h-[400px] w-[400px] items-center justify-center pt-5 pb-6">
                           <svg
                             className="w-8 h-8 mb-4 text-gray-500"
                             aria-hidden="true"
@@ -350,7 +339,7 @@ const UpdateStorePage = ({ params }: { params: { id: number } }) => {
                           </p>
                         </div>
                         <input
-                          disabled={bgPreview ? true : false}
+                          disabled={oldBg ? true : false}
                           required
                           name="image-background"
                           id="image-background"
@@ -361,13 +350,14 @@ const UpdateStorePage = ({ params }: { params: { id: number } }) => {
                         />
                       </label>
                     </div>
-                    {bgPreview && (
-                      <div className=" flex items-center justify-center">
+                    {oldBg && (
+                      <div className="flex items-start justify-start">
                         <div className="flex relative">
                           <Image
-                            src={bgPreview}
+                          priority
+                            src={oldBg}
                             width={400}
-                            height={256}
+                            height={400}
                             alt="Background preview"
                             className="rounded-lg"
                           />
@@ -395,7 +385,7 @@ const UpdateStorePage = ({ params }: { params: { id: number } }) => {
                 </div>
               </div>
             </div>
-          </form>
+          </Form>
         </div>
       </div>
     </div>

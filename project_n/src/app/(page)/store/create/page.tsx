@@ -1,22 +1,26 @@
 "use client";
 
+import Form from "@/app/component/Form";
+import Input from "@/app/component/Input";
+import ShowError from "@/app/component/ShowError";
 import { CreateStore } from "@/app/service/store/service";
 import { useToast } from "@/hooks/use-toast";
 import { storage } from "@/lib/firebase/firebase";
+import { renderError, StoreSchema, validateWithZod } from "@/lib/zod/Schema";
 import {
   ref,
   uploadBytes,
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 import { v4 } from "uuid";
 
-const CreateStorePage = () => {
-  const router = useRouter();
+export default function CreateStorePage() {
+  const { data: session } = useSession();
   const { toast } = useToast();
 
   const [name, setName] = useState("");
@@ -28,6 +32,13 @@ const CreateStorePage = () => {
   const [bgPreview, setBgPreview] = useState<string>("");
 
   const [uploading, setUploading] = useState(false);
+
+  //error
+  const [error, setError] = useState<{
+    [key: string]: { message: string };
+  } | null>(null);
+  const [errorBg, setErrorBg] = useState("");
+  const [errorLogo, setErrorLogo] = useState("");
 
   // Cleanup function for preview URLs
   useEffect(() => {
@@ -55,6 +66,7 @@ const CreateStorePage = () => {
     }
   };
 
+  //delete Logo image
   const handleCancelLogo = () => {
     if (logoPreview) URL.revokeObjectURL(logoPreview);
     setImageLogo(null);
@@ -63,6 +75,7 @@ const CreateStorePage = () => {
     if (input) input.value = "";
   };
 
+  //delete Background image
   const handleCancelBackground = () => {
     if (bgPreview) URL.revokeObjectURL(bgPreview);
     setImageBackground(null);
@@ -81,7 +94,18 @@ const CreateStorePage = () => {
     try {
       let logoUrl = "";
       let bgUrl = "";
+      if (!imageLogo) {
+        setErrorLogo("กรุณาอัปโหลดรูปโลโก้ร้านค้าของคุณ");
+        return;
+      }
 
+      if (!imageBackground) {
+        setErrorBg("กรุณาอัปโหลดรูปพื้นหลังร้านค้าของคุณ");
+        return;
+      }
+      if (!imageLogo || !imageBackground) {
+        return; // หยุดการทำงานหากไม่มีรูปภาพใดรูปหนึ่ง
+      }
       if (imageLogo && imageBackground) {
         const storageLogoRef = ref(storage, `store/logo/${logoFileName}`);
         const storageBgRef = ref(storage, `store/background/${BgFileName}`);
@@ -101,14 +125,16 @@ const CreateStorePage = () => {
         imageLogoFileName: logoFileName,
         imageBackgroundURL: bgUrl,
         imageBgFileName: BgFileName,
-        userId: 1,
+        userId: Number(session?.user.id),
       };
+      validateWithZod(StoreSchema, data);
+      console.log(data);
       console.log(data);
       await CreateStore(data);
       toast({
-        description: "Create store successful!",
+        description: "สร้างร้านค้าสำเร็จ",
       });
-    } catch (error) {
+    } catch (error: any) {
       const deleteLogoRef = ref(storage, `store/logo/${logoFileName}`);
       const deleteBgRef = ref(storage, `store/background/${BgFileName}`);
 
@@ -126,72 +152,61 @@ const CreateStorePage = () => {
         .catch((error: any) => {
           console.log(error.message);
         });
-      if (error instanceof Error) {
-        console.error("Error uploading or submitting data", error);
-        toast({
-          variant: "destructive",
-          description: error.message,
-        });
-      } else {
-        console.error("Unexpected error", error);
-        toast({
-          variant: "destructive",
-          description: "An unexpected error occurred.",
-        });
+      if (error.fieldErrors) {
+        setError(error.fieldErrors); // ตั้งค่าข้อผิดพลาดโดยตรง
       }
     } finally {
       setUploading(false);
     }
   };
 
+  useEffect(() => {
+    setErrorLogo("");
+  }, [imageLogo]);
+
+  useEffect(() => {
+    setErrorBg("");
+  }, [imageBackground]);
   return (
     <div className="flex px-4">
-      <div className="flex flex-col h-full w-full max-w-[1200px] p-4 mx-auto border rounded-lg">
+      <div className="flex flex-col h-full w-full max-w-[1200px] mt-4 p-4 mx-auto border rounded-lg">
         <h1 className="text-5xl font-bold mb-4">สร้างร้านค้าของคุณ!</h1>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <Form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
-            <div>
-              <label htmlFor="name" className="text-xl font-bold block mb-2">
-                ชื่อร้านค้าของคุณ
-              </label>
-              <input
-                required
-                id="name"
-                onChange={(e) => setName(e.target.value)}
-                value={name}
-                placeholder="ชื่อร้านค้า..."
-                type="text"
-                className="w-96 p-3 rounded-xl border border-gray-500 bg-gray-50"
-              />
-            </div>
+            <Input
+              required={true}
+              name="name"
+              value={name}
+              onChange={setName}
+              label="ชื่อร้านค้าของคุณ"
+              placeholder="ชื่อร้านค้า..."
+              type=""
+              error={error?.name}
+            />
+
+            <Input
+              required={true}
+              name="description"
+              value={description}
+              onChange={setDescription}
+              label="รายละเอียดร้าน"
+              placeholder="รายละเอียดร้านค้า..."
+              type="textarea"
+              error={error?.description}
+            />
 
             <div>
-              <label
-                htmlFor="description"
-                className="text-xl font-bold block mb-2"
-              >
-                รายละเอียดร้าน
-              </label>
-              <textarea
-                required
-                id="description"
-                onChange={(e) => setDescription(e.target.value)}
-                value={description}
-                rows={5}
-                placeholder="รายละเอียดร้านค้า..."
-                className="w-96 p-3 rounded-xl border border-gray-500 bg-gray-50"
-              />
-            </div>
-
-            <div>
-              <p className="text-xl font-bold mb-2">รูปโลโก้ร้านค้าของคุณ</p>
+              <div className="flex text-xl font-bold">
+                <p className=" mb-2">รูปโลโก้ร้านค้าของคุณ</p>
+                <span className="text-red-500 ml-1">*</span>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center justify-center w-full">
+                <div className="flex items-start justify-start w-full">
                   <label
                     htmlFor="image-logo"
-                    className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+                    className="flex flex-col items-center justify-center h-[400px] w-[400px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
                   >
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <div className="flex flex-col h-[400px] w-[400px] items-center justify-center pt-5 pb-6">
                       <svg
                         className="w-8 h-8 mb-4 text-gray-500"
                         aria-hidden="true"
@@ -217,7 +232,6 @@ const CreateStorePage = () => {
                     </div>
                     <input
                       disabled={imageLogo ? true : false}
-                      required
                       accept="image/*"
                       name="image-logo"
                       id="image-logo"
@@ -228,14 +242,14 @@ const CreateStorePage = () => {
                   </label>
                 </div>
                 {logoPreview && (
-                  <div className=" flex items-center justify-center">
+                  <div className=" flex items-start justify-start">
                     <div className="flex relative">
                       <Image
                         src={logoPreview}
                         width={400}
                         height={400}
                         alt="Logo preview"
-                        className="  rounded-lg"
+                        className="rounded-lg"
                       />
                       <button
                         type="button"
@@ -249,17 +263,27 @@ const CreateStorePage = () => {
                   </div>
                 )}
               </div>
+              {errorLogo && (
+                <p className="text-sm text-red-500 mt-1 animate-fade-in">
+                  {errorLogo}
+                </p>
+              )}
             </div>
 
             <div>
-              <p className="text-xl font-bold mb-2">รูปพื้นหลังร้านค้าของคุณ</p>
+              <div className="flex text-xl font-bold">
+                <p className="text-xl font-bold mb-2">
+                  รูปพื้นหลังร้านค้าของคุณ
+                </p>
+                <span className="text-red-500 ml-1">*</span>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center justify-center w-full">
+                <div className="flex items-start justify-start w-full">
                   <label
                     htmlFor="image-background"
-                    className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+                    className="flex flex-col items-center justify-center h-[400px] w-[400px]  border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
                   >
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <div className="flex flex-col h-[400px] w-[400px] items-center justify-center pt-5 pb-6">
                       <svg
                         className="w-8 h-8 mb-4 text-gray-500"
                         aria-hidden="true"
@@ -285,7 +309,6 @@ const CreateStorePage = () => {
                     </div>
                     <input
                       disabled={imageBackground ? true : false}
-                      required
                       name="image-background"
                       id="image-background"
                       accept="image/*"
@@ -296,12 +319,12 @@ const CreateStorePage = () => {
                   </label>
                 </div>
                 {bgPreview && (
-                  <div className=" flex items-center justify-center">
+                  <div className=" flex items-start justify-start">
                     <div className="flex relative">
                       <Image
                         src={bgPreview}
                         width={400}
-                        height={256}
+                        height={400}
                         alt="Background preview"
                         className="rounded-lg"
                       />
@@ -317,6 +340,11 @@ const CreateStorePage = () => {
                   </div>
                 )}
               </div>
+              {errorBg && (
+                <p className="text-sm text-red-500 mt-1 animate-fade-in">
+                  {errorBg}
+                </p>
+              )}
             </div>
           </div>
 
@@ -329,10 +357,8 @@ const CreateStorePage = () => {
               {uploading ? "กำลังสร้าง..." : "สร้าง"}
             </button>
           </div>
-        </form>
+        </Form>
       </div>
     </div>
   );
-};
-
-export default CreateStorePage;
+}
