@@ -26,8 +26,8 @@ export const authOptions:NextAuthOptions  = {
           return {
             id: user.id.toString(),
             name: user.name,
-            email: user.email
-            
+            email: user.email,
+            roleId: user.roleId.toString()
           }
         } else {
           throw new Error("Username หรือ password ไม่ถูกต้อง กรุณากรอกใหม่")
@@ -38,18 +38,20 @@ export const authOptions:NextAuthOptions  = {
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: 'jwt',
-    maxAge:60 *5
+    maxAge:60 *60* 5 
   },
   callbacks: {
-    jwt: async ({ token, user }: { token: any; user?: { id: string } }) => {
+    jwt: async ({ token, user }: { token: any; user?: any }) => {
       if (user) {
         token.id = user.id
+        token.roleId = user.roleId
       }
       return token
     },
     session: async ({ session, token }: { session: any; token: any }) => {
       if (session.user) {
         session.user.id = token.id
+        session.user.roleId = token.roleId
         delete session.user.image
       }
       
