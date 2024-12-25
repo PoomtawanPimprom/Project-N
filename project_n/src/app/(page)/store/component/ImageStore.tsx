@@ -33,13 +33,14 @@ const ImageStore = ({ userId, ownerId, storeId, store }: prop) => {
 
   return (
     <div className="flex mx-auto">
-      <div className="flex flex-col relative md:w-[747px] lg:w-[1000px] xl:w-[1400px] h-[500px] justify-end items-end md:mt-2 md:rounded-lg">
+      <div className="flex flex-col relative md:w-[747px] lg:w-[1000px] xl:w-[1400px] h-[500px] justify-end items-end md:mt-4 md:rounded-lg">
         <Image
           src={store.imageBackgroundURL}
           width={1400}
           height={500}
           alt={store.name}
           className=" w-full h-full object-cover  md:rounded-lg"
+          priority={true}
         />
         <div className="absolute bottom-1 flex w-[1400px] justify-between p-1">
           <div className="text-7xl text-white font-bold">
