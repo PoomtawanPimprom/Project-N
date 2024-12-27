@@ -37,6 +37,7 @@ model User {
   Report      Report[]
   Store       Store[]
   OrderDetail OrderDetail[]
+  Follow      Follow[]
 }
 
 model Gender {
@@ -100,6 +101,7 @@ model Store {
   storeStatus   StoreStatus @relation(fields: [storeStatusId], references: [id])
 
   Product Product[]
+  Follow  Follow[]
 }
 
 model StoreStatus {
@@ -284,4 +286,16 @@ model PaymentStatus {
   id      Int       @id @default(autoincrement())
   name    String
   Payment Payment[]
+}
+
+//----------------------------------------------------------------------------------------------
+// Follow System
+
+model Follow {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  storeId Int
+  store   Store @relation(fields: [storeId], references: [id])
 }
