@@ -144,7 +144,7 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
               </div>
               <div className="flex">
                 <button
-                  className="py-2 px-4 rounded-lg bg-green text-white"
+                  className="py-2 px-4 rounded-lg bg-green-main text-white"
                   type="submit"
                   onClick={handleFliterChange}
                 >
