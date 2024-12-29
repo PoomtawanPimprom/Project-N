@@ -294,6 +294,7 @@ model PaymentStatus {
 model Follow {
   id     Int  @id @default(autoincrement())
   userId Int
+  createdAt DateTime @default(now())
   user   User @relation(fields: [userId], references: [id])
 
   storeId Int
