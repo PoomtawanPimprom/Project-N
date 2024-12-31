@@ -12,6 +12,7 @@ type InputProp = {
   disabled?: boolean;
   className?: string;
   labelClassName?: string;
+  inputClassName?: string;
 };
 
 export default function Input({
@@ -26,13 +27,14 @@ export default function Input({
   disabled,
   className,
   labelClassName,
+  inputClassName
 }: InputProp) {
   return (
     <div className={`w-full  ${className}`}>
       {label && (
         <label
           htmlFor={name}
-          className={`block text-xl font-bold mb-2 ${labelClassName}`}
+          className={cn(`block text-xl font-bold mb-2`,labelClassName)}
         >
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
@@ -47,7 +49,7 @@ export default function Input({
             placeholder={placeholder}
             onChange={(e) => onChange(e.target.value)}
             disabled={disabled}
-            className={`
+            className={cn(`
               w-96
               h-32
               p-3
@@ -70,7 +72,7 @@ export default function Input({
               }
               placeholder:text-gray-400
               text-sm
-            `}
+            `,inputClassName)}
           />
         ) : (
           <input
@@ -81,7 +83,7 @@ export default function Input({
             placeholder={placeholder}
             onChange={(e) => onChange(e.target.value)}
             disabled={disabled}
-            className={`
+            className={cn(`
               w-96
               p-3
               border
@@ -102,7 +104,7 @@ export default function Input({
               }
               placeholder:text-gray-400
               text-sm
-            `}
+            `,inputClassName)}
           />
         )}
       </div>
