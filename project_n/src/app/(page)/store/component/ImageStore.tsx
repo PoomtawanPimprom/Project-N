@@ -11,22 +11,28 @@ import { useRouter } from "next/navigation";
 import { MdOutlineInventory2 } from "react-icons/md";
 import Image from "next/image";
 
+
+import { useSession } from "next-auth/react";
+
 interface prop {
-  userId: number;
   ownerId: number | undefined;
   store: any;
   storeId: number;
 }
 
-const ImageStore = ({ userId, ownerId, storeId, store }: prop) => {
+const ImageStore = ({  ownerId, storeId, store }: prop) => {
   const router = useRouter();
+  const {data:session} = useSession();
   const [Owner, setOwner] = useState(false);
+
   const checkOwner = () => {
-    if (userId != ownerId) {
+    if (Number(session?.user.id) != ownerId) {
       setOwner(false);
+      return;
     }
     setOwner(true);
   };
+
   useEffect(() => {
     checkOwner();
   }, []);
@@ -70,10 +76,10 @@ const ImageStore = ({ userId, ownerId, storeId, store }: prop) => {
               </>
             )}
             <div className="flex items-end">
-              <ButtonChat userId={1} storeId={storeId} />
+              <ButtonChat userId={Number(session?.user?.id)} storeId={storeId} />
             </div>
             <div className="flex items-end">
-              <ButtonFollow userId={1} storeId={storeId} />
+              <ButtonFollow userId={Number(session?.user?.id)} storeId={storeId} />
             </div>
           </div>
         </div>
