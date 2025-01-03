@@ -2,11 +2,10 @@
 
 import Form from "@/app/component/Form";
 import Input from "@/app/component/Input";
-import ShowError from "@/app/component/ShowError";
 import { CreateStore } from "@/app/service/store/service";
 import { useToast } from "@/hooks/use-toast";
 import { storage } from "@/lib/firebase/firebase";
-import { renderError, StoreSchema, validateWithZod } from "@/lib/zod/Schema";
+import { StoreSchema, validateWithZod } from "@/lib/zod/Schema";
 import {
   ref,
   uploadBytes,
@@ -152,6 +151,7 @@ export default function CreateStorePage() {
         .catch((error: any) => {
           console.log(error.message);
         });
+      //handle error from Zod
       if (error.fieldErrors) {
         setError(error.fieldErrors); // ตั้งค่าข้อผิดพลาดโดยตรง
       }
