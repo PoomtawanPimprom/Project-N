@@ -59,14 +59,14 @@ model UserStatus {
 }
 
 model UserAddress {
-  id          Int    @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   firstName   String
   lastName    String
   houseNo     String
-  moo         String
-  province    String
-  district    String
-  subDistrict String
+  moo         String?
+  province    String //จังหวัด
+  district    String //อำเภอ
+  subDistrict String? //ตำบล
   postalCode  String
   mobile      String
   userId      Int
@@ -292,10 +292,10 @@ model PaymentStatus {
 // Follow System
 
 model Follow {
-  id     Int  @id @default(autoincrement())
-  userId Int
+  id        Int      @id @default(autoincrement())
+  userId    Int
   createdAt DateTime @default(now())
-  user   User @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   storeId Int
   store   Store @relation(fields: [storeId], references: [id])
