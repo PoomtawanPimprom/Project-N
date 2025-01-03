@@ -1,4 +1,6 @@
 import { cn } from "@/lib/utils";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 type InputProp = {
   type: string;
@@ -6,7 +8,7 @@ type InputProp = {
   name: string;
   error?: { message: string };
   onChange: (value: any) => void;
-  value: string;
+  value: any;
   placeholder: string;
   required?: boolean;
   disabled?: boolean;
@@ -27,20 +29,28 @@ export default function Input({
   disabled,
   className,
   labelClassName,
-  inputClassName
+  inputClassName,
 }: InputProp) {
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
+    
+  };
+  //check if input is a password and show/hide password icon
+  const inputType = type === "password" && showPassword ? "text" : type;
+
   return (
     <div className={`w-full  ${className}`}>
       {label && (
         <label
           htmlFor={name}
-          className={cn(`block text-xl font-bold mb-2`,labelClassName)}
+          className={cn(`block text-xl font-bold mb-2`, labelClassName)}
         >
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
-      <div className="">
+      <div className="relative">
         {type === "textarea" ? (
           <textarea
             id={name}
@@ -49,7 +59,8 @@ export default function Input({
             placeholder={placeholder}
             onChange={(e) => onChange(e.target.value)}
             disabled={disabled}
-            className={cn(`
+            className={cn(
+              `
               w-96
               h-32
               p-3
@@ -72,18 +83,21 @@ export default function Input({
               }
               placeholder:text-gray-400
               text-sm
-            `,inputClassName)}
+            `,
+              inputClassName
+            )}
           />
         ) : (
           <input
             id={name}
             name={name}
-            type={type}
+            type={inputType} 
             value={value}
             placeholder={placeholder}
             onChange={(e) => onChange(e.target.value)}
             disabled={disabled}
-            className={cn(`
+            className={cn(
+              `
               w-96
               p-3
               border
@@ -104,8 +118,25 @@ export default function Input({
               }
               placeholder:text-gray-400
               text-sm
-            `,inputClassName)}
+            `,
+              inputClassName
+            )}
           />
+        )}
+        {type == "password" && (
+          <>
+            <button
+              type="button"
+              onClick={togglePassword}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900"
+            >
+              {showPassword ? (
+                <EyeOff size={20} className="text-gray-500" />
+              ) : (
+                <Eye size={20} className="text-gray-500" />
+              )}
+            </button>
+          </>
         )}
       </div>
 
