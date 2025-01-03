@@ -1,6 +1,6 @@
 "use client";
-import ShowError from "@/app/component/ShowError";
-import { LoginSchema, renderError, validateWithZod } from "@/lib/zod/Schema";
+import Input from "@/app/component/Input";
+import { LoginSchema, validateWithZod } from "@/lib/zod/Schema";
 import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
@@ -11,33 +11,26 @@ const LoginPage = () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
 
-  const [error, setError] = useState("");
-  const togglePassword = () => {
-    setShowPassword(!showPassword);
-  };
+  const [error, setError] = useState<{
+    [key: string]: { message: string };
+  } | null>(null);
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const validatedDatas = validateWithZod(LoginSchema, { username, password });
+      validateWithZod(LoginSchema, { username, password });
       const result = await signIn("credentials", {
         redirect: false,
         username,
         password,
       });
-      if (result?.error) {
-         //handle validation errors from next-auth
-        setError(result.error);
-        console.error(result.error);
-        return false;
-      }
       router.push("/");
-    } catch (error) {
+    } catch (error: any) {
       //handle validation errors from zod
-      const err = renderError(error);
-      setError(err.message);
-      console.log(error);
+      if (error.fieldErrors) {
+        setError(error.fieldErrors);
+      }
     }
   };
   return (
@@ -54,51 +47,33 @@ const LoginPage = () => {
       <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2 ">
         <h1 className="text-2xl font-semibold mb-2">Login</h1>
         <form onSubmit={onSubmit} className="space-y-2">
+          
           {/* <!-- Username Input --> */}
-          <div className="">
-            <label htmlFor="username" className="block text-gray-600">
-              Username
-            </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-gray-900"
-              autoComplete="off"
-            />
-          </div>
+          <Input
+            label="Username"
+            labelClassName="font-normal text-base text-gray-600"
+            name="username"
+            value={username}
+            onChange={setUsername}
+            type="text"
+            placeholder=""
+            inputClassName="w-full"
+            error={error?.username}
+          />
+
           {/* <!-- Password Input --> */}
-          <div className="">
-            <label htmlFor="password" className="block text-gray-600">
-              Password
-            </label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-gray-900"
-                autoComplete="off"
-              />
-              <button
-                type="button"
-                onClick={togglePassword}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900"
-              >
-                {showPassword ? (
-                  <EyeOff size={20} className="text-gray-500" />
-                ) : (
-                  <Eye size={20} className="text-gray-500" />
-                )}
-              </button>
-            </div>
-          </div>
-          {/* error */}
-          <ShowError classname="mb-2" error={error} />
-          {/* <!-- Remember Me Checkbox --> */}
+          <Input
+            placeholder=""
+            label="Password"
+            labelClassName="font-normal text-base text-gray-600"
+            name="password"
+            value={password}
+            onChange={setPassword}
+            type="password"
+            inputClassName="w-full"
+            error={error?.password}
+          />
+
           <div className=" flex items-center">
             <input
               type="checkbox"

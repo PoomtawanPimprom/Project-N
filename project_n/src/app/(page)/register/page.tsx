@@ -1,4 +1,5 @@
 "use client";
+import Input from "@/app/component/Input";
 import ShowError from "@/app/component/ShowError";
 import { createUser } from "@/app/service/register/service";
 import { useToast } from "@/hooks/use-toast";
@@ -13,14 +14,18 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+
   const [error, setError] = useState("");
+  const [errorZod, setErrorZod] = useState<{
+    [key: string]: { message: string };
+  } | null>(null);
 
   const onSumbit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data = { username, email, password };
     try {
-      const validatedDatas = validateWithZod(RegisterSchema, data);
-      const res = await createUser(validatedDatas);
+      const data = { username, email, password };
+      validateWithZod(RegisterSchema, data);
+      const res = await createUser(data);
       if (res.success) {
         toast({
           description: res.message,
@@ -29,7 +34,12 @@ function Register() {
       } else {
         setError(res.message);
       }
-    } catch (error) {
+    } catch (error: any) {
+      //handle validation errors from zod
+      if (error.fieldErrors) {
+        setErrorZod(error.fieldErrors);
+        return;
+      }
       const err = renderError(error);
       setError(err.message);
     }
@@ -39,48 +49,44 @@ function Register() {
     <div className="bg-gray-100 flex justify-center items-center h-screen">
       <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2 ">
         <h1 className="text-2xl font-semibold mb-2">Register</h1>
-        <form  className="space-y-2" onSubmit={onSumbit}>
+        <form className="space-y-2" onSubmit={onSumbit}>
           {/* <!-- Username Input --> */}
-          <div className="">
-            <label htmlFor="username" className="block text-gray-600">
-              Username
-            </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-gray-900"
-              autoComplete="off"
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
+          <Input
+            label="Username"
+            labelClassName="font-normal text-base text-gray-600"
+            name="username"
+            value={username}
+            onChange={setUsername}
+            type="text"
+            placeholder=""
+            inputClassName="w-full"
+            error={errorZod?.username}
+          />
           {/* <!-- Password Input --> */}
-          <div className="">
-            <label htmlFor="password" className="block text-gray-600">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-gray-900"
-              autoComplete="off"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="">
-            <label htmlFor="email" className="block text-gray-600">
-              email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-gray-900"
-              autoComplete="off"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+          <Input
+            placeholder=""
+            label="Password"
+            labelClassName="font-normal text-base text-gray-600"
+            name="password"
+            value={password}
+            onChange={setPassword}
+            type="password"
+            inputClassName="w-full"
+            error={errorZod?.password}
+          />
+
+          {/* <!-- Email Input --> */}
+          <Input
+            placeholder=""
+            label="Email"
+            labelClassName="font-normal text-base text-gray-600"
+            type="email"
+            name="email"
+            inputClassName="w-full"
+            onChange={setEmail}
+            value={email}
+            error={errorZod?.email}
+          />
 
           <ShowError classname="mb-2" error={error} />
 
