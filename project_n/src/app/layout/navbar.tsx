@@ -2,8 +2,9 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { IoMdMore } from "react-icons/io";
-import { CircleUser, Heart, Moon, Search, ShoppingCart } from "lucide-react";
+import { CircleUser, Moon, ShoppingCart } from "lucide-react";
 import SearchInput from "./navber/SearchInput";
+import { signOut } from "next-auth/react";
 
 export default function Navbar() {
   const [toggleDropdown, setToggleDropdown] = useState(false);
@@ -69,7 +70,10 @@ export default function Navbar() {
                   >
                     สินค้าที่ชอบ
                   </Link>
-                  <button className="px-8 py-2  hover:bg-gray-100 text-center">
+                  <button
+                    onClick={() => signOut()}
+                    className="px-8 py-2  hover:bg-gray-100 text-center"
+                  >
                     Log out
                   </button>
                 </div>
