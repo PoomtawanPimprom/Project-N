@@ -57,7 +57,7 @@ export default function Input({
             name={name}
             value={value}
             placeholder={placeholder}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={onChange}
             disabled={disabled}
             className={cn(
               `
@@ -94,7 +94,7 @@ export default function Input({
             type={inputType} 
             value={value}
             placeholder={placeholder}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={onChange}
             disabled={disabled}
             className={cn(
               `

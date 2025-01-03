@@ -2,6 +2,7 @@
 
 import Form from "@/app/component/Form";
 import Input from "@/app/component/Input";
+import SubmitButtton from "@/app/component/SubmitButtton";
 import { CreateStore } from "@/app/service/store/service";
 import { useToast } from "@/hooks/use-toast";
 import { storage } from "@/lib/firebase/firebase";
@@ -177,7 +178,7 @@ export default function CreateStorePage() {
               required={true}
               name="name"
               value={name}
-              onChange={setName}
+              onChange={(e)=>setName(e.target.value)}
               label="ชื่อร้านค้าของคุณ"
               placeholder="ชื่อร้านค้า..."
               type=""
@@ -188,7 +189,7 @@ export default function CreateStorePage() {
               required={true}
               name="description"
               value={description}
-              onChange={setDescription}
+              onChange={(e)=>setDescription(e.target.value)}
               label="รายละเอียดร้าน"
               placeholder="รายละเอียดร้านค้า..."
               type="textarea"
@@ -349,13 +350,11 @@ export default function CreateStorePage() {
           </div>
 
           <div className="flex justify-end gap-4">
-            <button
-              type="submit"
-              disabled={uploading}
-              className="rounded-xl bg-green-main  py-2 px-6 font-bold text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {uploading ? "กำลังสร้าง..." : "สร้าง"}
-            </button>
+            <SubmitButtton
+            label="กำลังสร้าง..."
+            labelUploading="สร้าง"
+            disabled={uploading}
+            />
           </div>
         </Form>
       </div>

@@ -214,7 +214,7 @@ const UpdateStorePage = ({ params }: { params: { id: number } }) => {
                   required={true}
                   name="name"
                   value={name}
-                  onChange={setName}
+                  onChange={(e)=>setName(e.target.value)}
                   label="ชื่อร้านค้าของคุณ"
                   placeholder="ชื่อร้านค้า..."
                   type=""
@@ -224,7 +224,7 @@ const UpdateStorePage = ({ params }: { params: { id: number } }) => {
                   required={true}
                   name="description"
                   value={description}
-                  onChange={setDescription}
+                  onChange={(e)=>setDescription(e.target.value)}
                   label="รายละเอียดร้าน"
                   placeholder="รายละเอียดร้านค้า..."
                   type="textarea"

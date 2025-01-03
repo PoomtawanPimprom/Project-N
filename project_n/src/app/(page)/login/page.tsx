@@ -54,7 +54,7 @@ const LoginPage = () => {
             labelClassName="font-normal text-base text-gray-600"
             name="username"
             value={username}
-            onChange={setUsername}
+            onChange={(e)=>setUsername(e.target.value)}
             type="text"
             placeholder=""
             inputClassName="w-full"
@@ -68,7 +68,7 @@ const LoginPage = () => {
             labelClassName="font-normal text-base text-gray-600"
             name="password"
             value={password}
-            onChange={setPassword}
+            onChange={(e)=>setPassword(e.target.value)}
             type="password"
             inputClassName="w-full"
             error={error?.password}

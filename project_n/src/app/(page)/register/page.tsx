@@ -56,7 +56,7 @@ function Register() {
             labelClassName="font-normal text-base text-gray-600"
             name="username"
             value={username}
-            onChange={setUsername}
+            onChange={(e)=>setUsername(e.target.value)}
             type="text"
             placeholder=""
             inputClassName="w-full"
@@ -69,7 +69,7 @@ function Register() {
             labelClassName="font-normal text-base text-gray-600"
             name="password"
             value={password}
-            onChange={setPassword}
+            onChange={(e)=>setPassword(e.target.value)}
             type="password"
             inputClassName="w-full"
             error={errorZod?.password}
@@ -83,7 +83,7 @@ function Register() {
             type="email"
             name="email"
             inputClassName="w-full"
-            onChange={setEmail}
+            onChange={(e)=>setEmail(e.target.value)}
             value={email}
             error={errorZod?.email}
           />

@@ -27,7 +27,6 @@ export default async function RootLayout({
       <body className={inter.className}>
         <main className="font-noto">
           <SessionProvider session={session}>
-            <Navbar/>
             {children}
             </SessionProvider>
         </main>
