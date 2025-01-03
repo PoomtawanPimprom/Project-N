@@ -63,3 +63,25 @@ export const StoreSchema = z.object({
 });
 
 //product
+export const productSchema = z.object({
+    name: z
+      .string()
+      .min(1, "กรุณากรอกชื่อสินค้า")
+      .max(100, "ชื่อสินค้าความยาวเกินกำหนด"),
+    description: z
+      .string()
+      .min(1, "กรุณากรอกรายละเอีดยสินค้า")
+      .max(200, "รายละเอีดยสินค้าความยาวเกินกำหนด"),
+    price: z.number().min(1, "กรุณากรอกราคาสินค้า"),
+    storeID: z.number().min(1),
+    categoryID: z.number().min(1, "กรุณากรอกราคาสินค้า"),
+    image: z.object({}).optional(), // เปลี่ยนจาก image เป็น images และใช้ object แทน array
+    inventory: z
+      .object({
+        quantity: z.number().optional(),
+        size: z.string().optional(),
+        color: z.string().optional(),
+      })
+      .optional(),
+  });
+  
