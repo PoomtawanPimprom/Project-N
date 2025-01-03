@@ -16,8 +16,6 @@ export async function GET(request: NextRequest, { params }: { params: { userId: 
 
         const data = await prisma.follow.findFirst({ where: { userId: userId, storeId: storeId } })
 
-        //caae : not found 
-        if (!data) return NextResponse.json({ follow: false }, { status: 200 });
         
         //case : found
         return NextResponse.json(data, { status: 200 });
