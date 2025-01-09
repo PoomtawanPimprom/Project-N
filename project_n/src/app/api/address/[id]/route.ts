@@ -23,8 +23,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   const addressId = Number(params.id)
   try {
     const {
-      firstName,
-      lastName,
+      fullName,
       houseNo,
       moo,
       province,
@@ -35,8 +34,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     } = await request.json();
     const updatePost = await prisma.userAddress.update({
       where: { id: addressId }, data: {
-        firstName,
-        lastName,
+        fullName,
         houseNo,
         moo,
         province,
