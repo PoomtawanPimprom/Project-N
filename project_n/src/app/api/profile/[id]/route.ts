@@ -20,10 +20,11 @@ export async function PUT(request: NextRequest, { params } : { params: { id: str
             birthdate,
             profile,
             saler,
+            resetToken,
+            resetTokenExp,
             genderId,
             roleId,
             userStatusId,
-            userAddressId
         } = await request.json();
         const userId = Number(params.id)
         const updatePost = await prisma.user.update({
@@ -36,10 +37,11 @@ export async function PUT(request: NextRequest, { params } : { params: { id: str
                 birthdate: new Date(birthdate),
                 profile,
                 saler,
+                resetToken,
+                resetTokenExp,
                 genderId,
                 roleId,
                 userStatusId,
-                userAddressId
             }
         });
         return NextResponse.json(updatePost);
