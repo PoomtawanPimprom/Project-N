@@ -20,8 +20,7 @@ export default function editAddress() {
     const [addresses, setAddresses] = useState<userAddressInterface[]>([]);
     const [updateAddressData, setUpdateAddressData] = useState<userAddressInterface>({
         id: 0,
-        firstName: '',
-        lastName: '',
+        fullName: '',
         houseNo: '',
         moo: '',
         province: '',
@@ -47,8 +46,7 @@ export default function editAddress() {
         try {
             console.log(updateAddressData)
             await updateUserAddress(updateAddressData.id, {
-                firstName: updateAddressData.firstName,
-                lastName: updateAddressData.lastName,
+                fullName: updateAddressData.fullName,
                 houseNo: updateAddressData.houseNo,
                 moo: updateAddressData.moo,
                 province: updateAddressData.province,
@@ -112,13 +110,8 @@ export default function editAddress() {
                                 <form className="space-y-4" onSubmit={addDataAddress}>
 
                                     <div>
-                                        <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
-                                        <input type="text" id="firstName" name="firstName" onChange={handleInput} className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="First Name" />
-                                    </div>
-                                    
-                                    <div>
-                                        <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
-                                        <input type="text" id="lastName" name="lastName" onChange={handleInput} className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="Last Name" />
+                                        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Full Name</label>
+                                        <input type="text" id="fullName" name="fullName" onChange={handleInput} className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="First Name" />
                                     </div>
 
                                     <div>
@@ -170,7 +163,7 @@ export default function editAddress() {
 
                                 <div className="flex flex-wrap items-center gap-2 text-base">
                                     <h1 className="font-semibold">
-                                        {address.firstName} {address.lastName}
+                                        {address.fullName} {address.fullName}
                                     </h1>
                                     <Separator orientation="vertical" className="hidden sm:block" />
                                     <p className="text-gray-600">{address.mobile || "No Number"}</p>
@@ -216,31 +209,16 @@ export default function editAddress() {
                                     <form className="space-y-4" onSubmit={handleSubmit} >
                                         <div>
                                             <label htmlFor='firstName' className="block text-sm font-medium text-gray-700">
-                                                FirstName
+                                                fullName
                                             </label>
                                             <input
                                                 type="text"
                                                 id="firstName"
                                                 name="firstName"
-                                                value={updateAddressData.firstName}
+                                                value={updateAddressData.fullName}
                                                 onChange={handleInput}
                                                 className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
                                                 placeholder="First Name"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label htmlFor='lastName' className="block text-sm font-medium text-gray-700">
-                                                LastName
-                                            </label>
-                                            <input
-                                                type="text"
-                                                id="lastName"
-                                                name="lastName"
-                                                value={updateAddressData.lastName}
-                                                onChange={handleInput}
-                                                className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
-                                                placeholder="Last Name"
                                             />
                                         </div>
 
