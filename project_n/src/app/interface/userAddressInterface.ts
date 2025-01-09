@@ -1,8 +1,7 @@
 import { userInterface } from "./userInterface"
 export interface userAddressInterface {
     id: number
-    firstName: string
-    lastName: string
+    fullName: string
     houseNo: string
     moo: string
     province: string
