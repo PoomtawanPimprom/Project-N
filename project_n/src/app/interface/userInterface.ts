@@ -13,6 +13,8 @@ export interface userInterface{
     birthdate? :Date   //Optional   
     profile   ?:string
     saler     :boolean
+    resetToken? :string
+    resetTokenExp :Date
 
     genderId:number
     gender?: genderInterface
@@ -22,7 +24,5 @@ export interface userInterface{
 
     userStatusId:number
     userStatus?: userStatusInterface
-    
-    userAddressId:number
-    userAddress?: userAddressInterface
+
 }
