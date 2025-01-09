@@ -19,10 +19,11 @@ export async function POST(request: NextRequest) {
             birthdate,
             profile,
             saler,
+            resetToken,
+            resetTokenExp,
             genderId,
             roleId,
             userStatusId,
-            userAddressId
         } = await request.json();
 
         await prisma.user.create({
@@ -35,10 +36,11 @@ export async function POST(request: NextRequest) {
                 birthdate: new Date(birthdate),
                 profile,
                 saler,
+                resetToken,
+                resetTokenExp,
                 genderId,
                 roleId,
                 userStatusId,
-                userAddressId
             }
         });
         return new NextResponse("User created successfully", { status: 201 });
