@@ -20,12 +20,13 @@ function profile() {
         genderId: 0,
         roleId: 0,
         userStatusId: 0,
-        userAddressId: 0,
+        resetToken: "",
+        resetTokenExp: new Date(),
     });
 
 
     const fetchUserData = async () => {
-        const res = await getUserById(3);
+        const res = await getUserById(1);
         setUserData(res);
         console.log(res);
     }
@@ -50,7 +51,6 @@ function profile() {
                 genderId: userData.genderId,
                 roleId: userData.roleId,
                 userStatusId: userData.userStatusId,
-                userAddressId: userData.userAddressId,
             });
     
             alert("Profile updated successfully!");
@@ -118,11 +118,7 @@ function profile() {
                                 id="birthdate"
                                 name="birthdate"
 
-                                value={
-                                    userData.birthdate instanceof Date
-                                        ? userData.birthdate.toISOString().split("T")[0] // แปลง Date เป็น YYYY-MM-DD
-                                        : ""
-                                }
+                                value={ userData.birthdate ? new Date(userData.birthdate).toISOString().split("T")[0] : "" }
                                 onChange={(e) => {
                                     setUserData((prevData) => ({
                                         ...prevData,
