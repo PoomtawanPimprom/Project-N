@@ -1,3 +1,4 @@
+import { userAddressStatusInterface } from "./userAddressStatusInterface"
 import { userInterface } from "./userInterface"
 export interface userAddressInterface {
     id: number
@@ -12,4 +13,7 @@ export interface userAddressInterface {
     
     userId:number
     user?: userInterface
+
+    addressStatusId?:number
+    addressStatus:userAddressStatusInterface
 }
