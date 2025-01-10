@@ -72,6 +72,15 @@ model UserAddress {
 
   userId      Int?
   user        User? @relation(fields: [userId], references: [id])
+
+  addressStatusId      Int?
+  addressStatus        AddressStatus? @relation(fields: [addressStatusId], references: [id])
+}
+
+model AddressStatus {
+  id          Int     @id @default(autoincrement())
+  name        String
+  UserAddress UserAddress[]
 }
 
 //----------------------------------------------------------------------------------------------
