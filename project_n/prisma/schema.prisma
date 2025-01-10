@@ -30,9 +30,10 @@ model User {
   userStatusId Int        @default(1)
   userStatus   UserStatus @relation(fields: [userStatusId], references: [id])
 
-  userAddressId Int?
-  userAddress   UserAddress? @relation(fields: [userAddressId], references: [id])
+  // userAddressId Int?
+  // userAddress   UserAddress? @relation(fields: [userAddressId], references: [id])
 
+  UserAddress UserAddress[]
   Favorite    Favorite[]
   Report      Report[]
   Store       Store[]
@@ -59,9 +60,8 @@ model UserStatus {
 }
 
 model UserAddress {
-  id          Int     @id @default(autoincrement())
-  firstName   String
-  lastName    String
+  id          Int    @id @default(autoincrement())
+  fullName    String
   houseNo     String
   moo         String?
   province    String //จังหวัด
@@ -69,9 +69,9 @@ model UserAddress {
   subDistrict String? //ตำบล
   postalCode  String
   mobile      String
-  userId      Int
 
-  User User[]
+  userId      Int?
+  user        User? @relation(fields: [userId], references: [id])
 }
 
 //----------------------------------------------------------------------------------------------
