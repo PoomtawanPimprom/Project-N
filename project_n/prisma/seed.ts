@@ -49,8 +49,7 @@ const reportStatusData = [
 
 const userAddressData =
 {
-    firstName: "test1",
-    lastName: "String",
+    fullName: "test1 String",
     houseNo: "String",
     moo: "String",
     province: "String",
@@ -114,8 +113,14 @@ const paymentMethodData = [
     {id: 3,name: "บัตรเครดิต/บัตรเดบิต" },
 ]
 
+const userAddressStatusData = [
+    { id: 0, name: "non" },
+    { id: 1, name: "set-Default" },
+]
+
 async function main() {
     try {
+        await prisma.addressStatus.createMany({data: userAddressStatusData})
         await prisma.paymentMethod.createMany({ data: paymentMethodData })
         await prisma.paymentStatus.createMany({ data: paymentStatusData })
         await prisma.orderStatus.createMany({ data: orderStatusData })
