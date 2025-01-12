@@ -4,7 +4,7 @@ import { useState } from "react";
 
 type InputProp = {
   type: string;
-  label: string;
+  label?: string;
   name: string;
   error?: { message: string };
   onChange: (value: any) => void;
