@@ -19,7 +19,7 @@ import React, { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import ModalDelete from "./ModalDelete";
 import { v4 } from "uuid";
-import { storage } from "@/lib/firebase/firebase";
+import { extractFileNameFromUrl, storage } from "@/lib/firebase/firebase";
 import { deleteObject, ref, uploadBytes } from "firebase/storage";
 import Form from "@/app/component/Form";
 import Input from "@/app/component/Input";
@@ -201,16 +201,7 @@ export default function editProductpage({
     }
   };
 
-  const extractFileNameFromUrl = (url: string): string | null => {
-    const regex = /products%2F([^?]+)/;
-    const match = url.match(regex);
 
-    if (match && match[1]) {
-      return decodeURIComponent(match[1]);
-    }
-
-    return null; // ถ้าไม่พบผลลัพธ์จะคืนค่า null
-  };
 
   // ฟังก์ชันลบรูปภาพจาก Firebase
   const deleteUploadedImages = async (images: string[]) => {
@@ -218,7 +209,7 @@ export default function editProductpage({
       console.log("start detele");
       await Promise.all(
         images.map(async (imgUrl) => {
-          const fileName = extractFileNameFromUrl(imgUrl);
+          const fileName = extractFileNameFromUrl("products",imgUrl);
           console.log(fileName);
           const refPath = `products/${fileName}`;
 
