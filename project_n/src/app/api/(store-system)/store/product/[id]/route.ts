@@ -35,7 +35,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             where: { storeID: storeId },
             orderBy: {
                 createdAt: sortDate === 'asc' ? 'asc' : 'desc'
-            }
+            },
+            include:{category:true}
         })
         
         return NextResponse.json(data)
