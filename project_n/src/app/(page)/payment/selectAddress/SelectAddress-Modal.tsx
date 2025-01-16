@@ -9,7 +9,7 @@ import { CirclePlus } from "lucide-react";
 type Modalprop = {
   user: userInterface;
   open: boolean;
-  allUserAddress: userAddressInterface[]; 
+  allUserAddress: userAddressInterface[];
   defalutAddress: userAddressInterface;
   onClose: () => void;
   closeSelectOpenCreateAddress: () => void;
@@ -23,28 +23,28 @@ export default function SelectAddressModal({
   onClose,
   closeSelectOpenCreateAddress,
 }: Modalprop) {
-
-
   const [selectAddress, setSelectAddress] = useState<userAddressInterface>();
-  const UpdateAddressActionBindAddressId = UpdateAddressAction.bind(null,( !selectAddress?.id? null : 1 ));
-
+  const UpdateAddressActionBindUserId = UpdateAddressAction.bind(null, {
+    userId: user.id,
+    defalutAddressId: defalutAddress?.id,
+  });
 
   const concatAddress = (address: userAddressInterface) => {
     return `${address.houseNo}, ม.${address.moo}, ต.${address.subDistrict}, อ.${address.district}, จ.${address.province}, ${address.postalCode}`;
   };
-
-  const isCurrentAddress = (address: userAddressInterface) => {
-    if (defalutAddress.id === address.id) {
-      return true;
-    } else {
-      return false;
+  useEffect(() => {
+    // Set the default address when the modal is opened
+    if (defalutAddress) {
+      setSelectAddress(defalutAddress);
     }
-  };
+  }, [defalutAddress]);
+
+
 
   return (
     <Modal open={open} onClose={onClose}>
       <div className="flex flex-col w-64 sm:w-96 ">
-        <form action={UpdateAddressActionBindAddressId} className="space-y-2">
+        <form action={UpdateAddressActionBindUserId} className="space-y-2">
           <div className="flex font-bold text-xl">
             <p>ที่อยู่ของฉัน</p>
           </div>
@@ -79,9 +79,10 @@ export default function SelectAddressModal({
           <div className="flex w-full justify-between space-x-2 font-semibold">
             <div>
               <button
-               type="button"
-               onClick={closeSelectOpenCreateAddress}
-               className="flex px-2 py-4 border rounded-lg justify-center font-bold">
+                type="button"
+                onClick={closeSelectOpenCreateAddress}
+                className="flex px-2 py-4 border rounded-lg justify-center font-bold"
+              >
                 <CirclePlus className="mr-2" />
                 <p>สร้างที่อยู่ใหม่</p>
               </button>
