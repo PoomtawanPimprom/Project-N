@@ -1,7 +1,7 @@
 "use client";
 import { reivewInterface } from "@/app/interface/reviewInterface";
 import { deleteReviewById } from "@/app/service/review/service";
-import { deleteUploadedImages } from "@/lib/firebase/firebase";
+import { deleteUploadedImage } from "@/lib/firebase/firebase";
 import { Image, MessageSquare, MoreVertical, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -31,11 +31,12 @@ export default function ShowComment({ reviewByProductId, userId }: prop) {
       console.log(review)
       //check if the review have images
       if (review.images && Object.keys(review.images).length > 0) {
-        console.log("startttttttttttttttttttttttttttttttttttttt");
-        await deleteUploadedImages(
-          "review",
-          Object.values(review.images).map((item, index) => `${item}_${index + 1}`)
-        );
+        console.log("start deleting images...");
+        
+        const imageUrls = getImageUrls(review.images);
+        for (const imgUrl of imageUrls) {
+          await deleteUploadedImage("review", imgUrl);
+        }
       }
       
       await deleteReviewById(review.id);

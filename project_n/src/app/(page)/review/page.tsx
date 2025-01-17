@@ -13,7 +13,7 @@ export default async function ReviewPage() {
     redirect("/login")
   }
   const userId = Number(session.user?.id)
-  const productId = 1;
+  const productId = 2;
   const allReviewsByProductId = (await prisma.review.findMany({
     where: { productId },
     include: {
@@ -22,7 +22,7 @@ export default async function ReviewPage() {
   })) as reivewInterface[];
   return (
     <div className="flex flex-col p-4 gap-2">
-      <CreateReview productId={1} userId={userId}/>
+      <CreateReview productId={productId} userId={userId}/>
       <ShowComment reviewByProductId={allReviewsByProductId} userId={userId}/>
     </div>
   );

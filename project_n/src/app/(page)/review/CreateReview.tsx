@@ -3,19 +3,12 @@ import Form from "@/app/component/Form";
 import Input from "@/app/component/Input";
 import SubmitButtton from "@/app/component/SubmitButtton";
 import { createReview } from "@/app/service/review/service";
-import { storage } from "@/lib/firebase/firebase";
+import { deleteUploadedImage, genarateImageName, storage, uploadImageToFirebase } from "@/lib/firebase/firebase";
 import { reviewSchema, validateWithZod } from "@/lib/zod/Schema";
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
 import { ImagePlus, NotebookPen, X } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
-import { v4 } from "uuid";
-import { z } from "zod";
 
 type prop = {
   userId: number;
@@ -30,12 +23,15 @@ export default function CreateReview({ userId, productId }: prop) {
   const [formData, setFormData] = useState({
     comment: "",
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<{
     [key: string]: { message: string };
   } | null>(null);
+
   const [imageError, setImageError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -106,13 +102,13 @@ export default function CreateReview({ userId, productId }: prop) {
 
       //prepare image for upload to firebase
       const imageUrls: { [key: string]: string } = {};
+
+      //upload image into firebase
       uploadedImages = await Promise.all(
         images.map(async (image, index) => {
-          const reviewName = v4();
-          const storageRef = ref(storage, `review/${reviewName}`);
-          await uploadBytes(storageRef, image);
-          const url = await getDownloadURL(storageRef);
-          return { index: index + 1, url, ref: storageRef }; // เก็บ reference สำหรับลบ
+          const reviewName = genarateImageName();
+          const result = await uploadImageToFirebase(image,reviewName,"review")
+          return { index: index + 1, url:result.downloadURL, ref: result.Ref }; // เก็บ reference สำหรับลบ
         })
       );
       uploadedImages.forEach(({ index, url }) => {
@@ -137,12 +133,11 @@ export default function CreateReview({ userId, productId }: prop) {
     } catch (error: any) {
       if (uploadedImages.length > 0) {
         await Promise.all(
-          uploadedImages.map(async ({ ref }) => {
+          uploadedImages.map(async ({ ref, url }) => {
             try {
-              await deleteObject(ref);
-              console.log("Deleted file from Firebase:", ref.fullPath);
+              await deleteUploadedImage("review", url); // Use the provided function to delete
             } catch (deleteError) {
-              console.error("Error deleting file:", ref.fullPath, deleteError);
+              console.error("Error deleting uploaded image:", deleteError);
             }
           })
         );
@@ -201,10 +196,12 @@ export default function CreateReview({ userId, productId }: prop) {
           <div className="grid grid-cols-5 gap-2">
             {images.map((file, index) => (
               <div key={index} className="relative group">
-                <img
+                <Image
+                  priority
+                  height={96}
                   src={URL.createObjectURL(file)}
                   alt={`Preview ${index + 1}`}
-                  className="w-full h-24 object-cover rounded-lg"
+                  className="w-full  object-cover rounded-lg"
                 />
                 <button
                   type="button"
