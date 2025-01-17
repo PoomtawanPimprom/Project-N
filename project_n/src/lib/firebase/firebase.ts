@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { deleteObject, getStorage, ref } from "firebase/storage";
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDtSsC_sxR5jAHebVyByvYwE5WJ-CBPUyc",
@@ -16,10 +17,37 @@ const storage = getStorage(app);
 
 
 
-export {storage};
+export { storage };
+
+//create
+export const genarateImageName = () => { return v4() }
+
+export async function uploadImageToFirebase(
+  image: File, 
+  imageName: string,
+  folder: string) {
+    try {
+      // Create a reference to the storage location
+      const Ref = ref(storage, `${folder}/${imageName}`);
+  
+      // Upload the image
+      await uploadBytes(Ref, image);
+  
+      // Get the download URL
+      const downloadURL = await getDownloadURL(Ref);
+      
+      //return the download URL
+      return {downloadURL,Ref};
+    } catch (error) {
+      console.error("Error uploading image: ", error);
+      throw error;
+    }
+}
 
 
-export const extractFileNameFromUrl = (folder: string,url: string): string | null => {
+// part delete fild 
+
+export const extractFileNameFromUrl = (folder: string, url: string): string | null => {
   const regex = new RegExp(`${folder}%2F([^?]+)`);
   const match = url.match(regex);
 
@@ -30,23 +58,15 @@ export const extractFileNameFromUrl = (folder: string,url: string): string | nul
   return null; // ถ้าไม่พบผลลัพธ์จะคืนค่า null
 };
 
-export const deleteUploadedImages = async (folder: string,images: string[]) => {
-    try {
-      console.log("start detele");
-      await Promise.all(
-        images.map(async (imgUrl) => {
-          console.log("folder",folder)
-          const fileName = extractFileNameFromUrl(folder,imgUrl);
-          const refPath = `${folder}/${fileName}`;
+export const deleteUploadedImage = async (folder: string, imageUrl: string) => {
+  try {
 
-
-          const storageRef = ref(storage, refPath);
-
-          await deleteObject(storageRef);
-          console.log("deleted image done");
-        })
-      );
-    } catch (error) {
-      console.error("Error deleting uploaded images", error);
-    }
-  };
+    const fileName = extractFileNameFromUrl(folder, imageUrl);
+    const refPath = `${folder}/${fileName}`;
+    const storageRef = ref(storage, refPath);
+    
+    await deleteObject(storageRef);
+  } catch (error) {
+    console.error("Error deleting uploaded image", error);
+  }
+};
