@@ -4,10 +4,15 @@ import MenuLeft from "../menuleft";
 import { Eye, EyeClosed } from "lucide-react";
 
 export default function Password() {
+    // Set assign values
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
+
+    // 
+    const [showCurPass, setShowCurPass] = useState(false);
+    const [showNewPass, setNewPass] = useState(false);
+    const [showConfirmPass, setConfirmPass] = useState(false);
 
     const handleSubmit = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -32,15 +37,15 @@ export default function Password() {
                             <label className="block text-sm font-medium text-gray-700">Current Password</label>
                             <div className="relative">
                                 <input
-                                    type={showPassword ? "text" : "password"}
+                                    type={showCurPass ? "text" : "password"}
                                     className="w-full border rounded-md p-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-gray-500"
                                     value={currentPassword}
                                     onChange={(e) => setCurrentPassword(e.target.value)}
                                     required
                                 />
                                 <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600"
-                                    onClick={() => setShowPassword(!showPassword)}>
-                                    {showPassword ? <Eye /> : <EyeClosed />}
+                                    onClick={() => setShowCurPass(!showCurPass)}>
+                                    {showCurPass ? <Eye /> : <EyeClosed />}
                                 </button>
                             </div>
                         </div>
@@ -49,7 +54,7 @@ export default function Password() {
                             <label className="block text-sm font-medium text-gray-700">New Password</label>
                             <div className="relative">
                                 <input
-                                    type={showPassword ? "text" : "password"}
+                                    type={showNewPass ? "text" : "password"}
                                     className="w-full border rounded-md p-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-gray-500"
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
@@ -58,9 +63,9 @@ export default function Password() {
                                 <button
                                     type="button"
                                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600"
-                                    onClick={() => setShowPassword(!showPassword)}
+                                    onClick={() => setNewPass(!showNewPass)}
                                 >
-                                    {showPassword ? <Eye /> : <EyeClosed />}
+                                    {showNewPass ? <Eye /> : <EyeClosed />}
                                 </button>
                             </div>
                         </div>
@@ -69,7 +74,7 @@ export default function Password() {
                             <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
                             <div className="relative">
                                 <input
-                                    type={showPassword ? "text" : "password"}
+                                    type={showConfirmPass ? "text" : "password"}
                                     className="w-full border rounded-md p-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-gray-500"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
@@ -78,9 +83,9 @@ export default function Password() {
                                 <button
                                     type="button"
                                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600"
-                                    onClick={() => setShowPassword(!showPassword)}
+                                    onClick={() => setConfirmPass(!showConfirmPass)}
                                 >
-                                    {showPassword ? <Eye /> : <EyeClosed />}
+                                    {showConfirmPass ? <Eye /> : <EyeClosed />}
                                 </button>
                             </div>
                         </div>

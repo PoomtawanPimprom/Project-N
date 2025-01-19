@@ -15,5 +15,5 @@ export interface userAddressInterface {
     user?: userInterface
 
     addressStatusId?:number
-    addressStatus:userAddressStatusInterface
+    addressStatus?:userAddressStatusInterface
 }

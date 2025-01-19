@@ -145,7 +145,7 @@ const UpdateStorePage = ({ params }: { params: { id: number } }) => {
       toast({
         description: "บันทึกข้อมูลสำเร็จ",
       });
-      // router.push(`/store/${storeID}`);
+
     } catch (error: any) {
       toast({
         variant:"destructive",

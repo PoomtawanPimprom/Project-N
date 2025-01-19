@@ -47,20 +47,11 @@ const reportStatusData = [
     { id: 3, name: "เรียบร้อยแล้ว" }
 ]
 
-const userAddressData =
-{
-    firstName: "test1",
-    lastName: "String",
-    houseNo: "String",
-    moo: "String",
-    province: "String",
-    district: "String",
-    subDistrict: "String",
-    postalCode: "123",
-    mobile: "1324",
-    userId: 1
-}
-    ;
+const addressStatusData = [
+    { id: 1, name: "ส่งแล้ว" },
+    { id: 2, name: "รับเรื่องแล้ว" },
+    { id: 3, name: "เรียบร้อยแล้ว" }
+]
 
 const userData =
 {
@@ -73,11 +64,27 @@ const userData =
     birthdate: new Date(1990, 0, 1),
     profile: "test1",
     saler: false,
+    resetToken: 'tokenJingJing',
+    resetTokenExp: new Date(1990, 0, 1),
     genderId: 1,
     roleId: 1,
     userStatusId: 1,
-    userAddressId: 1
 }
+const userAddressData =
+{
+    id: 1,
+    fullName: "First & Last Name",
+    houseNo: "String",
+    moo: "String",
+    province: "String",
+    district: "String",
+    subDistrict: "String",
+    postalCode: "123",
+    mobile: "1324",
+    userId: 1
+}
+    ;
+
 
 const storeData =
 {

@@ -25,21 +25,21 @@ export default function MenuLeft() {
                 <ul className="gap-2 ">
                     <div className="relative">
                         <BsPersonVcard className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
-                        <li className="pl-10 text-1"><Link href='/profile'>Manage Account</Link></li>
+                        <li className="pl-10 text-1  hover:text-slate-500"><Link href='/profile'>จัดการบัญชี</Link></li>
                     </div>
-                    <li className="pl-10 text-1"><Link href='/profile/address'>Manage Address</Link></li>
-                    <li className="pl-10 text-1"><Link href='/profile/password'>Change Password</Link></li>
+                    <li className="pl-10 text-1 hover:text-slate-600"><Link href='/profile/address'>จัดการที่อยู่</Link></li>
+                    <li className="pl-10 text-1 hover:text-slate-600"><Link href='/profile/password'>เปลี่ยนรหัสผ่าน</Link></li>
                 </ul>
                 <ul className="gap-2">
                     <div className="relative">
                         <IoIosGift className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
-                        <li className="pl-10 text-1"><Link href='/profile/purchase'>My Purchase</Link></li>
+                        <li className="pl-10 text-1 hover:text-slate-600"><Link href='/profile/purchase'>คำสั่งซื้อสินค้า</Link></li>
                     </div>
                 </ul>
                 <ul className="gap-2">
                     <div className="relative">
                         <MdPayment className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
-                        <li className="pl-10 text-1"><Link href='/profile/voucher'>Voucher</Link></li>
+                        <li className="pl-10 text-1 hover:text-slate-600"><Link href='/profile/voucher'>คูปอง</Link></li>
                     </div>
                 </ul>
             </div>
