@@ -1,15 +1,21 @@
 "use client";
+import Input from "@/app/component/Input";
 //interfaces
 import { categoryInterface } from "@/app/interface/categoryInterface";
 
-//services
 import { getAllCategory } from "@/app/service/category/service";
 import { CreateProdcut } from "@/app/service/product/service";
-import { useToast } from "@/hooks/use-toast";
-import { storage } from "@/lib/firebase/firebase";
-import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
-import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
+
+import { storage } from "@/lib/firebase/firebase";
+import { productSchema, validateWithZod } from "@/lib/zod/Schema";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { v4 } from "uuid";
@@ -22,8 +28,12 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
 
   //state
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
+  const [error, setError] = useState<{
+    [key: string]: { message: string };
+  } | null>(null);
+
+  const [errorImage, setErrorImage] = useState("");
   //product
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -40,12 +50,12 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
     const files = Array.from(e.target.files);
 
     if (images.length + files.length > 5) {
-      setError("สามารถอัพโหลดรูปได้สูงสุด 5 รูปเท่านั้น");
+      setErrorImage("สามารถอัพโหลดรูปได้สูงสุด 5 รูปเท่านั้น");
       return;
     }
 
     setImages((prev) => [...prev, ...files]);
-    setError("");
+    setErrorImage("");
   };
 
   const removeImage = (index: number) => {
@@ -84,19 +94,11 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
 
   const onSubmitCreateProduct = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted. Setting loading to true...");
     let uploadedImages: { index: number; url: string; ref: any }[] = [];
     try {
       setLoading(true);
-      console.log("Loading state after setting:", loading);
-      if (!name || !description || price <= 0 || category === 0) {
-        setError("กรุณากรอกข้อมูลสินค้าทั้งหมดให้ครบถ้วน");
-        setLoading(false);
-        return;
-      }
-
+      if (images.length === 0) throw new Error("กรุ��าเลือกรูปสินค้า");
       const imageUrls: { [key: string]: string } = {};
-
       uploadedImages = await Promise.all(
         images.map(async (image, index) => {
           const productName = v4();
@@ -121,12 +123,12 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
         inventory: inventory,
       };
       console.log(data);
+      validateWithZod(productSchema, data);
       await CreateProdcut(data);
       toast({
         description: "สร้างสินค้าเรียบร้อยแล้ว",
       });
-    } catch (error) {
-      
+    } catch (error: any) {
       if (uploadedImages.length > 0) {
         await Promise.all(
           uploadedImages.map(async ({ ref }) => {
@@ -150,6 +152,10 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
         toast({
           description: "An unexpected error occurred.",
         });
+      }
+
+      if (error.fieldErrors) {
+        setError(error.fieldErrors);
       }
     } finally {
       setLoading(false);
@@ -177,37 +183,38 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
           <div className="flex w-full">
             <div className="flex flex-col w-full">
               <form className="space-y-2" onSubmit={onSubmitCreateProduct}>
-                <div className="space-y-2">
-                  <p className="font-bold text-2xl">ชื่อสินค้า</p>
-                  <input
-                    name="name"
-                    type="text"
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-96 p-2 border border-black rounded-lg"
-                    placeholder="โปรดระบุชื่อสินค้า"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <p className="font-bold text-2xl">รายละเอียดสินค้า</p>
-                  <textarea
-                    rows={5}
-                    cols={40}
-                    name="description"
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="w-96 p-2 border border-black rounded-lg"
-                    placeholder="โปรดระบุรายละเอียดสินค้า"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <p className="font-bold text-2xl">ราคา</p>
-                  <input
-                    name="price"
-                    onChange={(e) => setPrice(Number(e.target.value))}
-                    type="text"
-                    className="p-2 border border-black rounded-lg"
-                    placeholder="โปรดระบุราคาสินค้า"
-                  />
-                </div>
+                <Input
+                  required={true}
+                  label="ชื่อสินค้า"
+                  name="name"
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="โปรดระบุชื่อสินค้า..."
+                  type="text"
+                  value={name}
+                  error={error?.name}
+                />
+                <Input
+                  label="รายละเอียดสินค้า"
+                  required={true}
+                  type="textarea"
+                  onChange={(e) => setDescription(e.target.value)}
+                  value={description}
+                  name="description"
+                  placeholder="โปรดระบุรายละเอียดสินค้า"
+                  error={error?.description}
+                />
+                <Input
+                  label="ราคา"
+                  required={true}
+                  name="price"
+                  onChange={(e) => setPrice(Number(e.target.value))}
+                  value={price}
+                  error={error?.price}
+                  type="text"
+                  placeholder="โปรดระบุราคาสินค้า"
+                  inputClassName="w-64"
+                />
+                {/* input inventory */}
                 <div className="space-y-2">
                   <p className="font-bold text-2xl">สินค้าในสต็อก</p>
                   {inventory.map((item, index) => (
@@ -273,6 +280,8 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
                     เพิ่มตัวเลือก
                   </button>
                 </div>
+
+                {/* input image */}
                 <div className="space-y-2">
                   <p className="text-xl font-bold">รูปสินค้า</p>
                   <div className="grid grid-cols-2 gap-3">
@@ -364,7 +373,7 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
                     disabled={loading}
                     className="flex px-4 py-2 bg-green-main rounded-xl text-white  font-bold"
                   >
-                    {loading ? "กำลังบันทึก": "บันทึก"}
+                    {loading ? "กำลังบันทึก" : "บันทึก"}
                   </button>
                 </div>
               </form>

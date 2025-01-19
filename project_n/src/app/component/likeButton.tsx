@@ -5,9 +5,9 @@ import {
   deleteFavoriteByid,
   getFavoriteByProductIdAndUserId,
 } from "@/app/service/favorite/service";
+import { Heart } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
-import { FaRegHeart } from "react-icons/fa6";
 
 interface propInterface {
   productId: number;
@@ -61,7 +61,7 @@ const LikeButton = (prop: propInterface) => {
         onClick={handleOnClick}
         className="flex bg-white border h-10 w-10 rounded-full justify-center items-center hover:bg-gray-100"
       >
-        {isFavoritedStatus === true ? <FaHeart /> : <FaRegHeart />}
+        {isFavoritedStatus === true ? <FaHeart /> : <Heart />}
       </button>
     </>
   );

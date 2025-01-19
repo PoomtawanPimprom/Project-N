@@ -19,13 +19,20 @@ import React, { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import ModalDelete from "./ModalDelete";
 import { v4 } from "uuid";
-import { storage } from "@/lib/firebase/firebase";
+import { extractFileNameFromUrl, storage } from "@/lib/firebase/firebase";
 import { deleteObject, ref, uploadBytes } from "firebase/storage";
+import Form from "@/app/component/Form";
+import Input from "@/app/component/Input";
+
 interface ProductImage {
   [key: string]: string;
 }
 
-const editProductpage = ({ params }: { params: { productId: number } }) => {
+export default function editProductpage({
+  params,
+}: {
+  params: { productId: number };
+}) {
   const ProductId = params.productId;
   const { toast } = useToast();
   const router = useRouter();
@@ -34,8 +41,10 @@ const editProductpage = ({ params }: { params: { productId: number } }) => {
 
   //state
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
+  const [error, setError] = useState<{
+    [key: string]: { message: string };
+  } | null>(null);
+  const [errorImage, setErrorImage] = useState("");
   //data
   const [categoryData, setCategoryData] = useState<categoryInterface[]>([]);
   const [product, setProduct] = useState<productInterface>();
@@ -66,12 +75,12 @@ const editProductpage = ({ params }: { params: { productId: number } }) => {
     const totalImages = oldImages.length + newImages.length + files.length;
 
     if (totalImages > MAX_FILES) {
-      setError("สามารถอัพโหลดรูปได้สูงสุด 5 รูปเท่านั้น");
+      setErrorImage("สามารถอัพโหลดรูปได้สูงสุด 5 รูปเท่านั้น");
       return;
     }
 
     setNewImages((prev) => [...prev, ...files]);
-    setError("");
+    setErrorImage("");
   };
 
   const removeExistingImage = (index: number) => {
@@ -107,31 +116,31 @@ const editProductpage = ({ params }: { params: { productId: number } }) => {
   const onSubmitUpdateProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     let uploadedImages: { index: number; url: string; refPath: string }[] = [];
-  
+
     try {
       setLoading(true);
-  
+
       // Step 1: ลบรูปภาพเก่าก่อน
       if (oldImagesURL.length > 0) {
         await deleteUploadedImages(oldImagesURL); // ลบรูปภาพเก่า
       }
-  
+
       // Step 2: อัปโหลดรูปใหม่ไปที่ Firebase
       uploadedImages = await Promise.all(
         newImages.map(async (image, index) => {
           const uniqueId = v4(); // Generate a unique ID for the image
           const refPath = `products/${product?.storeID}/${uniqueId}`; // Path in Firebase
           const storageRef = ref(storage, refPath);
-  
+
           await uploadBytes(storageRef, image);
           const url = `https://firebasestorage.googleapis.com/v0/b/${
             storage.app.options.storageBucket
           }/o/${encodeURIComponent(refPath)}?alt=media`;
-  
+
           return { index, url, refPath };
         })
       );
-  
+
       // Step 3: รวมข้อมูลรูปภาพใหม่กับเก่า
       const ProductData = {
         name: name,
@@ -150,11 +159,11 @@ const editProductpage = ({ params }: { params: { productId: number } }) => {
         },
         categoryID: categoryId,
       };
-  
+
       console.log(ProductData);
       // Step 4: อัปเดตข้อมูลสินค้า
       await updateProductbyID(ProductId, ProductData);
-  
+
       // Step 5: อัปเดตข้อมูลสินค้าคงคลัง
       await Promise.all(
         inventories.map(async (inventory) => {
@@ -166,60 +175,55 @@ const editProductpage = ({ params }: { params: { productId: number } }) => {
           });
         })
       );
-  
+
       toast({
         description: "แก้ไขสินค้าเรียบร้อยแล้ว",
       });
       fetchData();
-    } catch (error) {
+    } catch (error: any) {
       // Step 6: ลบรูปใหม่หากเกิดข้อผิดพลาด
       if (uploadedImages.length > 0) {
-        await deleteUploadedImages(uploadedImages.map(image => image.url));
+        await deleteUploadedImages(uploadedImages.map((image) => image.url));
       }
-  
+
       console.error("Error uploading or submitting data", error);
       toast({
         variant: "destructive",
         description:
           error instanceof Error ? error.message : "Unexpected error occurred.",
       });
+
+      if (error.fieldErrors) {
+        setError(error.fieldErrors);
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const extractFileNameFromUrl = (url: string): string | null => {
-    const regex = /products%2F([^?]+)/;  
-    const match = url.match(regex);
-    
-    if (match && match[1]) {
-      return decodeURIComponent(match[1]);  
-    }
-  
-    return null;  // ถ้าไม่พบผลลัพธ์จะคืนค่า null
-  };
+
 
   // ฟังก์ชันลบรูปภาพจาก Firebase
   const deleteUploadedImages = async (images: string[]) => {
     try {
-      console.log("start detele")
+      console.log("start detele");
       await Promise.all(
         images.map(async (imgUrl) => {
-          const fileName = extractFileNameFromUrl(imgUrl);
-          console.log(fileName)
+          const fileName = extractFileNameFromUrl("products",imgUrl);
+          console.log(fileName);
           const refPath = `products/${fileName}`;
-  
+
           const storageRef = ref(storage, refPath);
-  
+
           await deleteObject(storageRef);
-          console.log("deleted image done")
+          console.log("deleted image done");
         })
       );
     } catch (error) {
       console.error("Error deleting uploaded images", error);
     }
   };
-  
+
   const onclickDeleteProduct = async () => {
     setOpenDeleteModal(true);
   };
@@ -272,45 +276,38 @@ const editProductpage = ({ params }: { params: { productId: number } }) => {
         </div>
         <div className="body flex flex-col h-dvh">
           <div className="flex flex-col border border-black w-full  rounded-xl p-4">
-            <form
-              action=""
-              className=" space-y-2"
-              onSubmit={onSubmitUpdateProduct}
-            >
-              <div className=" space-y-2">
-                <p>ชื่อสินค้า</p>
-                <input
-                  value={name}
-                  name="name"
-                  onChange={(e) => setName(e.target.value)}
-                  type="text"
-                  className="w-96 p-2 border border-black rounded-lg"
-                  placeholder="โปรดระบุชื่อสินค้า"
-                />
-              </div>
-              <div className=" space-y-2">
-                <p>รายละเอียดสินค้า</p>
-                <textarea
-                  rows={5}
-                  cols={40}
-                  value={description}
-                  name="description"
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="w-96 p-2 border border-black rounded-lg"
-                  placeholder="โปรดระบุรายละเอียดสินค้า"
-                />
-              </div>
-              <div className="  space-y-2">
-                <p>ราคา</p>
-                <input
-                  value={price}
-                  name="price"
-                  onChange={(e) => setPrice(Number(e.target.value))}
-                  type="text"
-                  className="p-2 border border-black rounded-lg"
-                  placeholder="โปรดระบุราคาสินค้า"
-                />
-              </div>
+            <Form className=" space-y-2" onSubmit={onSubmitUpdateProduct}>
+              <Input
+                required={true}
+                label="ชื่อสินค้า"
+                name="name"
+                onChange={(e) => setName(e.target.value)}
+                placeholder="โปรดระบุชื่อสินค้า..."
+                type="text"
+                value={name}
+                error={error?.name}
+              />
+              <Input
+                label="รายละเอียดสินค้า"
+                required={true}
+                type="textarea"
+                onChange={(e) => setDescription(e.target.value)}
+                value={description}
+                name="description"
+                placeholder="โปรดระบุรายละเอียดสินค้า"
+                error={error?.description}
+              />
+              <Input
+                label="ราคา"
+                required={true}
+                name="price"
+                onChange={(e) => setPrice(Number(e.target.value))}
+                value={price}
+                error={error?.price}
+                type="text"
+                placeholder="โปรดระบุราคาสินค้า"
+                inputClassName="w-64"
+              />
               <div className="  space-y-2">
                 <p className="">แก้ไขสต็อกสินค้า</p>
                 {inventory.map((item, index) => (
@@ -416,7 +413,7 @@ const editProductpage = ({ params }: { params: { productId: number } }) => {
                         src={URL.createObjectURL(file)}
                         alt={`New ${index + 1}`}
                         className="w-full h-full object-cover rounded-lg"
-                         loading="lazy"
+                        loading="lazy"
                       />
                       <button
                         type="button"
@@ -472,7 +469,9 @@ const editProductpage = ({ params }: { params: { productId: number } }) => {
                     </div>
                   )}
                 </div>
-                {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+                {errorImage && (
+                  <p className="text-red-500 text-sm mt-2">{errorImage}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <p>option</p>
@@ -495,17 +494,17 @@ const editProductpage = ({ params }: { params: { productId: number } }) => {
               </div>
               <div className="flex justify-end">
                 <button
-                  className="px-4 py-2 bg-green-main dark:bg-black text-white rounded-xl"
+                  type="submit"
+                  disabled={loading}
+                  className="flex px-4 py-2 bg-green-main rounded-xl text-white  font-bold"
                 >
-                  Submit
+                  {loading ? "กำลังบันทึก" : "บันทึก"}
                 </button>
               </div>
-            </form>
+            </Form>
           </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default editProductpage;
+}

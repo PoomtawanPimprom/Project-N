@@ -39,6 +39,7 @@ model User {
   Store       Store[]
   OrderDetail OrderDetail[]
   Follow      Follow[]
+  Review      Review[]
 }
 
 model Gender {
@@ -60,7 +61,7 @@ model UserStatus {
 }
 
 model UserAddress {
-  id          Int    @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   fullName    String
   houseNo     String
   moo         String?
@@ -70,15 +71,15 @@ model UserAddress {
   postalCode  String
   mobile      String
 
-  userId      Int?
-  user        User? @relation(fields: [userId], references: [id])
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
 
-  addressStatusId      Int?
-  addressStatus        AddressStatus? @relation(fields: [addressStatusId], references: [id])
+  addressStatusId Int?
+  addressStatus   AddressStatus? @relation(fields: [addressStatusId], references: [id])
 }
 
 model AddressStatus {
-  id          Int     @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   name        String
   UserAddress UserAddress[]
 }
@@ -144,6 +145,7 @@ model Product {
   Favorite  Favorite[]
   Report    Report[]
   OrderItem OrderItem[]
+  Review    Review[]
 }
 
 model Inventory {
@@ -302,10 +304,26 @@ model PaymentStatus {
 
 model Follow {
   id        Int      @id @default(autoincrement())
-  userId    Int
   createdAt DateTime @default(now())
+  userId    Int
   user      User     @relation(fields: [userId], references: [id])
 
   storeId Int
   store   Store @relation(fields: [storeId], references: [id])
+}
+
+//----------------------------------------------------------------------------------------------
+// Review System
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  comment   String
+  createdAt DateTime @default(now())
+  images     Json?
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
 }

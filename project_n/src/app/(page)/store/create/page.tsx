@@ -48,21 +48,15 @@ export default function CreateStorePage() {
     };
   }, [logoPreview, bgPreview]);
 
+  //logo image =================================================================
+
+  //for logo images
   const handleLogoFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     if (file) {
       if (logoPreview) URL.revokeObjectURL(logoPreview);
       setImageLogo(file);
       setLogoPreview(URL.createObjectURL(file));
-    }
-  };
-
-  const handleBgFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    if (file) {
-      if (bgPreview) URL.revokeObjectURL(bgPreview);
-      setImageBackground(file);
-      setBgPreview(URL.createObjectURL(file));
     }
   };
 
@@ -73,6 +67,17 @@ export default function CreateStorePage() {
     setLogoPreview("");
     const input = document.getElementById("image-logo") as HTMLInputElement;
     if (input) input.value = "";
+  };
+
+  //Background image =================================================================
+
+  const handleBgFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
+    if (file) {
+      if (bgPreview) URL.revokeObjectURL(bgPreview);
+      setImageBackground(file);
+      setBgPreview(URL.createObjectURL(file));
+    }
   };
 
   //delete Background image
@@ -86,6 +91,7 @@ export default function CreateStorePage() {
     if (input) input.value = "";
   };
 
+  //================================================================
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUploading(true);
@@ -106,13 +112,16 @@ export default function CreateStorePage() {
       if (!imageLogo || !imageBackground) {
         return; // หยุดการทำงานหากไม่มีรูปภาพใดรูปหนึ่ง
       }
+      //in case have both
       if (imageLogo && imageBackground) {
+        //prepare
         const storageLogoRef = ref(storage, `store/logo/${logoFileName}`);
         const storageBgRef = ref(storage, `store/background/${BgFileName}`);
-
+        //upload into firebase
         await uploadBytes(storageBgRef, imageBackground);
         await uploadBytes(storageLogoRef, imageLogo);
 
+        //get path url
         logoUrl = await getDownloadURL(storageLogoRef);
         bgUrl = await getDownloadURL(storageBgRef);
       }
@@ -127,14 +136,15 @@ export default function CreateStorePage() {
         imageBgFileName: BgFileName,
         userId: Number(session?.user.id),
       };
+      //validate
       validateWithZod(StoreSchema, data);
-      console.log(data);
-      console.log(data);
+
       await CreateStore(data);
       toast({
         description: "สร้างร้านค้าสำเร็จ",
       });
-    } catch (error: any) {
+    } 
+    catch (error: any) {
       const deleteLogoRef = ref(storage, `store/logo/${logoFileName}`);
       const deleteBgRef = ref(storage, `store/background/${BgFileName}`);
 
@@ -178,7 +188,7 @@ export default function CreateStorePage() {
               required={true}
               name="name"
               value={name}
-              onChange={(e)=>setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               label="ชื่อร้านค้าของคุณ"
               placeholder="ชื่อร้านค้า..."
               type=""
@@ -189,7 +199,7 @@ export default function CreateStorePage() {
               required={true}
               name="description"
               value={description}
-              onChange={(e)=>setDescription(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
               label="รายละเอียดร้าน"
               placeholder="รายละเอียดร้านค้า..."
               type="textarea"
@@ -351,9 +361,9 @@ export default function CreateStorePage() {
 
           <div className="flex justify-end gap-4">
             <SubmitButtton
-            label="กำลังสร้าง..."
-            labelUploading="สร้าง"
-            disabled={uploading}
+              label="กำลังสร้าง..."
+              labelUploading="สร้าง"
+              disabled={uploading}
             />
           </div>
         </Form>

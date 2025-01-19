@@ -84,4 +84,8 @@ export const productSchema = z.object({
       })
       .optional(),
   });
-  
+
+//review
+export const reviewSchema = z.object({
+    comment: z.string().min(1, "โปรดกรอกข้อความ").max(100, "เกินข้อความที่กำหนด"),
+  });
