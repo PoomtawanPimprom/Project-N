@@ -78,20 +78,6 @@ const userData =
     roleId: 1,
     userStatusId: 1,
 }
-const userAddressData =
-{
-    id: 1,
-    fullName: "First & Last Name",
-    houseNo: "String",
-    moo: "String",
-    province: "String",
-    district: "String",
-    subDistrict: "String",
-    postalCode: "123",
-    mobile: "1324",
-    userId: 1
-}
-    ;
 
 
 const storeData =
