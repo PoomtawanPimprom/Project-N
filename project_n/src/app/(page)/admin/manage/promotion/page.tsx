@@ -1,10 +1,14 @@
 "use client";
+import { AiOutlineSearch } from "react-icons/ai";
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
-import { promotionInterface  } from "@/app/interface/promotionInterface";
-import { createPromotion, getPromotionAll } from "@/app/service/promotion/service";
+import { promotionInterface } from "@/app/interface/promotionInterface";
+import { createPromotion, getPromotionAll, updatePromotionById } from "@/app/service/promotion/service";
+import { useToast } from "@/hooks/use-toast";
 
 
 export default function AdminPromotions() {
+    const { toast } = useToast();
+    const [search, setSearch] = useState<string>("");
     const [promotions, setPromotions] = useState<promotionInterface[]>([]);
     const [formData, setFormData] = useState<promotionInterface>({
         id: 0,
@@ -15,6 +19,16 @@ export default function AdminPromotions() {
         minimumPrice: 0,
         isActive: false,
     });
+
+    const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setSearch(e.target.value.toLowerCase());
+    };
+
+    const filteredPromotions = promotions.filter((promo) =>
+        promo.name.toLowerCase().includes(search.toLowerCase()) ||
+        promo.description.toLowerCase().includes(search.toLowerCase())
+    );
+
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -30,20 +44,45 @@ export default function AdminPromotions() {
         e.preventDefault();
         const submissionData = {
             ...formData,
-            discountPercentage: parseFloat(formData.discountPercentage.toString()), // Convert to number
-            discountAmount: parseInt(formData.discountAmount.toString()), // Convert to integer
-            minimumPrice: parseInt(formData.minimumPrice.toString()), // Convert to integer
+            discountPercentage: parseFloat(formData.discountPercentage.toString()),
+            discountAmount: parseInt(formData.discountAmount.toString()),
+            minimumPrice: parseInt(formData.minimumPrice.toString()),
         };
         console.log(submissionData)
         await createPromotion(submissionData);
     };
 
-    const togglePromotionStatus = (id: number) => {
-        setPromotions(
-            promotions.map((promo) =>
+    const togglePromotionStatus = async (id: number) => {
+        try {
+            const updatedPromotions = promotions.map((promo) =>
                 promo.id === id ? { ...promo, isActive: !promo.isActive } : promo
-            )
-        );
+            );
+            // Set ui status
+            setPromotions(updatedPromotions);
+            // find id promotion
+            const updatedPromo = updatedPromotions.find((promo) => promo.id === id);
+            console.log(updatedPromo?.isActive)
+            await updatePromotionById(id, { isActive: updatedPromo?.isActive });
+            if (updatedPromo?.isActive === true) {
+                toast({
+                    title: "ใช้งานโปรโมชั่นนี้",
+                    variant: "default",
+                });
+            } else {
+                toast({
+                    title: "ยกเลิกโปรโมชั่นนี้",
+                    variant: "default",
+                });
+            }
+        } catch (error) {
+            console.error("Failed to update promotion:", error);
+            // Set before value
+            setPromotions(promotions);
+            toast({
+                title: "ใช้งานโปรโมชั่นนี้",
+                variant: "destructive",
+            });
+        }
     };
 
     const fetchUserData = async () => {
@@ -92,6 +131,20 @@ export default function AdminPromotions() {
 
                 <div className="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
                     <h2 className="text-xl font-semibold mb-4">Promotions List</h2>
+
+                    <div className="mb-4 flex items-center space-x-2">
+                        <div className="relative w-full max-w-md">
+                            <AiOutlineSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                            <input
+                                type="text"
+                                placeholder="Search name promotions..."
+                                value={search}
+                                onChange={handleSearchChange}
+                                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                            />
+                        </div>
+                    </div>
+
                     <table className="w-full table-auto border-collapse">
                         <thead>
                             <tr className="bg-gray-100 text-sm">
@@ -104,7 +157,7 @@ export default function AdminPromotions() {
                             </tr>
                         </thead>
                         <tbody>
-                            {promotions.map((promo) => (
+                            {filteredPromotions.map((promo) => (
                                 <tr key={promo.id} className="text-center text-sm">
                                     <td className="border p-2">{promo.name}</td>
                                     <td className="border p-2">{promo.description}</td>
