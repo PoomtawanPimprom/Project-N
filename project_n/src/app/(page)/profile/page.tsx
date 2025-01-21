@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { userInterface } from '@/app/interface/userInterface';
 import Image from 'next/image'
 import tree from '../../../../public/pngtree.png'
@@ -7,14 +7,13 @@ import { useToast } from "@/hooks/use-toast";
 import MenuLeft from './menuleft'
 import { getUserById, updateUserById } from '@/app/service/profile/service';
 
-// ManageFirebase
-import { storage } from "@/lib/firebase/firebase";
-import { v4 } from "uuid";
-import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteUploadedImage, genarateImageName, uploadImageToFirebase } from "@/lib/firebase/firebase";
+
 
 function Profile() {
-
     const { toast } = useToast();
+    const [profileImage, setProfileImage] = useState<string>("");
+    const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
     const [userData, setUserData] = useState<userInterface>({
         id: 0,
         name: "",
@@ -32,87 +31,59 @@ function Profile() {
         resetTokenExp: new Date(),
     });
 
-    //new image
-    const [imageLogo, setImageLogo] = useState<File | null>(null);
 
-    //file name
-    const [oldLogoImageFileName, setOldLogoImageFileName] = useState<string | null | undefined>(undefined);
-    //old image preview
-    const [oldLogo, setOldLogo] = useState<string>("");
-    const [uploading, setUploading] = useState(false);
-    const [error, setError] = useState<{ [key: string]: { message: string }; } | null>(null);
-
-    // Set file image & Create image url
-    const handleLogoFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0] || null;
-        // console.log(file);
+    // Automatically upload the image when file is selected
+    const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
         if (file) {
-            // if (oldLogo) URL.revokeObjectURL(oldLogo);
-            setImageLogo(file);
-            setOldLogo(URL.createObjectURL(file));
-
-            await handelOnSubmit({
-                preventDefault: () => {},
-            } as React.FormEvent);
-        }
-
-    };
-
-    useEffect(() => {
-        console.log("Updated imageLogo state:", imageLogo);
-        console.log("Updated oldLogo state:", oldLogo);
-    }, [imageLogo, oldLogo]);
-
-    const handelOnSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const newImagelogoFileName = v4();
-
-        try {
-            setUploading(true);
-            let logoUrl = "";
-
-            if (imageLogo) {
-                if (oldLogoImageFileName) {
-                    const storageOldLogoRef = ref(storage, `profile/${oldLogoImageFileName}`);
-
-                    await deleteObject(storageOldLogoRef);
+            const imageName = genarateImageName();
+            const folder = "profile/1/";
+            
+            try {
+                // Check if there is an original picture in the profile.
+                if (userData.profile) {
+                    // Remove old image from Firebase
+                    await deleteUploadedImage('profile', userData.profile);
+                    console.log("Previous image deleted successfully.");
                 }
-                const storageLogoRef = ref( storage, `profile/${newImagelogoFileName}`);
+                // Upload the file to Firebase
+                const { downloadURL } = await uploadImageToFirebase(file, imageName, folder);
+                setProfileImage(downloadURL);
+                console.log("Profile Image URL:", downloadURL);
 
-
-                await uploadBytes(storageLogoRef, imageLogo);
-
-                logoUrl = await getDownloadURL(storageLogoRef);
-            }
-            const data = {
-                imageLogoURL: imageLogo ? logoUrl : "",
-                imageLogoFileName: imageLogo ? newImagelogoFileName : "",
-            };
-            await updateUserById(storeID, data);
-            toast({
-                description: "บันทึกข้อมูลสำเร็จ",
-            });
-
-        } catch (error: any) {
-            toast({
-                variant: "destructive",
-                description: "บันทึกไม่สำเร็จ"
-            })
-            //delete images on firebase
-            const deleteLogoRef = ref(storage, `store/logo/${newImagelogoFileName}`);
-
-            deleteObject(deleteLogoRef)
-                .then(() => {
-                    console.log("delete logo successful");
-                })
-                .catch((error: any) => {
-                    console.log(error.message);
+                await updateUserById(userData.id, {
+                    ...userData,
+                    profile: downloadURL, // ใช้ URL ของรูปใหม่
                 });
-            if (error.fieldErrors) {
-                setError(error.fieldErrors); // ตั้งค่าข้อผิดพลาดโดยตรง
+
+                setUserData((prevData) => ({
+                    ...prevData,
+                    profile: downloadURL,
+                }));
+                // Fetch image dimensions
+                const img = document.createElement("img"); // Correct way to create an image element
+                img.src = downloadURL;
+                img.onload = () => {
+                    setImageDimensions({
+                        width: img.width,
+                        height: img.height,
+                    });
+                };
+
+                // Show success toast
+                toast({
+                    title: "Upload Successful",
+                    description: "Your profile image has been uploaded successfully.",
+                    variant: "default",
+                });
+            } catch (error) {
+                console.error("Error uploading the image:", error);
+                toast({
+                    title: "Upload Failed",
+                    description: "There was an issue uploading your image. Please try again.",
+                    variant: "destructive",
+                });
             }
-        } finally {
-            setUploading(false);
         }
     };
 
@@ -125,7 +96,8 @@ function Profile() {
 
     useEffect(() => {
         fetchUserData();
-    }, []);
+        console.log(String(userData.profile))
+    }, [userData.profile]);
 
     const onSubmitUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -138,7 +110,7 @@ function Profile() {
                 email: userData.email,
                 mobile: userData.mobile,
                 birthdate: userData.birthdate,
-                profile: userData.profile,
+                profile: profileImage,
                 saler: userData.saler,
                 genderId: userData.genderId,
                 roleId: userData.roleId,
@@ -156,7 +128,7 @@ function Profile() {
         <section id="profile">
             <div className="container mx-auto flex flex-col lg:flex-row py-6 gap-4 px-4 sm:px-6 lg:px-8">
 
-                <MenuLeft />
+                <MenuLeft profile={String(userData.profile)} />
 
                 {/* Content right */}
                 <div className="flex flex-col gap-6 lg:w-3/4 z-50">
@@ -227,10 +199,19 @@ function Profile() {
 
                     {/* File Upload Section */}
                     <div className="bg-white border-0 shadow-md border-black p-6 rounded-lg  space-y-4 sm:border sm:shadow-none">
-                        <Image src={tree} alt="Tree" className="w-24 mx-auto" />
+                        {/* <Image src={profileImage || tree} alt="Profile" className="w-24 mx-auto" /> */}
+                        {profileImage && imageDimensions && (
+                            <Image
+                                src={profileImage}
+                                alt="Profile"
+                                width={200}
+                                height={200}
+                                className="w-24 mx-auto"
+                            />
+                        )}
                         <input
                             type="file"
-                            onChange={handleLogoFileChange}
+                            onChange={handleImageChange}
                             className="block w-full text-sm text-gray-500 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold
                                 file:bg-gray-600 file:text-white
                                 hover:file:bg-gray-700"
