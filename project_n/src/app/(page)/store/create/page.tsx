@@ -17,7 +17,6 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
-import { v4 } from "uuid";
 
 export default function CreateStorePage() {
   const { data: session } = useSession();
