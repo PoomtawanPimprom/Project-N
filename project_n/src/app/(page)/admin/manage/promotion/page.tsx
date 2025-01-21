@@ -1,9 +1,12 @@
 "use client";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { promotionInterface } from "@/app/interface/promotionInterface";
-import { createPromotion, getPromotionAll, updatePromotionById } from "@/app/service/promotion/service";
+import { createPromotion, deletePromotionById, getPromotionAll, updatePromotionById } from "@/app/service/promotion/service";
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 
 export default function AdminPromotions() {
@@ -20,6 +23,7 @@ export default function AdminPromotions() {
         isActive: false,
     });
 
+    // OnChange Search input
     const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value.toLowerCase());
     };
@@ -29,7 +33,7 @@ export default function AdminPromotions() {
         promo.description.toLowerCase().includes(search.toLowerCase())
     );
 
-
+    // OnChange input
     const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
 
@@ -39,7 +43,7 @@ export default function AdminPromotions() {
         }));
     };
 
-
+    // Create promotion data
     const onSubmitAddPromotion = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const submissionData = {
@@ -48,10 +52,63 @@ export default function AdminPromotions() {
             discountAmount: parseInt(formData.discountAmount.toString()),
             minimumPrice: parseInt(formData.minimumPrice.toString()),
         };
-        console.log(submissionData)
         await createPromotion(submissionData);
+        fetchPromotionData();
+        setFormData({
+            id: 0,
+            name: "",
+            description: "",
+            discountPercentage: 0,
+            discountAmount: 0,
+            minimumPrice: 0,
+            isActive: false,
+        });
     };
 
+    const onSubmitUpdatePromotion = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        try {
+            console.log(formData)
+            await updatePromotionById(formData.id, {
+                name: formData.name,
+                description: formData.description,
+                discountPercentage: parseInt(formData.discountPercentage.toString()),
+                discountAmount: parseInt(formData.discountAmount.toString()),
+                minimumPrice: parseInt(formData.minimumPrice.toString()),
+                isActive: formData.isActive,
+            });
+            toast({
+                title: "อัพเดทข้อมูลเรียบร้อย",
+                variant: "default",
+            });
+            fetchPromotionData();
+            setFormData({
+                id: 0,
+                name: "",
+                description: "",
+                discountPercentage: 0,
+                discountAmount: 0,
+                minimumPrice: 0,
+                isActive: false,
+            });
+
+        } catch (error: any) {
+            console.error("Failed to update promotion:", error.message);
+        }
+    };
+
+    // Delete promotion
+    const deleteDataPromotion = async (id: Number) => {
+        // console.log(id);
+        await deletePromotionById(id);
+        toast({
+            title: "ลบข้อมูลเรียบร้อย",
+            variant: "default",
+        });
+        fetchPromotionData();
+    }
+
+    // Toggle promotion
     const togglePromotionStatus = async (id: number) => {
         try {
             const updatedPromotions = promotions.map((promo) =>
@@ -61,7 +118,7 @@ export default function AdminPromotions() {
             setPromotions(updatedPromotions);
             // find id promotion
             const updatedPromo = updatedPromotions.find((promo) => promo.id === id);
-            console.log(updatedPromo?.isActive)
+            // console.log(updatedPromo?.isActive)
             await updatePromotionById(id, { isActive: updatedPromo?.isActive });
             if (updatedPromo?.isActive === true) {
                 toast({
@@ -85,14 +142,14 @@ export default function AdminPromotions() {
         }
     };
 
-    const fetchUserData = async () => {
+    // Fetch Data
+    const fetchPromotionData = async () => {
         const res = await getPromotionAll();
         setPromotions(res);
         console.log(res);
     }
-
     useEffect(() => {
-        fetchUserData();
+        fetchPromotionData();
     }, [])
 
     return (
@@ -154,6 +211,7 @@ export default function AdminPromotions() {
                                 <th className="border p-2">Discount Amount</th>
                                 <th className="border p-2">Minimum Price</th>
                                 <th className="border p-2">Active</th>
+                                <th className="border p-2">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -176,6 +234,112 @@ export default function AdminPromotions() {
                                             <div className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full peer-checked:translate-x-5 transition-transform"></div>
                                         </label>
                                     </td>
+                                    <td className="border p-2">
+                                        <div className="flex justify-center gap-2">
+                                            <Dialog >
+                                                <DialogTrigger asChild onClick={() => { setFormData(promo) }}>
+                                                    <button className="w-full sm:w-auto px-4 py-2 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                                        <MdEdit />
+                                                    </button>
+                                                </DialogTrigger>
+                                                <DialogContent >
+                                                    <DialogHeader>
+                                                        <DialogTitle>แก้ไขโปรโมชั่น</DialogTitle>
+                                                    </DialogHeader>
+                                                    <form className="space-y-4 bg-white p-4 rounded-lg max-w-xl mx-auto sm:mx-0"
+                                                        onSubmit={onSubmitUpdatePromotion}
+                                                    >
+                                                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                                            <div>
+                                                                <label htmlFor="name" className="block text-sm font-medium">
+                                                                    Promotion Name
+                                                                </label>
+                                                                <input
+                                                                    type="text"
+                                                                    name="name"
+                                                                    value={formData.name}
+                                                                    onChange={handleInputChange}
+                                                                    className="w-full border rounded-md p-2"
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <label htmlFor="description" className="block text-sm font-medium">
+                                                                    Description
+                                                                </label>
+                                                                <textarea
+                                                                    name="description"
+                                                                    value={formData.description}
+                                                                    onChange={handleInputChange}
+                                                                    className="w-full border rounded-md p-2"
+                                                                    rows={2}
+                                                                    required
+                                                                ></textarea>
+                                                            </div>
+                                                            <div>
+                                                                <label htmlFor="discountPercentage" className="block text-sm font-medium">
+                                                                    Discount Percentage (%)
+                                                                </label>
+                                                                <input
+                                                                    type="number"
+                                                                    name="discountPercentage"
+                                                                    value={formData.discountPercentage}
+                                                                    onChange={handleInputChange}
+                                                                    className="w-full border rounded-md p-2"
+                                                                    min={0}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <label htmlFor="discountAmount" className="block text-sm font-medium">
+                                                                    Discount Amount
+                                                                </label>
+                                                                <input
+                                                                    type="number"
+                                                                    name="discountAmount"
+                                                                    value={formData.discountAmount}
+                                                                    onChange={handleInputChange}
+                                                                    className="w-full border rounded-md p-2"
+                                                                    min={0}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <label htmlFor="minimumPrice" className="block text-sm font-medium">
+                                                                    Minimum Price
+                                                                </label>
+                                                                <input
+                                                                    type="number"
+                                                                    name="minimumPrice"
+                                                                    value={formData.minimumPrice}
+                                                                    onChange={handleInputChange}
+                                                                    className="w-full border rounded-md p-2"
+                                                                    min={0}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex justify-end gap-2">
+                                                            <DialogClose asChild>
+                                                                <button type="button" className="px-4 py-2 text-sm text-gray-700 bg-white border rounded-lg shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                                                    ยกเลิก
+                                                                </button>
+                                                            </DialogClose>
+                                                            <DialogClose asChild>
+                                                                <button  type="submit" className="px-4 py-2 text-sm text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                                                    บันทึก
+                                                                </button>
+                                                            </DialogClose>
+                                                        </div>
+                                                    </form>
+                                                </DialogContent>
+                                            </Dialog>
+                                            <button onClick={() => deleteDataPromotion(promo.id)} className="w-full sm:w-auto px-4 py-2 text-white bg-red-600 rounded-lg shadow-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                                <FaRegTrashAlt />
+                                            </button>
+                                        </div>
+                                    </td>
+
                                 </tr>
                             ))}
                         </tbody>
