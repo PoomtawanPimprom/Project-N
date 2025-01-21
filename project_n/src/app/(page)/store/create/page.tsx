@@ -5,7 +5,7 @@ import Input from "@/app/component/Input";
 import SubmitButtton from "@/app/component/SubmitButtton";
 import { CreateStore } from "@/app/service/store/service";
 import { useToast } from "@/hooks/use-toast";
-import { storage } from "@/lib/firebase/firebase";
+import { genarateImageName, storage } from "@/lib/firebase/firebase";
 import { StoreSchema, validateWithZod } from "@/lib/zod/Schema";
 import {
   ref,
@@ -95,8 +95,8 @@ export default function CreateStorePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUploading(true);
-    const logoFileName = v4();
-    const BgFileName = v4();
+    const logoFileName = genarateImageName();
+    const BgFileName = genarateImageName();
     try {
       let logoUrl = "";
       let bgUrl = "";
