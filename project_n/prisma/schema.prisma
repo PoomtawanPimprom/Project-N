@@ -168,10 +168,10 @@ model Category {
 model Discount {
   id               Int     @id @default(autoincrement())
   name             String
-  description       String
-  discountPercentage Float
-  discountAmount   Int
-  minimumPrice     Int
+  desciption       String
+  discount_persent Float
+  disconnt_value   Int
+  priceMinimum     Int
   active           Boolean
 }
 
