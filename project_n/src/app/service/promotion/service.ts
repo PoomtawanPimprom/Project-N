@@ -44,7 +44,7 @@ export const createPromotion = async (data: any) => {
 
 
 // Update by id
-export async function updatePromotionById(id: number, updatedData: Partial<userInterface>) {
+export async function updatePromotionById(id: number, updatedData: any) {
     const response = await fetch(`/api/promotion/${id}`, {
         method: "PUT",
         headers: {
