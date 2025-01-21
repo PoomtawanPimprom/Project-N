@@ -166,13 +166,13 @@ model Category {
 }
 
 model Discount {
-  id               Int     @id @default(autoincrement())
-  name             String
-  desciption       String
-  discount_persent Float
-  disconnt_value   Int
-  priceMinimum     Int
-  active           Boolean
+  id                  Int     @id @default(autoincrement())
+  name                String
+  description         String  @default("")
+  discountPercentage  Int     @default(0)
+  discountAmount      Int     @default(0)
+  minimumPrice        Int     @default(0)
+  isActive            Boolean @default(false)
 }
 
 model ProductStatus {
