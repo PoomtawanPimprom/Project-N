@@ -20,9 +20,9 @@ export async function PUT(request: NextRequest, { params } : { params: { id: str
             minimumPrice,
             isActive,
         } = await request.json();
-        const id = Number(params.id)
+        const promoId = Number(params.id)
         const updatePost = await prisma.discount.update({
-            where: { id: id }, data: { 
+            where: { id: promoId }, data: { 
                 name,
                 description,
                 discountPercentage,
@@ -39,8 +39,8 @@ export async function PUT(request: NextRequest, { params } : { params: { id: str
 
 export async function DELETE(request: NextRequest, { params } : { params: { id: string}}){
     try {
-        const userID = Number(params.id);
-        await prisma.user.delete({ where: { id: userID } });
+        const promoID = Number(params.id);
+        await prisma.discount.delete({ where: { id: promoID } });
         return new NextResponse("Promotion delete successfully", { status: 201 });
     } catch (e: any) {
         return new NextResponse(e instanceof Error ? e.message : String(e), { status: 500 })
