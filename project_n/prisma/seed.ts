@@ -72,29 +72,9 @@ const userData =
     birthdate: new Date(1990, 0, 1),
     profile: "test1",
     saler: false,
-    resetToken: 'tokenJingJing',
-    resetTokenExp: new Date(1990, 0, 1),
     genderId: 1,
     roleId: 1,
     userStatusId: 1,
-}
-
-
-const storeData =
-{
-    id: 1,
-    name: "test1",
-    userId: 1,
-}
-
-const productData =
-{
-    id: 1,
-    name: "test1",
-    description: "test1",
-    price: 100,
-    storeID: 1,
-    categoryID: 1
 }
 
 const orderStatusData = [
@@ -109,21 +89,19 @@ const paymentStatusData = [
     { id: 2, name: "ชำระแล้ว" },
 ]
 
-const paymentMethodData = [
-    {id: 1,name: "QR Promptpay" },
-    {id: 2,name: "เก็บเงินปลายทาง" },
-    {id: 3,name: "บัตรเครดิต/บัตรเดบิต" },
-]
-
 const userAddressStatusData = [
     { id: 0, name: "non" },
     { id: 1, name: "set-Default" },
 ]
 
+const transportData = [
+    { id: 1, providerName: "Matter shipping", transportPrice: 50 }
+]
+
 async function main() {
     try {
-        await prisma.addressStatus.createMany({data: userAddressStatusData})
-        await prisma.paymentMethod.createMany({ data: paymentMethodData })
+        await prisma.transport.createMany({ data: transportData })
+        await prisma.addressStatus.createMany({ data: userAddressStatusData })
         await prisma.paymentStatus.createMany({ data: paymentStatusData })
         await prisma.orderStatus.createMany({ data: orderStatusData })
         await prisma.productStatus.createMany({ data: productStatusData })
@@ -136,8 +114,6 @@ async function main() {
         await prisma.reportStatus.createMany({ data: reportStatusData })
         await prisma.userAddress.create({ data: userAddressData });
         await prisma.user.create({ data: userData });
-        await prisma.store.create({ data: storeData });
-        await prisma.product.create({ data: productData });
     }
     catch (error) {
         console.log(error)
