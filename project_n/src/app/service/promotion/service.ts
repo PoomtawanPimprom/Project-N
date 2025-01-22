@@ -1,4 +1,3 @@
-import { userInterface } from "@/app/interface/userInterface";
 // Get all
 export async function getPromotionAll(){
     const res = await fetch(`/api/promotion`, {
