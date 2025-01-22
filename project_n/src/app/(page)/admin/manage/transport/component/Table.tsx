@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { transportInterface } from "@/app/interface/transportInterface";
 import DeleteTransportModal from "./DeleteTransport-Modal";
 import UpdateTransportModal from "./UpdateTransport-Modal";
+import { SquarePen, Trash2 } from "lucide-react";
 
 type prop = {
   transports: transportInterface[];
@@ -56,9 +57,10 @@ const DataTable = ({ transports }: prop) => {
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                     <div className="flex justify-end gap-2">
                       <button
-                        className="px-4 py-2 rounded-md text-sm font-medium transition-colors bg-black hover:bg-gray-800 text-white"
+                        className="flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors bg-black hover:bg-gray-800 text-white"
                         onClick={() => setOpenModalUpdate(true)}
                       >
+                        <SquarePen className="mr-2" />
                         Update
                       </button>
                       <UpdateTransportModal
@@ -67,9 +69,10 @@ const DataTable = ({ transports }: prop) => {
                         open={openModalUpdate}
                       />
                       <button
-                        className="px-4 py-2 rounded-md text-sm font-medium transition-colors bg-red-600 hover:bg-red-700 text-white"
+                        className="flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors bg-red-600 hover:bg-red-700 text-white"
                         onClick={() => setOpenModalDelete(true)}
                       >
+                        <Trash2 className="mr-2"/>
                         Delete
                       </button>
                       <DeleteTransportModal
