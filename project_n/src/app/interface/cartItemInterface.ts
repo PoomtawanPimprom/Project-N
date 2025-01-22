@@ -10,5 +10,7 @@ export interface cartItemInterface{
     productId: number;
     product?: productInterface
 
+    color?: string;
+    size?: string;
     quantity: number;
 }
