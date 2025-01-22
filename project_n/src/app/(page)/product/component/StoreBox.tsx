@@ -1,3 +1,4 @@
+import { storeInterface } from "@/app/interface/storeInterface";
 import Link from "next/link";
 
 import { FaBoxes } from "react-icons/fa";
@@ -5,16 +6,16 @@ import { FaStar } from "react-icons/fa6";
 import { MdPeopleAlt } from "react-icons/md";
 
 interface prop {
-  store: any;
+  store: storeInterface;
 }
 
-const StoreInfo = async ({ store }: prop) => {
+const StoreBox = async ({ store }: prop) => {
   return (
     <div className="flex justify-center">
       <div className="flex flex-col w-[450px] bg-white lg:flex-row lg:justify-between lg:w-full border p-4 rounded-xl dark:bg-bg-dark dark:border-none">
         <div className="flex items-center">
           <div className="logo flex w-[120px] h-[120px] mr-4 rounded-xl bg-gray-400">
-            <img src="" alt="" className="w-[120px] h-[120px] rounded-xl" />
+            <img src={store.imageLogoURL?.toString()} alt="" className="w-[120px] h-[120px] rounded-xl" />
           </div>
           <div className="flex flex-col justify-between">
             <div className="flex flex-col w-full">
@@ -54,4 +55,4 @@ const StoreInfo = async ({ store }: prop) => {
   );
 };
 
-export default StoreInfo;
+export default StoreBox;

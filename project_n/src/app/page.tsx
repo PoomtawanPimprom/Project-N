@@ -2,9 +2,11 @@ import prisma from "@/lib/prisma/db";
 import ShowBanner from "./component/ShowBanner";
 import ProductCard from "./component/productCard";
 import Navbar from "./layout/navbar";
-import { Box } from "lucide-react";
+import { Box, Store } from "lucide-react";
 import { productInterface } from "./interface/productInterface";
 import { storeInterface } from "./interface/storeInterface";
+import InfoStore from "./(page)/store/component/InfoStore";
+import StoreBox from "./(page)/product/component/StoreBox";
 
 const banners = [
   {
@@ -41,7 +43,7 @@ export default async function Home({
   })) as productInterface[];
 
   const stores = (await prisma.store.findMany({
-    where: { name: {contains:search} },
+    where: { name: { contains: search } },
   })) as storeInterface[];
 
   // ตรวจสอบว่ามีการค้นหาหรือไม่
@@ -88,21 +90,33 @@ export default async function Home({
               </>
             ) : (
               // แสดงข้อความเมื่อไม่พบสินค้า
-              <div className="text-center py-10">
-                <p className="text-xl text-gray-600">
-                  ไม่พบสินค้าที่คุณค้นหา "{search}"
-                </p>
-              </div>
+              <>
+                <div className="flex w-full text-3xl font-bold space-x-2 items-center mb-2">
+                  <Box />
+                  <p>สินค้าที่ค้นพบ</p>
+                </div>
+                <div className="text-center py-10">
+                  <p className="text-xl text-gray-600">
+                    ไม่พบสินค้าที่คุณค้นหา "{search}"
+                  </p>
+                </div>
+              </>
             )}
 
             {hasStores && (
               // แสดงร้านค้าที่ค้นพบ (ถ้ามี)
               <div className="mt-8">
                 <div className="flex w-full text-3xl font-bold space-x-2 items-center mb-2">
-                  <Box />
+                  <Store />
                   <p>ร้านค้าที่ค้นพบ</p>
                 </div>
-                {/* เพิ่มการแสดงผลร้านค้าตามต้องการ */}
+                <div className="grid grid-cols-1">
+                  {stores.map((store, index) => (
+                    <>
+                      <StoreBox store={store} />
+                    </>
+                  ))}
+                </div>
               </div>
             )}
           </div>

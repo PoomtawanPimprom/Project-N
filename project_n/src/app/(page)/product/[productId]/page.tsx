@@ -1,5 +1,5 @@
 import Desription from "../component/Desription";
-import StoreInfo from "../component/StoreBox";
+import StoreBox from "../component/StoreBox";
 import ProductImage from "../component/ProductImage";
 import SelectToCart from "../component/SelectToCart";
 import prisma from "@/lib/prisma/db";
@@ -31,7 +31,7 @@ const ProductByIdPage = async ({params}: { params: { productId: number } }) => {
               <SelectToCart product={product} inventory={inventories} productId={productId}/>
             </div>
             <Desription product={product} />
-            <StoreInfo store={product?.store} />
+            <StoreBox store={product?.store} />
             <ReviewBox reviews={reviews}/>
           </div>
         </div>
