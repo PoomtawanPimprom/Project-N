@@ -253,8 +253,8 @@ model OrderDetail {
 
   userId        Int
   user          User        @relation(fields: [userId], references: [id])
-  paymentId     Int
-  payment       Payment     @relation(fields: [paymentId], references: [id])
+  paymentId     Int?
+  payment       Payment?     @relation(fields: [paymentId], references: [id])
   transportId   Int
   transport     Transport   @relation(fields: [transportId], references: [id])
   orderStatusId Int
@@ -279,23 +279,16 @@ model Transport {
 model Payment {
   id              Int           @id @default(autoincrement())
   orderId         Int
-  amout           Float
+  amount           Float
   moneySlip       String?
   createAt        DateTime      @default(now())
   updatedAt       DateTime?     @updatedAt
   paymentStatusId Int
   paymentStatus   PaymentStatus @relation(fields: [paymentStatusId], references: [id])
-  paymentMethodId Int
-  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
 
   OrderDetail OrderDetail[]
 }
 
-model PaymentMethod {
-  id      Int       @id @default(autoincrement())
-  name    String
-  Payment Payment[]
-}
 
 model PaymentStatus {
   id      Int       @id @default(autoincrement())
