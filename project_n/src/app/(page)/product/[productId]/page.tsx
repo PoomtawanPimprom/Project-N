@@ -3,6 +3,8 @@ import StoreInfo from "../component/StoreBox";
 import ProductImage from "../component/ProductImage";
 import SelectToCart from "../component/SelectToCart";
 import prisma from "@/lib/prisma/db";
+import ReviewBox from "../component/ReviewBox";
+import { reivewInterface } from "@/app/interface/reviewInterface";
 
 const ProductByIdPage = async ({params}: { params: { productId: number } }) => {
   const productId = Number(params.productId);
@@ -15,6 +17,10 @@ const ProductByIdPage = async ({params}: { params: { productId: number } }) => {
     where:{productID: productId},
   })
 
+  const reviews = (await prisma.review.findMany({
+    where:{productId:productId},
+    include:{ user:true}
+  }))as reivewInterface[]
   return (
     <>
       <div className="flex flex-col items-center dark:bg-black">
@@ -26,6 +32,7 @@ const ProductByIdPage = async ({params}: { params: { productId: number } }) => {
             </div>
             <Desription product={product} />
             <StoreInfo store={product?.store} />
+            <ReviewBox reviews={reviews}/>
           </div>
         </div>
       </div>
