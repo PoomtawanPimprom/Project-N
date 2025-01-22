@@ -15,8 +15,8 @@ export interface storeInterface {
     productTotal: number;
     follow: number;
     follower: number;
-    createdDate: string;
-    updatedAt?: string;
+    createdDate?: Date;
+    updatedAt?: Date;
     //fk
     userId: number;
     user?:userInterface
