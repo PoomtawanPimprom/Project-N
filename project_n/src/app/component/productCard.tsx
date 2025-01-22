@@ -4,7 +4,6 @@ import LikeButton from "./likeButton";
 //icon
 import { useRouter } from "next/navigation";
 import { productInterface } from "../interface/productInterface";
-import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { ShoppingCart } from "lucide-react";
 
@@ -58,7 +57,7 @@ const ProductCard = ({ product }: prop) => {
               ${product.price}
             </span>
             <div className="gap-2 flex">
-              <LikeButton productId={product.id} userId={1} />
+              <LikeButton productId={product.id} userId={Number(session?.user!.id)} />
               {/* add to cart */}
               <button className="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors">
                 <ShoppingCart className="w-5 h-5" />
