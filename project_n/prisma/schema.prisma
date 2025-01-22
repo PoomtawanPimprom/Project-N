@@ -39,6 +39,7 @@ model User {
   Store       Store[]
   OrderDetail OrderDetail[]
   Follow      Follow[]
+  CartItem  CartItem[]
   Review      Review[]
 }
 
@@ -145,6 +146,7 @@ model Product {
   Favorite  Favorite[]
   Report    Report[]
   OrderItem OrderItem[]
+  CartItem  CartItem[]
   Review    Review[]
 }
 
@@ -326,4 +328,16 @@ model Review {
 
   productId Int
   product   Product @relation(fields: [productId], references: [id])
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  
+  userId    Int
+  user      User       @relation(fields: [userId], references: [id])
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  quantity  Int
 }
