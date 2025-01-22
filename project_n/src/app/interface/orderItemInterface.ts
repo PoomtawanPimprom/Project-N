@@ -12,4 +12,6 @@ export interface orderItemInterface {
     productId: number
     product?: productInterface
 
+    color?: string;
+    size?: string;
 }
