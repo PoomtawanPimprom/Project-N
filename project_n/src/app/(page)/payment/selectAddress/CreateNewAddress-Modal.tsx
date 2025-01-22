@@ -5,7 +5,7 @@ import Modal from "@/app/component/modal";
 import SubmitButtton from "@/app/component/SubmitButtton";
 import { userInterface } from "@/app/interface/userInterface";
 import { createAddress } from "@/app/service/address/service";
-import { validateWithZod } from "@/lib/zod/Schema";
+import { userAddressSchema, validateWithZod } from "@/lib/zod/Schema";
 import { revalidatePath } from "next/cache";
 import { useState } from "react";
 import { z } from "zod";
@@ -16,35 +16,7 @@ type Modalprop = {
   onClose: () => void;
 };
 
-const userAddressSchema = z.object({
-  fullName: z
-    .string()
-    .max(30, "ชื่อ-นามสกุลมีความยาวมากเกินไป")
-    .min(1, "โปรดกรอกชื่อ-นามสกุล"),
-  houseNo: z.string().regex(/^\d+$/, "เลขที่บ้านควรเป็นตัวเลข"), //บ้านเลขที่
-  moo: z.string().regex(/^\d*$/, "เลขที่หมู่บ้านควรเป็นตัวเลข").optional(), //หมู่
-  subDistrict: z.string().optional(), //ตำบล
-  district: z
-    .string()
-    .max(30, "ชื่ออำเภอมีความยาวมากเกินไป")
-    .min(1, "โปรดกรอกอำเภอ"), //อำเภอ
-  province: z
-    .string()
-    .max(30, "ชื่อจังหวัดมีความยาวมากเกินไป")
-    .min(1, "โปรดกรอกจังหวัด"), //จังหวัด
-  postalCode: z //รหัสไปรษณ์
-    .string()
-    .min(1, "โปรดกรอกรหัสไปรษณี")
-    .regex(/^\d+$/, "รหัสไปรษณีควรเป็นตัวเลข")
-    .regex(/^\d{5}$/, "รหัสไปรษณีควรมีแค่ 5 หลัก"),
-  mobile: z //เบอร์
-    .string()
-    .regex(/^\d+$/, "เลขที่หมู่บ้านควรเป็นตัวเลข")
-    .refine((val) => val.toString().length === 10, {
-      message: "เบอร์โทรศัพท์ควรเป็นตัวเลข 10 หลัก",
-    }),
-  userId: z.number().int(),
-});
+
 
 export default function CreateNewAddressModal({
   open,

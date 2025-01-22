@@ -39,8 +39,8 @@ export default function SelectAddress({
       {/* Have default address yet?? */}
       {default_address != null ? (
         //in case have address
-        <>
-          <div className="flex space-x-2 text-sm sm:text-base md:text-lg">
+        <div className="w-full">
+          <div className="flex w-full justify-between space-x-2 text-sm sm:text-base md:text-lg">
             <div className="flex p-2 font-semibold">
               {default_address.fullName}
             </div>
@@ -56,12 +56,12 @@ export default function SelectAddress({
               </button>
             </div>
           </div>
-        </>
+        </div>
       ) 
       // in case have address but don't have default address
       : AllUserAddress != null ? (
-        <>
-          <div className="flex space-x-2 text-sm sm:text-base md:text-lg">
+        <div className="w-full">
+          <div className="flex w-full justify-between space-x-2 text-sm sm:text-base md:text-lg">
             <div className="flex w-full">
               <button
                 onClick={() => {
@@ -73,11 +73,11 @@ export default function SelectAddress({
               </button>
             </div>
           </div>
-        </>
+        </div>
       ) : (
         //case dosent have any address
-        <>
-          <div className="flex space-x-2 text-sm sm:text-base md:text-lg">
+        <div className="w-full">
+          <div className="flex w-full justify-between space-x-2 text-sm sm:text-base md:text-lg">
             <div className="flex w-full">
               <button
                 onClick={() => {
@@ -90,7 +90,7 @@ export default function SelectAddress({
               </button>
             </div>
           </div>
-        </>
+        </div>
       )}
 
       <CreateNewAddressModal
