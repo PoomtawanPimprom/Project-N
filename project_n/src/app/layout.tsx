@@ -5,7 +5,6 @@ import { Toaster } from "@/components/ui/toaster";
 
 import SessionProvider from "./component/SessionProvider";
 import { getServerSession } from "next-auth";
-import Navbar from "./layout/navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
