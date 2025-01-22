@@ -238,7 +238,7 @@ model ReportStatus {
 model OrderItem {
   id            Int         @id @default(autoincrement())
   orderDetailId Int
-  orderDetail   OrderDetail @relation(fields: [orderDetailId], references: [id])
+  orderDetail   OrderDetail? @relation(fields: [orderDetailId], references: [id])
   productId     Int
   product       Product     @relation(fields: [productId], references: [id])
   color         String?
