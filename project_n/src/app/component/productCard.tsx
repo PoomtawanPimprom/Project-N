@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 import { ShoppingCart } from "lucide-react";
 
 interface prop {
-  product: productInterface | any;
+  product: productInterface;
 }
 
 const ProductCard = ({ product }: prop) => {
