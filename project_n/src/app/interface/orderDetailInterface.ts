@@ -12,7 +12,7 @@ export interface orderDetailInterface {
     userId: number
     user?: userInterface
 
-    paymentId: number
+    paymentId?: number
     payment?: paymentInterface
 
     transportId: number
