@@ -40,7 +40,7 @@ export const LoginSchema = z.object({
 //report
 export const ReportSchema = z.object({
     comment: z.string().min(1, "ข้อความรายงานควรมากกว่า 1 ตัวอักษร").max(200, "ข้อความรายงานไม่ควรเกิน 1 ตัวอักษร"),
-    selectCate: z.number().min(1, "โปรดเลือกหมวดหมู่"),
+    selectCate: z.string().min(1, "โปรดเลือกหมวดหมู่"),
 })
 
 //store
