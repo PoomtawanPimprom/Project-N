@@ -6,22 +6,26 @@ import {
   getFavoriteByProductIdAndUserId,
 } from "@/app/service/favorite/service";
 import { Heart } from "lucide-react";
+import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 
 interface propInterface {
   productId: number;
-  userId: number;
 }
 
 const LikeButton = (prop: propInterface) => {
+  const { data: session } = useSession();
   const [isFavoritedStatus, setIsFavoritedStatus] = useState<boolean>();
   const [favoriteData, setFavoriteData] = useState<favoriteInterface[]>([]);
 
   const fetchData = async () => {
+    if (!session){
+      return;
+    }
     const dataFavorite = await getFavoriteByProductIdAndUserId(
       prop.productId,
-      prop.userId
+      session?.user.id
     );
     setFavoriteData(dataFavorite);
   };
@@ -39,7 +43,6 @@ const LikeButton = (prop: propInterface) => {
 
   useEffect(() => {
     const status = hasValue();
-    console.log(status);
     setIsFavoritedStatus(status);
   }, [favoriteData]);
 
@@ -48,7 +51,7 @@ const LikeButton = (prop: propInterface) => {
       await deleteFavoriteByid(favoriteData[0].id);
     } else {
       const data = {
-        userId: prop.userId,
+        userId: session?.user.id,
         productId: prop.productId,
       };
       await createFavorite(data);

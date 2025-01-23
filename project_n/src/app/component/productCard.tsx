@@ -57,7 +57,7 @@ const ProductCard = ({ product }: prop) => {
               ${product.price}
             </span>
             <div className="gap-2 flex">
-              <LikeButton productId={product.id} userId={Number(session?.user!.id)} />
+              <LikeButton productId={product.id}  />
               {/* add to cart */}
               <button className="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors">
                 <ShoppingCart className="w-5 h-5" />
