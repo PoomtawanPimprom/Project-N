@@ -160,7 +160,6 @@ export default function editProductpage({
         categoryID: categoryId,
       };
 
-      console.log(ProductData);
       // Step 4: อัปเดตข้อมูลสินค้า
       await updateProductbyID(ProductId, ProductData);
 
@@ -206,11 +205,9 @@ export default function editProductpage({
   // ฟังก์ชันลบรูปภาพจาก Firebase
   const deleteUploadedImages = async (images: string[]) => {
     try {
-      console.log("start detele");
       await Promise.all(
         images.map(async (imgUrl) => {
           const fileName = extractFileNameFromUrl("products",imgUrl);
-          console.log(fileName);
           const refPath = `products/${fileName}`;
 
           const storageRef = ref(storage, refPath);

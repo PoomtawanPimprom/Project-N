@@ -122,7 +122,6 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
         image: imageUrls, // เปลี่ยนจาก image เป็น images และใช้ object แทน array
         inventory: inventory,
       };
-      console.log(data);
       validateWithZod(productSchema, data);
       await CreateProdcut(data);
       toast({
