@@ -26,7 +26,9 @@ export async function PUT(request:NextRequest) {
                 paymentStatusId:2
             }
         })
+        return NextResponse.json({ message: "done" }, { status: 200 });
     } catch (error:any) {   
         console.log(error.message)
+        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
     }   
 }

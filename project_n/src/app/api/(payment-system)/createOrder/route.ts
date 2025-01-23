@@ -7,14 +7,14 @@ const prisma = new PrismaClient()
 export async function POST(request: NextRequest) {
     try {
 
-        const { userId, items,transportId} = await request.json();
+        const { userId, items} = await request.json();
 
         const createOrderDetail = await prisma.orderDetail.create({
             data: {
                 userId,
                 total: items.reduce((total: number, item: { price: number, quantity: number }) => total + Number(item.price) * Number(item.quantity), 0),
                 orderStatusId: 1,
-                transportId:transportId
+                transportId:1
             }
         });
         const orderItems = items.map((item:any) => ({
