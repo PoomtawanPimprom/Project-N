@@ -1,4 +1,5 @@
 "use client";
+import Input from "@/app/component/Input";
 import Modal from "@/app/component/modal";
 import ShowError from "@/app/component/ShowError";
 import { reportCategoryInterface } from "@/app/interface/reportCategoryInterface";
@@ -16,38 +17,41 @@ interface prop {
 }
 
 const ModalReportForm = ({ productId, open, onClose }: prop) => {
-  const { toast } = useToast();
+  const {toast} =useToast()
   const { data: session, status } = useSession();
   const [reportCate, setReportCate] = useState<reportCategoryInterface[]>([]);
 
   const [comment, setComment] = useState("");
   const [selectCate, setSelectCate] = useState("");
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState<{
+    [key: string]: { message: string };
+  } | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       setLoading(true);
       validateWithZod(ReportSchema, { comment, selectCate });
       const data = {
         comment,
-        userId: session?.user.id,
+        userId: Number(session?.user.id),
         productId: productId,
-        reportCategoryId: selectCate,
+        reportCategoryId: Number(selectCate),
         reportStatusId: 1,
       };
       await createReport(data);
       toast({
-        description: "Create store successful!",
+        description: "ส่งคำรายงานเรียบร้อย",
       });
-    } catch (error) {
-      const err = renderError(error);
-      setError(err.message);
+    } catch (error: any) {
+      console.log(error);
+      if (error.fieldErrors) {
+        setError(error.fieldErrors); // ตั้งค่าข้อผิดพลาดโดยตรง
+      }
     } finally {
       setLoading(false);
-      onClose();
     }
   };
 
@@ -69,6 +73,7 @@ const ModalReportForm = ({ productId, open, onClose }: prop) => {
               <div className="flex flex-col space-y-2 ">
                 <h1>หัวข้อ</h1>
                 <select
+                  required
                   className="border border-gray-200  p-2 rounded-xl"
                   value={0 || selectCate}
                   onChange={(e) => setSelectCate(e.target.value)}
@@ -83,15 +88,17 @@ const ModalReportForm = ({ productId, open, onClose }: prop) => {
                   ))}
                 </select>
               </div>
-              <div className="flex flex-col space-y-2">
-                <p>ข้อความ</p>
-                <input
-                  type="text"
-                  onChange={(e) => setComment(e.target.value)}
-                  className="p-2 border border-gray-200 rounded-lg focus:border-none"
-                />
-              </div>
-              <ShowError error={error}/>
+              <Input
+                labelClassName="text-lg font-medium"
+                label="ข้อความ"
+                name="comment"
+                onChange={(e) => setComment(e.target.value)}
+                value={comment}
+                placeholder=""
+                type=""
+                inputClassName="w-full"
+                error={error?.comment}
+              />
               <div className="flex justify-end space-x-2">
                 <div>
                   <button
@@ -104,9 +111,7 @@ const ModalReportForm = ({ productId, open, onClose }: prop) => {
                 </div>
                 <div>
                   <button
-                    type="submit"
                     disabled={loading}
-                    onClick={handleSubmit}
                     className="px-4 py-2 bg-green-main text-white rounded-xl font-semibold"
                   >
                     ส่ง
