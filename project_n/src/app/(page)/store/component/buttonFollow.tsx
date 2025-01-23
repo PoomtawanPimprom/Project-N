@@ -40,7 +40,6 @@ const ButtonFollow =  ({ userId, storeId }: prop) => {
   const fetchData = async () => {
     if (!userId) return null;
     const isFollowed = await checkFollowed(storeId, userId);
-    console.log(isFollowed);
     setIsFollowed(isFollowed);
   };
   useEffect(() => {

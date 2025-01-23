@@ -39,7 +39,9 @@ const TabelAllReport = ({ userId,reportDataByUserID }: prop) => {
           </thead>
           <tbody className="">
             {reportDataByUserID.map((item, index) => (
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr
+              key={index}
+              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td className="px-6 py-2">{item.comment}</td>
                 <td className="px-6 py-2">
                   {new Date(item.createdAt).toLocaleDateString("th-TH")}

@@ -28,10 +28,8 @@ export default function ShowComment({ reviewByProductId, userId }: prop) {
 
   const handleDeleteReview = async (review: reivewInterface) => {
     try {
-      console.log(review)
       //check if the review have images
       if (review.images && Object.keys(review.images).length > 0) {
-        console.log("start deleting images...");
         
         const imageUrls = getImageUrls(review.images);
         for (const imgUrl of imageUrls) {
@@ -47,13 +45,15 @@ export default function ShowComment({ reviewByProductId, userId }: prop) {
     }
   };
 
-  const getImageUrls = (images: string[] | undefined): string[] => {
+  const getImageUrls = (
+    images: { image1?: string; image2?: string; image3?: string; image4?: string; image5?: string } | undefined
+  ): string[] => {
     if (!images) return [];
     return Object.values(images).filter(
       (url): url is string => typeof url === "string" && url.length > 0
     );
   };
-
+  
   const filteredReviews = reviewByProductId.filter((review) => {
     const imageUrls = getImageUrls(review.images);
     switch (filterType) {
@@ -65,6 +65,7 @@ export default function ShowComment({ reviewByProductId, userId }: prop) {
         return true;
     }
   });
+  
 
   return (
     <>
