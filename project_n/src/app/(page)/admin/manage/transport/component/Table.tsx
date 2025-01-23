@@ -12,14 +12,6 @@ type prop = {
 const DataTable = ({ transports }: prop) => {
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [openModalDelete, setOpenModalDelete] = useState(false);
-  const handleUpdate = (id: number) => {
-    console.log("Update item:", id);
-  };
-
-  const handleDelete = (id: number) => {
-    console.log("Delete item:", id);
-  };
-
   return (
     <div className="w-full overflow-x-auto rounded-lg border">
       <div className="min-w-full inline-block align-middle">
@@ -43,8 +35,8 @@ const DataTable = ({ transports }: prop) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {transports.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-50">
+              {transports.map((item,index) => (
+                <tr key={index} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {item.id}
                   </td>
@@ -99,19 +91,30 @@ const DataTable = ({ transports }: prop) => {
                   <span className="text-gray-600">{item.providerName}</span>
                 </div>
                 <div className="flex gap-2">
-                  <button
-                    className="px-4 py-2 rounded-md text-sm font-medium transition-colors bg-black hover:bg-gray-800 text-white"
-                    onClick={() => handleUpdate(item.id)}
-                  >
-                    Update
-                  </button>
-
-                  <button
-                    className="px-4 py-2 rounded-md text-sm font-medium transition-colors bg-red-600 hover:bg-red-700 text-white"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    Delete
-                  </button>
+                <button
+                        className="flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors bg-black hover:bg-gray-800 text-white"
+                        onClick={() => setOpenModalUpdate(true)}
+                      >
+                        <SquarePen className="mr-2" />
+                        Update
+                      </button>
+                      <UpdateTransportModal
+                      transport={item}
+                        onClose={() => setOpenModalUpdate(false)}
+                        open={openModalUpdate}
+                      />
+                      <button
+                        className="flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors bg-red-600 hover:bg-red-700 text-white"
+                        onClick={() => setOpenModalDelete(true)}
+                      >
+                        <Trash2 className="mr-2"/>
+                        Delete
+                      </button>
+                      <DeleteTransportModal
+                        id={item.id}
+                        onClose={() => setOpenModalDelete(false)}
+                        open={openModalDelete}
+                      />
                 </div>
               </div>
             ))}

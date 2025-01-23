@@ -138,7 +138,9 @@ const ReportInfoTable = () => {
             </thead>
             <tbody>
               {reports.map((item, index) => (
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <tr 
+                key={index}
+                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   
                   <td className="px-6 py-4">{item.comment}</td>
                   <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString("th-TH")}</td>
@@ -170,7 +172,9 @@ const ReportInfoTable = () => {
               </button>
 
               {numbers.map((item, index) => (
-                <div className="px-2 py-2 border-x-[1px] border-slate-800">
+                <div 
+                key={index}
+                className="px-2 py-2 border-x-[1px] border-slate-800">
                   <a href="">{item}</a>
                 </div>
               ))}
