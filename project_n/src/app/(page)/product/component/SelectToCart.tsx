@@ -4,15 +4,14 @@ import ReportButton from "@/app/component/reportButton";
 import { inventoryInterface } from "@/app/interface/inventoryInterface";
 import { useEffect, useState } from "react";
 import ModalReportForm from "../../report/component/modalReportForm";
-import { Heart } from "lucide-react";
-import { getFavoriteByProductIdAndUserId } from "@/app/service/favorite/service";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
 import LikeButtonProductPage from "./LikeButton";
+import { productInterface } from "@/app/interface/productInterface";
+import Description from "./Desription";
 
 type SelectProp = {
   productId: number;
-  product: any;
-  inventory: any;
+  product: productInterface;
+  inventory: inventoryInterface[];
 };
 
 export default function SelectToCart({
@@ -60,7 +59,7 @@ export default function SelectToCart({
     setInventories(inventory);
   }, []);
   return (
-    <div className="flex flex-col justify-between space-y-2  border rounded-xl p-4">
+    <div className="flex flex-col  space-y-2  border rounded-xl p-4">
       {/* header */}
       <div>
         <div className="flex w-full  ">
@@ -89,6 +88,7 @@ export default function SelectToCart({
         </div>
       </div>
       {/* body */}
+      <Description product={product} />
       <div>
         {uniqueSizes.length > 0 && (
           <div>
@@ -144,8 +144,8 @@ export default function SelectToCart({
       </div>
 
       {/* footer */}
-      <div>
-        <div className="flex justify-between space-x-2 ">
+      <div className="flex h-full items-end ">
+        <div className="flex justify-between space-x-2 h-fit  w-full">
           <div className="flex border border-black w-1/3  rounded-lg ">
             <button
               onClick={() => setCount(count - 1)}
