@@ -20,14 +20,15 @@ const LikeButton = (prop: propInterface) => {
   const [favoriteData, setFavoriteData] = useState<favoriteInterface[]>([]);
 
   const fetchData = async () => {
-    if (!session){
+    if (!session) {
       return;
+    } else {
+      const dataFavorite = await getFavoriteByProductIdAndUserId(
+        prop.productId,
+        session?.user.id
+      );
+      setFavoriteData(dataFavorite);
     }
-    const dataFavorite = await getFavoriteByProductIdAndUserId(
-      prop.productId,
-      session?.user.id
-    );
-    setFavoriteData(dataFavorite);
   };
 
   const hasValue = () => {
@@ -51,7 +52,7 @@ const LikeButton = (prop: propInterface) => {
       await deleteFavoriteByid(favoriteData[0].id);
     } else {
       const data = {
-        userId: session?.user.id,
+        userId: Number(session?.user.id),
         productId: prop.productId,
       };
       await createFavorite(data);
@@ -61,7 +62,10 @@ const LikeButton = (prop: propInterface) => {
   return (
     <>
       <button
-        onClick={handleOnClick}
+        onClick={async (e) => {
+          e.stopPropagation();
+          await handleOnClick();
+        }}
         className="flex z-50 bg-white border h-10 w-10 rounded-full justify-center items-center hover:bg-gray-100"
       >
         {isFavoritedStatus === true ? <FaHeart /> : <Heart />}
