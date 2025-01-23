@@ -6,20 +6,17 @@ import { MdPayment } from 'react-icons/md'
 import Image from 'next/image';
 import tree from '../../../../public/pngtree.png';
 import Link from 'next/link'
-import Manud from '../../../../public/manud.png'
 
 type MenuLeftProps = {
-    profile: string; 
+    profile?: string | null;
 };
 
 export default function MenuLeft(props: MenuLeftProps) {
-    const defaultProfileImage = '../../../../public/pngtree.png';
-    const profileImageSrc = props.profile && props.profile.trim() !== '' ? props.profile : tree;
     return (
         <div className="flex flex-col gap-5 lg:w-1/4  ">
 
             <div className="max-w-sm mx-auto w-60 text-center border-0 shadow-md border-black rounded-xl px-4 py-3 gap-2 lg:flex lg:mx-0 lg:border lg:w-full lg:shadow-none lg:text-start lg:space-y-0 lg:space-x-6">
-                <Image src={profileImageSrc} alt="Profile" 
+                <Image src={tree} alt="Profile" 
                     className="block mx-auto w-24 h-24  rounded-full border border-black object-cover lg:w-14 lg:h-14"
                     width={200}
                     height={200} 
