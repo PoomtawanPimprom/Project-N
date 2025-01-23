@@ -3,7 +3,6 @@ import { userAddressInterface } from "@/app/interface/userAddressInterface";
 import { userInterface } from "@/app/interface/userInterface";
 import { useEffect, useState } from "react";
 import { UpdateAddressAction } from "./action";
-import { getUserAddress } from "@/app/service/address/service";
 import { CirclePlus } from "lucide-react";
 
 type Modalprop = {

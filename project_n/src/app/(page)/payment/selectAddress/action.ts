@@ -10,9 +10,6 @@ type updatype = {
 
 export async function UpdateAddressAction({ userId, defalutAddressId }: updatype, formdata: FormData) {
     const newAddressId = formdata.get('address');
-    console.log("userID", userId)
-    console.log("newAddressId", newAddressId)
-    console.log("defalutAddressId", defalutAddressId)
     //in case doesn't have defalutAddressId
     if (!defalutAddressId) {
         await prisma.userAddress.update({
