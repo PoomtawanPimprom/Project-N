@@ -58,7 +58,7 @@ export default function ProductImage({ product }: prop) {
       </div>
 
       {/* Thumbnail Navigation */}
-      <div className="flex gap-2 overflow-x-auto py-2">
+      <div className="flex gap-2 overflow-x-auto p-2">
         {imageArray.map((img, index) => (
           <button
             key={index}
