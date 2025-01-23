@@ -9,7 +9,7 @@ interface prop {
   store: storeInterface;
 }
 
-const StoreBox = async ({ store }: prop) => {
+const StoreBox =  ({ store }: prop) => {
   return (
     <div className="flex justify-center">
       <div className="flex flex-col w-[450px] bg-white lg:flex-row lg:justify-between lg:w-full border p-4 rounded-xl dark:bg-bg-dark dark:border-none">
@@ -26,20 +26,7 @@ const StoreBox = async ({ store }: prop) => {
                 {store?.description}
               </div>
             </div>
-            <div className="flex flex-col text-sm sm:text-base lg:flex-row font-semibold text-gray-400 lg:space-x-3">
-              <div className="flex items-center">
-                <FaStar className="text-black mr-1 dark:text-white " />
-                review : {store?.scores}
-              </div>
-              <div className="hidden lg:flex items-center">
-                <FaBoxes className="  text-black mr-1 dark:text-white" />
-                total product : {store?.productTotal}
-              </div>
-              <div className="flex items-center ">
-                <MdPeopleAlt className="text-black mr-1 dark:text-white" />
-                follower : {store?.follower}
-              </div>
-            </div>
+           
           </div>
         </div>
         <div className="flex  flex-row mt-2 justify-end  lg:mt-0 ">
