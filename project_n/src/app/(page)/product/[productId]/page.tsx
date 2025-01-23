@@ -5,22 +5,29 @@ import SelectToCart from "../component/SelectToCart";
 import prisma from "@/lib/prisma/db";
 import ReviewBox from "../component/ReviewBox";
 import { reivewInterface } from "@/app/interface/reviewInterface";
+import { productInterface } from "@/app/interface/productInterface";
+import { inventoryInterface } from "@/app/interface/inventoryInterface";
+import OtherProductFromSameStore from "../component/OtherProductFomSameStore";
 
 const ProductByIdPage = async ({params}: { params: { productId: number } }) => {
   const productId = Number(params.productId);
-  const product = await prisma.product.findUnique({
+  const product = (await prisma.product.findUnique({
     where:{id:productId},
     include : {store : true}
-  }) 
+  }) ) as productInterface
 
-  const inventories = await prisma.inventory.findMany({
-    where:{productID: productId},
-  })
+  const inventories = (await prisma.inventory.findMany({
+    where:{productID: productId}
+  })) as inventoryInterface[]
 
   const reviews = (await prisma.review.findMany({
     where:{productId:productId},
     include:{ user:true}
   }))as reivewInterface[]
+
+  const otherProduct = (await prisma.product.findMany({
+    where:{storeID:product.id}
+  })) as productInterface[]
   return (
     <>
       <div className="flex flex-col items-center dark:bg-black">
@@ -30,9 +37,10 @@ const ProductByIdPage = async ({params}: { params: { productId: number } }) => {
               <ProductImage product={product}/>
               <SelectToCart product={product} inventory={inventories} productId={productId}/>
             </div>
-            <Desription product={product} />
-            <StoreBox store={product?.store} />
+            
+            <StoreBox store={product?.store!} />
             <ReviewBox reviews={reviews}/>
+            <OtherProductFromSameStore otherProducts={otherProduct} currentProductId={productId}/>
           </div>
         </div>
       </div>
