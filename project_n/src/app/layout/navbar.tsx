@@ -1,12 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { IoMdMore } from "react-icons/io";
 import { CircleUser, Moon, ShoppingCart } from "lucide-react";
 import SearchInput from "./navber/SearchInput";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
+  const { data: session } = useSession();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [isMenuMore, setIsMenuMore] = useState(false);
 
@@ -53,30 +54,57 @@ export default function Navbar() {
 
             {toggleDropdown && (
               <>
-                <div
-                  className="fixed inset-0 z-30"
-                  onClick={() => setToggleDropdown(false)}
-                />
-                <div className="absolute flex flex-col bg-white shadow-lg rounded-md mt-2 right-0">
-                  <Link
-                    href="/profile"
-                    className="px-12 py-2 hover:bg-gray-100"
-                  >
-                    โปรไฟล์
-                  </Link>
-                  <Link
-                    href="/favorite"
-                    className="px-8 py-2 hover:bg-gray-100"
-                  >
-                    สินค้าที่ชอบ
-                  </Link>
-                  <button
-                    onClick={() => signOut()}
-                    className="px-8 py-2  hover:bg-gray-100 text-center"
-                  >
-                    Log out
-                  </button>
-                </div>
+                {!session ? (
+                  <>
+                    <div
+                      className="fixed inset-0 z-30"
+                      onClick={() => setToggleDropdown(false)}
+                    />
+                    <div className="absolute flex flex-col bg-white shadow-lg rounded-md mt-2 right-0">
+                      <Link
+                        href="/login"
+                        className="flex px-12 py-4 hover:bg-gray-100 whitespace-nowrap"
+                      >
+                        Log in
+                      </Link>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className="fixed inset-0 z-30"
+                      onClick={() => setToggleDropdown(false)}
+                    />
+                    <div className="absolute flex flex-col bg-white shadow-lg rounded-md mt-2 right-0">
+                      {session.user.roleId === "2" && (
+                        <Link
+                          href="/admin"
+                          className="px-12 py-2 hover:bg-gray-100 whitespace-nowrap"
+                        >
+                          Admin dashboard
+                        </Link>
+                      )}
+                      <Link
+                        href="/profile"
+                        className="px-12 py-2 hover:bg-gray-100 text-center"
+                      >
+                        โปรไฟล์
+                      </Link>
+                      <Link
+                        href="/favorite"
+                        className="px-8 py-2 hover:bg-gray-100 text-center"
+                      >
+                        สินค้าที่ชอบ
+                      </Link>
+                      <button
+                        onClick={() => signOut()}
+                        className="px-8 py-2  hover:bg-gray-100 text-center"
+                      >
+                        Log out
+                      </button>
+                    </div>
+                  </>
+                )}
               </>
             )}
           </li>
