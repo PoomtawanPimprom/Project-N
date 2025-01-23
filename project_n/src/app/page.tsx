@@ -113,7 +113,7 @@ export default async function Home({
                 <div className="grid grid-cols-1">
                   {stores.map((store, index) => (
                     <>
-                      <StoreBox store={store} />
+                      <StoreBox store={store} key={index}/>
                     </>
                   ))}
                 </div>
