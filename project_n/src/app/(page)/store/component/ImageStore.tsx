@@ -76,9 +76,6 @@ const ImageStore = ({  ownerId, storeId, store }: prop) => {
               </>
             )}
             <div className="flex items-end">
-              <ButtonChat userId={Number(session?.user?.id)} storeId={storeId} />
-            </div>
-            <div className="flex items-end">
               <ButtonFollow userId={Number(session?.user?.id)} storeId={storeId} />
             </div>
           </div>
