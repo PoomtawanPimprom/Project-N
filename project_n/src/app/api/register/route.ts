@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from "bcrypt";
 
 export async function POST(req: NextRequest) {
+    const url = 'https://firebasestorage.googleapis.com/v0/b/project-n-eff9b.firebasestorage.app/o/blank-profile-picture.webp?alt=media&token=c45efbe9-2f62-4750-beb2-870485a8d833'
     const { username, email, password } = await req.json();
     if (!username && !email && !password) {
         return NextResponse.json({ success: false, message: 'All fields are required' },{ status: 400 });
@@ -22,7 +23,8 @@ export async function POST(req: NextRequest) {
             data: {
                 username,
                 email,
-                password: hashpassword
+                password: hashpassword,
+                profile: url,
             }
         })
         return NextResponse.json({ success: true, message: 'User created successfully' },{status:200});
