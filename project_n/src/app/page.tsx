@@ -39,7 +39,7 @@ export default async function Home({
 }) {
   const search = searchParams.search;
   const products = (await prisma.product.findMany({
-    where: { name: search },
+    where: { name: {contains:search} },
   })) as productInterface[];
 
   const stores = (await prisma.store.findMany({
