@@ -78,10 +78,11 @@ const userData =
 }
 
 const orderStatusData = [
-    { id: 1, name: "กำลังส่ง" },
-    { id: 2, name: "กำลังดำเนินการ" },
-    { id: 3, name: "ดำเนินการเสร็จสิ้น" },
-    { id: 4, name: "ยกเลิกรายการ" },
+    {  name: "ยังไม่ชำระ" },
+    {  name: "รอร้านค้าจัดส่ง" },
+    {  name: "กำลังจัดส่ง" },
+    {  name: "ดำเนินการเสร็จสิ้น" },
+    {  name: "ยกเลิกรายการ" },
 ]
 
 const paymentStatusData = [
@@ -100,10 +101,10 @@ const transportData = [
 
 async function main() {
     try {
+        await prisma.orderStatus.createMany({ data: orderStatusData })
         await prisma.transport.createMany({ data: transportData })
         await prisma.addressStatus.createMany({ data: userAddressStatusData })
         await prisma.paymentStatus.createMany({ data: paymentStatusData })
-        await prisma.orderStatus.createMany({ data: orderStatusData })
         await prisma.productStatus.createMany({ data: productStatusData })
         await prisma.storeStatus.createMany({ data: storeStatusData })
         await prisma.category.createMany({ data: categoryData })
