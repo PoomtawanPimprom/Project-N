@@ -1,19 +1,15 @@
-import prisma from "@/lib/prisma/db";
-import InfoReportComponent from "../component/infoReport";
+import BackButton from "./BackButton";
+import InfoReportComponent from "./infoReport";
 
 const ManageReportByIdPage = async ({ params }: { params: { id: number } }) => {
   const reportId = Number(params.id);
-  const reportData = prisma.report.findUnique({
-    where: { id: reportId },
-    include: {
-      product: { select: { id: true, name: true } },
-      user: { select: { id: true, name: true } },
-    },
-  });
   return (
     <>
-      <div className="flex w-full ">
+      <div className="flex relative w-full ">
         <InfoReportComponent reportId={reportId} />
+        <div className="absolute left-4 top-4">
+          <BackButton />
+        </div>
       </div>
     </>
   );

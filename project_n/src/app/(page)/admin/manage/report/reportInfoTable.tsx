@@ -33,10 +33,9 @@ const ReportInfoTable = () => {
   const fetchAllData = async () => {
     await fetchReportCateData();
     await fetchReportData();
-  }
+  };
 
   const fetchReportCateData = async () => {
-
     const reportCateData = await getAllReportCategoies();
     setReportCategories(reportCateData);
   };
@@ -69,53 +68,55 @@ const ReportInfoTable = () => {
   return (
     <>
       <div className="filter flex mt-2 mb-2 space-x-2">
-          <div>
-            <input
-              type="text"
-              className="px-4 py-2 rounded-xl"
-              placeholder="Search..."
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <div>
-            <select
-              className="px-4 py-2 rounded-xl"
-              value={0 || sortReportCate}
-              onChange={(e) => setSortReportCate(e.target.value)}
-            >
-              <option value=""> - </option>
-              {reportCategories.map((item, index) => (
-                <option value={item.id} key={index}>
-                  {item.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <select
-              className="px-4 py-2 rounded-xl"
-              value={sortDate}
-              onChange={(e) => setSortDate(e.target.value)}
-            >
-              {sortDateCategoryData.map((item, index) => (
-                <option key={index} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <button className=" bg-green-main text-white px-4 py-2 rounded-xl hover:bg-green-900" onClick={handlefilter}>
-              ค้นหา
-            </button>
-          </div>
+        <div>
+          <input
+            type="text"
+            className="px-4 py-2 rounded-xl border "
+            placeholder="Search..."
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        <div>
+          <select
+            className="px-4 py-2 rounded-xl border "
+            value={0 || sortReportCate}
+            onChange={(e) => setSortReportCate(e.target.value)}
+          >
+            <option value=""> - </option>
+            {reportCategories.map((item, index) => (
+              <option value={item.id} key={index}>
+                {item.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <select
+            className="px-4 py-2 rounded-xl border "
+            value={sortDate}
+            onChange={(e) => setSortDate(e.target.value)}
+          >
+            {sortDateCategoryData.map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <button
+            className=" bg-green-main text-white px-4 py-2 rounded-xl hover:bg-green-900"
+            onClick={handlefilter}
+          >
+            ค้นหา
+          </button>
+        </div>
       </div>
       <div className="w-full">
         <div className="relative overflow-x-auto sm:rounded-lg">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead className="text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-
                 <th scope="col" className="px-6 py-3">
                   ข้อความ
                 </th>
@@ -138,12 +139,14 @@ const ReportInfoTable = () => {
             </thead>
             <tbody>
               {reports.map((item, index) => (
-                <tr 
-                key={index}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  
+                <tr
+                  key={index}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
                   <td className="px-6 py-4">{item.comment}</td>
-                  <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString("th-TH")}</td>
+                  <td className="px-6 py-4">
+                    {new Date(item.createdAt).toLocaleDateString("th-TH")}
+                  </td>
                   <td className="px-6 py-4">{item.user?.name}</td>
                   <td className="px-6 py-4">{item.product?.name}</td>
                   <td className="px-6 py-4">{item.reportCategory?.name}</td>
@@ -172,9 +175,10 @@ const ReportInfoTable = () => {
               </button>
 
               {numbers.map((item, index) => (
-                <div 
-                key={index}
-                className="px-2 py-2 border-x-[1px] border-slate-800">
+                <div
+                  key={index}
+                  className="px-2 py-2 border-x-[1px] border-slate-800"
+                >
                   <a href="">{item}</a>
                 </div>
               ))}
