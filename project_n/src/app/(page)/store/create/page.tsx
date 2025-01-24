@@ -15,10 +15,12 @@ import {
 } from "firebase/storage";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 
 export default function CreateStorePage() {
+  const router = useRouter()
   const { data: session } = useSession();
   const { toast } = useToast();
 
@@ -138,12 +140,14 @@ export default function CreateStorePage() {
       //validate
       validateWithZod(StoreSchema, data);
 
-      await CreateStore(data);
+      const res:any = await CreateStore(data);
       toast({
         description: "สร้างร้านค้าสำเร็จ",
       });
-    } 
-    catch (error: any) {
+      setTimeout(()=>{
+        router.push(`/store/${res.id}`)
+      },5000)
+    } catch (error: any) {
       const deleteLogoRef = ref(storage, `store/logo/${logoFileName}`);
       const deleteBgRef = ref(storage, `store/background/${BgFileName}`);
 
@@ -161,6 +165,10 @@ export default function CreateStorePage() {
         .catch((error: any) => {
           console.log(error.message);
         });
+      if(error.message) {
+        setError(error.message)
+      }
+
       //handle error from Zod
       if (error.fieldErrors) {
         setError(error.fieldErrors); // ตั้งค่าข้อผิดพลาดโดยตรง
@@ -360,8 +368,8 @@ export default function CreateStorePage() {
 
           <div className="flex justify-end gap-4">
             <SubmitButtton
-              label="กำลังสร้าง..."
-              labelUploading="สร้าง"
+              label="สร้าง"
+              labelUploading="กำลังสร้าง..."
               disabled={uploading}
             />
           </div>
