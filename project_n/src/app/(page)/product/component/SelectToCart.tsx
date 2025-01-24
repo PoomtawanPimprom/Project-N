@@ -10,6 +10,7 @@ import Description from "./Desription";
 import { createCart } from "@/app/service/cart/service";
 import { useSession } from "next-auth/react";
 import { cartItemInterface } from "@/app/interface/cartItemInterface";
+import { useToast } from "@/hooks/use-toast";
 
 type SelectProp = {
   productId: number;
@@ -22,10 +23,11 @@ export default function SelectToCart({
   inventory,
   productId,
 }: SelectProp) {
+  const { toast } = useToast();
   const [size, setSize] = useState<string | undefined>();
   const [color, setColor] = useState<string | undefined>();
   const [count, setCount] = useState(1);
- const {data:session} = useSession();
+  const { data: session } = useSession();
   //report system
   const [openReportModal, setOpenReportModal] = useState(false);
 
@@ -58,11 +60,14 @@ export default function SelectToCart({
         color: color,
         size: size,
         quantity: count,
-      })
+      });
+      toast({
+        description: "เพิ่มสินค้าเข้าตะกร้าเรียบร้อยแล้ว",
+      });
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     if (size && color) {
@@ -100,7 +105,7 @@ export default function SelectToCart({
             </div>
           </div>
         </div>
-        <div className="flex text-lg font-semibold text-gray-600" >
+        <div className="flex text-lg font-semibold text-gray-600">
           <p>฿{product.price}</p>
         </div>
       </div>
@@ -182,7 +187,10 @@ export default function SelectToCart({
             </button>
           </div>
           <div className="flex w-full  border rounded-lg justify-center items-center">
-            <button onClick={() => onSubmitAddToCart()} className="px-4 py-2 rounded-lg h-full w-full justify-center items-center bg-green-main text-white font-bold">
+            <button
+              onClick={() => onSubmitAddToCart()}
+              className="px-4 py-2 rounded-lg h-full w-full justify-center items-center bg-green-main text-white font-bold"
+            >
               เพิ่มลงตะกร้า
             </button>
           </div>
