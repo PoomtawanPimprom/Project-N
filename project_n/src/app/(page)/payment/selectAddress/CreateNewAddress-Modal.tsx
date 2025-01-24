@@ -7,6 +7,7 @@ import { userInterface } from "@/app/interface/userInterface";
 import { createAddress } from "@/app/service/address/service";
 import { userAddressSchema, validateWithZod } from "@/lib/zod/Schema";
 import { revalidatePath } from "next/cache";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 
@@ -23,6 +24,7 @@ export default function CreateNewAddressModal({
   onClose,
   user,
 }: Modalprop) {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     fullName: "",
     houseNo: "",
@@ -54,7 +56,7 @@ export default function CreateNewAddressModal({
       //send to server
       await createAddress(formData);
       setError(null);
-      revalidatePath("/payment");
+      router.refresh();
     } catch (error: any) {
       if (error.fieldErrors) {
         setError(error.fieldErrors); // ตั้งค่าข้อผิดพลาดโดยตรง

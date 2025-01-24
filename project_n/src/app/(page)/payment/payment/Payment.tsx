@@ -5,19 +5,101 @@ import React, { Suspense, useState } from "react";
 import SkeletonLoading from "./SkeletonLoading";
 import Image from "next/image";
 import Form from "@/app/component/Form";
+import {
+  deleteUploadedImage,
+  genarateImageName,
+  uploadImageToFirebase,
+} from "@/lib/firebase/firebase";
+import { CancelOrder, CreatePayment, UpdatePaymentStatusWhenChecked, verifySlip } from "@/app/service/(payment)/service";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 type prop = {
+  userId:number
+  orderDetailId: number
   amount: number;
 };
 
-export default function Payment({ amount }: prop) {
+export default function Payment({ orderDetailId,amount,userId }: prop) {
+  const {toast} = useToast()
+  const router = useRouter()
   const [image, setImage] = useState<File | null>(null);
   const [showInput, setShowInput] = useState<boolean>(true);
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    let url = "";
+    try {
+      setLoading(true);
+      setError(null);
+      console.log("start");
 
+      if (image === null) {
+        setError("โปรดใส่รูป");
+        return;
+      }
+      //upload image to firebase
+      const imagename = genarateImageName();
+      const upload = await uploadImageToFirebase(image, imagename, "slip");
+      url = upload.downloadURL;
+      const data = {
+        orderId: orderDetailId,
+        amount: amount,
+        moneySlip:url,
+      };
+
+      //create payment
+      const createPayment = await CreatePayment(data);
+      console.log(createPayment)
+      console.log("payment id",createPayment.payment.id)
+
+      //verify payment
+      // const formData = new FormData();
+      // formData.append('file', image); 
+      // const result = await verifySlip(formData);
+      // console.log(result);
+      // if(result.data.data.receiver.account.name.en !== "MR.POOMTAWAN P"){
+      //   toast({
+      //     description: "โปรดใส่สลิปที่ถูกต้อง",
+      //   });
+      //   throw new Error("incorrect payment")
+      // }
+
+      //check payment
+      const dataupdate ={
+        paymentId:createPayment.payment.id,
+        orderDetailId:orderDetailId,
+        userId:userId
+      }
+      console.log(dataupdate)
+      await UpdatePaymentStatusWhenChecked(dataupdate)
+      toast({
+        description: "ทำรายการเสร็จสิ้น",
+      });
+      setTimeout(()=>{
+        router.push(`/profile/purchase`)
+      },4000)
+    } catch (error) {
+      console.log(error)
+      toast({
+        description: "เกิดข้อผิดพลาด โปรดกรอกสลิปอีกรอบ",
+      });
+      await deleteUploadedImage("slip", url);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleCancelOrder = async () => {
+    await CancelOrder(orderDetailId)
+    router.push(`/`)
+  }
 
   const handleFileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -44,15 +126,15 @@ export default function Payment({ amount }: prop) {
       </Suspense>
       {/*  */}
       <div className="">
-        <Form onSubmit={onSubmit}>
+        <Form onSubmit={onSubmit} className="space-y-2">
           <div className="grid grid-cols-1  gap-4">
             {showInput && (
               <div className="flex items-start justify-start w-full">
                 <label
                   htmlFor="image-logo"
-                  className="flex flex-col items-center justify-center h-[400px] w-[400px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+                  className="flex flex-col items-center justify-center h-full w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
                 >
-                  <div className="flex flex-col h-[400px] w-[400px] items-center justify-center pt-5 pb-6">
+                  <div className="flex flex-col h-full w-full items-center justify-center pt-5 pb-6">
                     <svg
                       className="w-8 h-8 mb-4 text-gray-500"
                       aria-hidden="true"
@@ -107,19 +189,28 @@ export default function Payment({ amount }: prop) {
               </div>
             )}
           </div>
+
+          {error && (
+            <div className="mt-1 mb-1 text-lg text-red-500">
+              <p>{error}</p>
+            </div>
+          )}
+          <div className="flex justify-end space-x-2 w-full">
+            <button
+              type="button"
+              className="flex py-2 px-4 rounded-lg border border-gray-400"
+              onClick={handleCancelOrder}
+            >
+              ยกเลิก
+            </button>
+            <button
+              disabled={loading}
+              className="flex py-2 px-4 rounded-lg bg-green-main text-white disabled:bg-green-main/20"
+            >
+              {loading ? "กำลังชำระ" : "ยืนยัน"}
+            </button>
+          </div>
         </Form>
-      </div>
-      {/*  */}
-      <div className="flex justify-end space-x-2 w-full">
-        <button
-          type="button"
-          className="flex py-2 px-4 rounded-lg border border-gray-400"
-        >
-          ยกเลิก
-        </button>
-        <button className="flex py-2 px-4 rounded-lg bg-green-main text-white">
-          ยืนยัน
-        </button>
       </div>
     </div>
   );

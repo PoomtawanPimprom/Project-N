@@ -7,16 +7,19 @@ import { userAddressInterface } from "@/app/interface/userAddressInterface";
 //component
 import SelectAddress from "./selectAddress/SelectAddress";
 import ProductCart from "./productcart/ProductCart";
-import { productInterface } from "@/app/interface/productInterface";
 import Payment from "./payment/Payment";
+
+import { orderDetailInterface } from "@/app/interface/orderDetailInterface";
+import { orderItemInterface } from "@/app/interface/orderItemInterface";
+import { promotionInterface } from "@/app/interface/promotionInterface";
 
 export default async function PaymentPage() {
   const session = await getServerSession(authOptions);
-  console.log(session);
   if (!session) {
     redirect("/login");
   }
   const userId = Number(session?.user.id);
+
   const user = (await prisma.user.findUnique({
     where: { id: userId },
   })) as userInterface;
@@ -24,7 +27,7 @@ export default async function PaymentPage() {
   const userAddressDefault = (await prisma.userAddress.findFirst({
     where: {
       userId: userId,
-      addressStatusId: 1,
+      addressStatusId: 2,
     },
   })) as userAddressInterface;
 
@@ -32,11 +35,20 @@ export default async function PaymentPage() {
     where: { userId },
   })) as userAddressInterface[];
 
-  const productsFromUser =
-    (await prisma.product.findMany()) as productInterface[];
+  const orderDetailData = (await prisma.orderDetail.findFirst({
+    where: { userId: user.id, orderStatusId: 1 },
+    include: { transport: true },
+  })) as orderDetailInterface;
 
-      
-  const amount = 4999;
+  const orderItemsData = (await prisma.orderItem.findMany({
+    where: { orderDetailId: orderDetailData.id },
+    include: { product: true },
+  })) as orderItemInterface[];
+
+  const discount = (await prisma.discount.findUnique({
+    where: { id: orderDetailData.discountId },
+  })) as promotionInterface;
+
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-5 p-4 mx-auto max-w-6xl gap-2 ">
@@ -47,15 +59,25 @@ export default async function PaymentPage() {
               AllUserAddress={AllUserAddress}
               default_address={userAddressDefault}
             />
-          <ProductCart products={productsFromUser} />
+            <ProductCart
+              discount={discount}
+              orderItems={orderItemsData}
+              orderDetail={orderDetailData}
+            />
           </div>
-
-
         </div>
         <div className="col-span-2 ">
           <div className="flex flex-col gap-2">
             <div>
-              <Payment amount={500} />
+              <Payment
+              userId={userId}
+              orderDetailId={orderDetailData.id}
+                amount={
+                  orderDetailData.total +
+                  orderDetailData.transport?.transportPrice! -
+                  (discount?.discountAmount || 0)
+                }
+              />
             </div>
           </div>
         </div>

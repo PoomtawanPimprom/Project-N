@@ -15,7 +15,7 @@ export async function UpdateAddressAction({ userId, defalutAddressId }: updatype
         await prisma.userAddress.update({
             where: { userId: userId, id: Number(newAddressId) },
             data: {
-                addressStatusId: 1,
+                addressStatusId: 2,
             }
         })
     }
@@ -24,7 +24,7 @@ export async function UpdateAddressAction({ userId, defalutAddressId }: updatype
         await prisma.userAddress.update({
             where:{id:defalutAddressId},
             data:{
-                addressStatusId:0
+                addressStatusId:1
             }
         })
         await prisma.userAddress.update({
