@@ -7,6 +7,9 @@ import ModalReportForm from "../../report/component/modalReportForm";
 import LikeButtonProductPage from "./LikeButton";
 import { productInterface } from "@/app/interface/productInterface";
 import Description from "./Desription";
+import { createCart } from "@/app/service/cart/service";
+import { useSession } from "next-auth/react";
+import { cartItemInterface } from "@/app/interface/cartItemInterface";
 
 type SelectProp = {
   productId: number;
@@ -22,7 +25,7 @@ export default function SelectToCart({
   const [size, setSize] = useState<string | undefined>();
   const [color, setColor] = useState<string | undefined>();
   const [count, setCount] = useState(1);
-
+ const {data:session} = useSession();
   //report system
   const [openReportModal, setOpenReportModal] = useState(false);
 
@@ -46,6 +49,20 @@ export default function SelectToCart({
     );
     setAvailableQuantity(inventoryItem ? inventoryItem.quantity : null);
   };
+
+  const onSubmitAddToCart = async () => {
+    try {
+      await createCart({
+        userId: Number(session?.user.id),
+        productId: product.id,
+        color: color,
+        size: size,
+        quantity: count,
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     if (size && color) {
@@ -165,7 +182,7 @@ export default function SelectToCart({
             </button>
           </div>
           <div className="flex w-full  border rounded-lg justify-center items-center">
-            <button className="px-4 py-2 rounded-lg h-full w-full justify-center items-center bg-green-main text-white font-bold">
+            <button onClick={() => onSubmitAddToCart()} className="px-4 py-2 rounded-lg h-full w-full justify-center items-center bg-green-main text-white font-bold">
               เพิ่มลงตะกร้า
             </button>
           </div>
