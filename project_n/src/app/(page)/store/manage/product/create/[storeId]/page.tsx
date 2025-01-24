@@ -19,6 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { v4 } from "uuid";
+import StoreSideBar from "../../../StoreSideBar";
 
 const createProductpage = ({ params }: { params: { storeId: number } }) => {
   const { toast } = useToast();
@@ -173,10 +174,11 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
   }, []);
 
   return (
-    <>
-      <div className="flex flex-col items-center">
-        <div className="flex flex-col xl:w-[1000px] mx-auto p-4 border-x dark:border-gray-500">
-          <div className="text-5xl font-bold my-4">
+    <div className="min-h-screen bg-gray-100 flex">
+      <StoreSideBar storeId={storeId.toString()} />
+      <div className="flex w-full flex-col items-center p-4">
+        <div className="flex  flex-col w-full border p-4 rounded-lg bg-white border-x dark:border-gray-500">
+          <div className="text-3xl font-bold my-4">
             <p>เพิ่มสินค้า</p>
           </div>
           <div className="flex w-full">
@@ -380,7 +382,7 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

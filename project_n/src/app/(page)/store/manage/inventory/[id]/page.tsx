@@ -13,9 +13,9 @@ import { getProductsByStoreId } from "@/app/service/product/service";
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState, use } from "react";
+import StoreSideBar from "../../StoreSideBar";
 
-const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
-  const params = use(props.params);
+const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
   const router = useRouter();
   const storeId = Number(params.id);
   const [products, setProducts] = useState<productInterface[]>([]);
@@ -97,10 +97,11 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
     }
   };
   return (
-    <>
-      <div className="flex dark:bg-black">
-        <div className="flex flex-col w-[1100px] h-lvh mx-auto border p-4 dark:bg-black dark:border-gray-600 dark:border-x">
-          <div className="header flex my-2 text-4xl font-bold dark:text-white ">
+    <div className="min-h-screen bg-gray-100 flex">
+      <StoreSideBar  storeId={storeId.toString()}/>
+      <div className="flex w-full dark:bg-black p-4">
+        <div className="flex flex-col w-full border p-4 rounded-lg bg-white  dark:bg-black dark:border-gray-600 dark:border-x">
+          <div className="header flex my-2 text-3xl font-bold dark:text-white ">
             <p>จัดการสินค้าในสต็อก</p>
           </div>
           <div className="flex my-2 ">
@@ -137,7 +138,7 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
                   <option value={0} disabled>
                     เรียงจาก
                   </option>
-                  
+
                   <option value="asc">เก่าสุด</option>
                   <option value="desc">ล่าสุด</option>
                 </select>
@@ -170,7 +171,7 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
           </div>
           <div className="relative overflow-x-auto sm:rounded-lg border dark:border-gray-600">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <thead className="text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-2 py-3"></th>
                   <th scope="col" className="px-6 py-3">
@@ -233,7 +234,7 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
