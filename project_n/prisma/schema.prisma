@@ -70,7 +70,7 @@ model UserAddress {
   district    String //อำเภอ
   subDistrict String? //ตำบล
   postalCode  String
-  mobile      String  @unique
+  mobile      String
 
   userId Int?
   user   User? @relation(fields: [userId], references: [id])
@@ -137,8 +137,6 @@ model Product {
   store           Store         @relation(fields: [storeID], references: [id])
   categoryID      Int
   category        Category      @relation(fields: [categoryID], references: [id])
-  // discountID       Int
-  // discount         Discount    @relation(fields: [discountID], references: [id])
   productStatusID Int           @default(1)
   productStatus   ProductStatus @relation(fields: [productStatusID], references: [id])
 
@@ -156,9 +154,12 @@ model Inventory {
   quantity  Int
   size      String?
   color     String?
-  productID Int
   createdAt DateTime @default(now())
+
+  productID Int
   product   Product  @relation(fields: [productID], references: [id])
+
+  @@unique([productID, size, color])
 }
 
 model Category {
@@ -169,11 +170,8 @@ model Category {
 
 model Discount {
   id                 Int     @id @default(autoincrement())
-  name               String
-  description        String  @default("")
-  discountPercentage Int     @default(0)
+  name               String  @unique
   discountAmount     Int     @default(0)
-  minimumPrice       Int     @default(0)
   isActive           Boolean @default(false)
 }
 
@@ -236,29 +234,43 @@ model ReportStatus {
 
 //payment system
 model OrderItem {
-  id            Int          @id @default(autoincrement())
-  orderDetailId Int
-  orderDetail   OrderDetail? @relation(fields: [orderDetailId], references: [id])
-  productId     Int
-  product Product @relation(fields: [productId], references: [id])
-  color   String?
-  size    String?
-  quantity Int
+  id                Int              @id @default(autoincrement())
+  color             String?
+  size              String?
+  quantity          Int
+  storeId           Int?
+  userAddressId Int?
+
+
+  orderDetailId     Int
+  orderDetail       OrderDetail?     @relation(fields: [orderDetailId], references: [id])
+  productId         Int
+  product           Product          @relation(fields: [productId], references: [id])
+  orderItemStatusId Int?
+  orderItemStatus   OrderItemStatus? @relation(fields: [orderItemStatusId], references: [id])
+}
+
+model OrderItemStatus {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  OrderItem OrderItem[]
 }
 
 model OrderDetail {
-  id        Int      @id @default(autoincrement())
-  total     Float
-  createdAt DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  total      Float
+  createdAt  DateTime @default(now())
+  discountId Int      @default(0)
 
   userId        Int
-  user          User        @relation(fields: [userId], references: [id])
-  paymentId     Int?
+  user          User?       @relation(fields: [userId], references: [id])
+  paymentId     Int? @unique
   payment       Payment?    @relation(fields: [paymentId], references: [id])
   transportId   Int
-  transport     Transport   @relation(fields: [transportId], references: [id])
+  transport     Transport?   @relation(fields: [transportId], references: [id])
   orderStatusId Int
-  orderStatus   OrderStatus @relation(fields: [orderStatusId], references: [id])
+  orderStatus   OrderStatus? @relation(fields: [orderStatusId], references: [id])
 
   OrderItem OrderItem[]
 }
@@ -286,7 +298,7 @@ model Payment {
   paymentStatusId Int
   paymentStatus   PaymentStatus @relation(fields: [paymentStatusId], references: [id])
 
-  OrderDetail OrderDetail[]
+  OrderDetail OrderDetail?
 }
 
 model PaymentStatus {
