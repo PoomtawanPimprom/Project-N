@@ -5,9 +5,6 @@ import Image from 'next/image'
 import { useToast } from "@/hooks/use-toast";
 import MenuLeft from './menuleft'
 import { getUserById, updateUserById } from '@/app/service/profile/service';
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
 
 import { deleteUploadedImage, genarateImageName, uploadImageToFirebase } from "@/lib/firebase/firebase";
 import { useSession } from 'next-auth/react';
@@ -15,8 +12,6 @@ import { useSession } from 'next-auth/react';
 
 function Profile() {
     const {data:session} = useSession();
-    console.log(session?.user)
-    
     const { toast } = useToast();
     const [profileImage, setProfileImage] = useState<string>("");
     const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
@@ -36,7 +31,6 @@ function Profile() {
         resetToken: "",
         resetTokenExp: new Date(),
     });
-
 
     // Automatically upload the image when file is selected
     const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,9 +89,8 @@ function Profile() {
 
 
     const fetchUserData = async () => {
-        const res = await getUserById(2);
+        const res = await getUserById(Number(session?.user.id));
         setUserData(res);
-        console.log(res);
     }
 
     useEffect(() => {
@@ -133,7 +126,7 @@ function Profile() {
         <section id="profile">
             <div className="container mx-auto flex flex-col lg:flex-row py-6 gap-4 px-4 sm:px-6 lg:px-8">
 
-                <MenuLeft profile="" />
+                <MenuLeft checkCreatedStore={session?.user.storeId} profile="" />
 
                 {/* Content right */}
                 <div className="flex flex-col gap-6 lg:w-3/4 z-50">
@@ -146,7 +139,7 @@ function Profile() {
                             <input
                                 type="email"
                                 id="email"
-                                defaultValue={userData.email}
+                                value={userData.email}
                                 onChange={(e) => {
                                     setUserData((prevData) => ({
                                         ...prevData,
