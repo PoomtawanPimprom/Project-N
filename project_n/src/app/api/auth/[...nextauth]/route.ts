@@ -23,11 +23,15 @@ export const authOptions:NextAuthOptions  = {
         })
         //compare
         if (user &&(await bcrypt.compare(credentials.password, user.password!))) {
+          const store = await prisma.store.findFirst({
+            where:{userId:user.id}
+          })
           return {
             id: user.id.toString(),
             name: user.name,
             email: user.email,
-            roleId: user.roleId.toString()
+            roleId: user.roleId.toString(),
+            storeId: store ? store.id.toString() : ""
           }
         } else {
           throw new Error("Username หรือ password ไม่ถูกต้อง กรุณากรอกใหม่")
@@ -45,6 +49,7 @@ export const authOptions:NextAuthOptions  = {
       if (user) {
         token.id = user.id
         token.roleId = user.roleId
+        token.storeId = user.storeId
       }
       return token
     },
@@ -52,6 +57,7 @@ export const authOptions:NextAuthOptions  = {
       if (session.user) {
         session.user.id = token.id
         session.user.roleId = token.roleId
+        session.user.storeId = token.storeId
         delete session.user.image
       }
       
