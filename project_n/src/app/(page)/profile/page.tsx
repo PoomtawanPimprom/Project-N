@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { userInterface } from '@/app/interface/userInterface';
 import Image from 'next/image'
 import { useToast } from "@/hooks/use-toast";
@@ -11,7 +11,7 @@ import { useSession } from 'next-auth/react';
 
 
 function Profile() {
-    const {data:session} = useSession();
+    const { data: session } = useSession();
     const { toast } = useToast();
     const [profileImage, setProfileImage] = useState<string>("");
     const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
@@ -37,7 +37,7 @@ function Profile() {
         const file = e.target.files?.[0];
         if (file) {
             const imageName = genarateImageName();
-            const folder = "profile/1/";
+            const folder = `profile/${userData.id}/`;
 
             try {
                 // Check if there is an original picture in the profile.
@@ -87,11 +87,18 @@ function Profile() {
         }
     };
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        setUserData((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
 
     const fetchUserData = async () => {
         const res = await getUserById(Number(session?.user.id));
         setUserData(res);
-        console.log(res);
     }
 
     useEffect(() => {
@@ -101,20 +108,20 @@ function Profile() {
     const onSubmitUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            console.log(userData)
-            await updateUserById(userData.id, {
+            const data = {
                 name: userData.name,
-                username: userData.username,
                 password: userData.password,
                 email: userData.email,
                 mobile: userData.mobile,
                 birthdate: userData.birthdate,
-                profile: profileImage,
+                profile: String(profileImage) || String(userData.profile),
                 saler: userData.saler,
                 genderId: userData.genderId,
                 roleId: userData.roleId,
                 userStatusId: userData.userStatusId,
-            });
+            };
+
+            await updateUserById(userData.id, data);
 
             alert("Profile updated successfully!");
         } catch (error: any) {
@@ -127,26 +134,27 @@ function Profile() {
         <section id="profile">
             <div className="container mx-auto flex flex-col lg:flex-row py-6 gap-4 px-4 sm:px-6 lg:px-8">
 
-                <MenuLeft checkCreatedStore={session?.user.storeId} profile="" />
+                <MenuLeft checkCreatedStore={session?.user.storeId} profile={userData} />
 
                 {/* Content right */}
                 <div className="flex flex-col gap-6 lg:w-3/4 z-50">
                     {/* Form Section */}
                     <form onSubmit={onSubmitUpdate} action="" className="bg-white border-0 shadow-md border-black p-6 rounded-lg space-y-4 sm:border sm:shadow-none">
                         <div className="space-y-1">
+                            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                                ชื่อ
+                            </label>
+                            <input name="name" type="name" id="name" value={userData.name}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/2"
+                            />
+                        </div>
+                        <div className="space-y-1">
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                                 อีเมล
                             </label>
-                            <input
-                                type="email"
-                                id="email"
-                                value={userData.email}
-                                onChange={(e) => {
-                                    setUserData((prevData) => ({
-                                        ...prevData,
-                                        email: e.target.value,
-                                    }));
-                                }}
+                            <input name="email" type="email" id="email" value={userData.email}
+                                onChange={handleInputChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/2"
                             />
                         </div>
@@ -154,16 +162,11 @@ function Profile() {
                             <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">
                                 เบอร์โทรศัพท์
                             </label>
-                            <input
+                            <input name="mobile"
                                 type="text"
                                 id="mobile"
                                 value={userData.mobile}
-                                onChange={(e) => {
-                                    setUserData((prevData) => ({
-                                        ...prevData,
-                                        mobile: e.target.value,
-                                    }));
-                                }}
+                                onChange={handleInputChange}
                                 className="w-1/2 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/3"
                             />
                         </div>
