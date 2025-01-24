@@ -43,3 +43,14 @@ export async function deleteListById(storeID: number) {
         },
     });
 }
+
+
+export async function checkUserCreatedStore(userId: number) {
+    const res = await fetch(`/api/checkStore/${userId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    return res.json();
+}

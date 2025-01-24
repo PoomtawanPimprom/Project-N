@@ -1,6 +1,6 @@
 import { userInterface } from "@/app/interface/userInterface";
 
-export async function getUserById(id: Number){
+export async function getUserById(id: number){
     const res = await fetch(`/api/profile/${id}`, {
         method: 'GET',
         headers: {
