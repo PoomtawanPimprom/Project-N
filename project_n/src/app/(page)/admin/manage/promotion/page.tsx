@@ -2,11 +2,12 @@
 import { FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import { promotionInterface } from "@/app/interface/promotionInterface";
 import { createPromotion, deletePromotionById, getPromotionAll, updatePromotionById } from "@/app/service/promotion/service";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import AdminSideBar from "../../AdminSideBar";
 
 
 export default function AdminPromotions() {
@@ -153,48 +154,38 @@ export default function AdminPromotions() {
     }, [])
 
     return (
-        <section id="admin-promotions" className="min-h-screen bg-gray-50">
+        <section id="admin-promotions" className="min-h-screen bg-gray-50 flex">
+            <AdminSideBar />
             <div className="container mx-auto px-4 py-6 space-y-6">
-                <h1 className="text-2xl font-bold text-center sm:text-left">Manage Promotions</h1>
+                <h1 className="text-3xl font-bold text-center sm:text-left">จัดการโปรโมชั่น</h1>
 
                 <form className="space-y-4 bg-white p-4 rounded-lg shadow-md max-w-xl mx-auto sm:mx-0" onSubmit={onSubmitAddPromotion}>
-                    <h2 className="text-xl font-semibold">Add New Promotion</h2>
+                    <h2 className="text-xl font-semibold">เพิ่มโปรโมชั่น</h2>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
-                            <label htmlFor="name" className="block text-sm font-medium">Promotion Name</label>
+                            <label htmlFor="name" className="block text-sm font-medium">ชื่อโปรโมชั่น</label>
                             <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full border rounded-md p-2" required />
                         </div>
+
                         <div>
-                            <label htmlFor="description" className="block text-sm font-medium">Description</label>
-                            <textarea name="description" value={formData.description} onChange={handleInputChange} className="w-full border rounded-md p-2" rows={2} required></textarea>
-                        </div>
-                        <div>
-                            <label htmlFor="discountPercentage" className="block text-sm font-medium">Discount Percentage (%)</label>
-                            <input type="number" name="discountPercentage" value={formData.discountPercentage} onChange={handleInputChange} className="w-full border rounded-md p-2" min={0} required />
-                        </div>
-                        <div>
-                            <label htmlFor="discountAmount" className="block text-sm font-medium">Discount Amount</label>
+                            <label htmlFor="discountAmount" className="block text-sm font-medium">ส่วนลด</label>
                             <input type="number" name="discountAmount" value={formData.discountAmount} onChange={handleInputChange} className="w-full border rounded-md p-2" min={0} required />
-                        </div>
-                        <div>
-                            <label htmlFor="minimumPrice" className="block text-sm font-medium">Minimum Price</label>
-                            <input type="number" name="minimumPrice" value={formData.minimumPrice} onChange={handleInputChange} className="w-full border rounded-md p-2" min={0} required />
                         </div>
                     </div>
                     <button type="submit" className="w-full py-2 px-4 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition">
-                        Add Promotion
+                        เพิ่มโปรโมชั่น
                     </button>
                 </form>
 
                 <div className="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
-                    <h2 className="text-xl font-semibold mb-4">Promotions List</h2>
+                    <h2 className="text-xl font-semibold mb-4">รายการโปรโมชั่น</h2>
 
                     <div className="mb-4 flex items-center space-x-2">
                         <div className="relative w-full max-w-md">
                             <AiOutlineSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                             <input
                                 type="text"
-                                placeholder="Search name promotions..."
+                                placeholder="ค้นหาชื่อโปรโมชั่น..."
                                 value={search}
                                 onChange={handleSearchChange}
                                 className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
@@ -205,23 +196,19 @@ export default function AdminPromotions() {
                     <table className="w-full table-auto border-collapse">
                         <thead>
                             <tr className="bg-gray-100 text-sm">
-                                <th className="border p-2">Name</th>
-                                <th className="border p-2">Description</th>
-                                <th className="border p-2">Discount (%)</th>
-                                <th className="border p-2">Discount Amount</th>
-                                <th className="border p-2">Minimum Price</th>
-                                <th className="border p-2">Active</th>
-                                <th className="border p-2">Action</th>
+                                <th className="border p-2">ไอดี</th>
+                                <th className="border p-2">ชื่อ</th>
+                                <th className="border p-2">ส่วนลด</th>
+                                <th className="border p-2">เปิดใช้งาน</th>
+                                <th className="border p-2">จัดการ</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredPromotions.map((promo) => (
                                 <tr key={promo.id} className="text-center text-sm">
+                                    <td className="border p-2">{promo.id}</td>
                                     <td className="border p-2">{promo.name}</td>
-                                    <td className="border p-2">{promo.description}</td>
-                                    <td className="border p-2">{promo.discountPercentage}</td>
                                     <td className="border p-2">{promo.discountAmount}</td>
-                                    <td className="border p-2">{promo.minimumPrice}</td>
                                     <td className="border p-2">
                                         <label className="relative inline-flex items-center cursor-pointer">
                                             <input
@@ -252,7 +239,7 @@ export default function AdminPromotions() {
                                                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                                             <div>
                                                                 <label htmlFor="name" className="block text-sm font-medium">
-                                                                    Promotion Name
+                                                                    ชื่อโปรโมชั่น
                                                                 </label>
                                                                 <input
                                                                     type="text"
@@ -264,33 +251,6 @@ export default function AdminPromotions() {
                                                                 />
                                                             </div>
                                                             <div>
-                                                                <label htmlFor="description" className="block text-sm font-medium">
-                                                                    Description
-                                                                </label>
-                                                                <textarea
-                                                                    name="description"
-                                                                    value={formData.description}
-                                                                    onChange={handleInputChange}
-                                                                    className="w-full border rounded-md p-2"
-                                                                    rows={2}
-                                                                    required
-                                                                ></textarea>
-                                                            </div>
-                                                            <div>
-                                                                <label htmlFor="discountPercentage" className="block text-sm font-medium">
-                                                                    Discount Percentage (%)
-                                                                </label>
-                                                                <input
-                                                                    type="number"
-                                                                    name="discountPercentage"
-                                                                    value={formData.discountPercentage}
-                                                                    onChange={handleInputChange}
-                                                                    className="w-full border rounded-md p-2"
-                                                                    min={0}
-                                                                    required
-                                                                />
-                                                            </div>
-                                                            <div>
                                                                 <label htmlFor="discountAmount" className="block text-sm font-medium">
                                                                     Discount Amount
                                                                 </label>
@@ -298,20 +258,6 @@ export default function AdminPromotions() {
                                                                     type="number"
                                                                     name="discountAmount"
                                                                     value={formData.discountAmount}
-                                                                    onChange={handleInputChange}
-                                                                    className="w-full border rounded-md p-2"
-                                                                    min={0}
-                                                                    required
-                                                                />
-                                                            </div>
-                                                            <div>
-                                                                <label htmlFor="minimumPrice" className="block text-sm font-medium">
-                                                                    Minimum Price
-                                                                </label>
-                                                                <input
-                                                                    type="number"
-                                                                    name="minimumPrice"
-                                                                    value={formData.minimumPrice}
                                                                     onChange={handleInputChange}
                                                                     className="w-full border rounded-md p-2"
                                                                     min={0}
