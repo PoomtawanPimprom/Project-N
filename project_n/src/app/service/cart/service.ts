@@ -1,6 +1,6 @@
 
 // Get by id
-export async function getCartById(id: Number){
+export async function getCartById(id: number){
     const res = await fetch(`/api/cart/${id}`, {
         method: 'GET',
         headers: {

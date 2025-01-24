@@ -9,7 +9,6 @@ type prop = {
     id: number;
     title: string;
     description: string;
-    imageUrl: string;
     color: string;
   }[];
 };
@@ -43,11 +42,7 @@ export default function ShowBanner({ banners }: prop) {
               }`}
             >
               <div className={`w-full h-full ${banner.color} relative`}>
-                <img
-                  src={banner.imageUrl}
-                  alt={banner.title}
-                  className="w-full h-full object-cover opacity-50"
-                />
+                
                 <div className="absolute inset-0 flex flex-col justify-center items-center text-white text-center">
                   <h2 className="text-4xl font-bold mb-4">{banner.title}</h2>
                   <p className="text-xl">{banner.description}</p>

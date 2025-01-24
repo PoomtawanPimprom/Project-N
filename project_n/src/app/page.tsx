@@ -13,21 +13,18 @@ const banners = [
     id: 1,
     title: "Summer Collection",
     description: "Up to 50% off on summer essentials",
-    imageUrl: "/api/placeholder/1200/400",
     color: "bg-blue-500",
   },
   {
     id: 2,
     title: "New Arrivals",
     description: "Check out our latest products",
-    imageUrl: "/api/placeholder/1200/400",
     color: "bg-purple-500",
   },
   {
     id: 3,
     title: "Special Offer",
     description: "Free shipping on orders over $50",
-    imageUrl: "/api/placeholder/1200/400",
     color: "bg-green-500",
   },
 ];
