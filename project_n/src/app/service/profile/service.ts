@@ -10,7 +10,7 @@ export async function getUserById(id: number){
     return res.json();
 }
 
-export async function updateUserById(id: number, updatedData: Partial<userInterface>) {
+export async function updateUserById(id: number, updatedData: any) {
     const response = await fetch(`/api/profile/${id}`, {
         method: "PUT",
         headers: {
