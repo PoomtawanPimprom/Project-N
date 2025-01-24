@@ -7,7 +7,7 @@ export interface productInterface {
     name: string
     description: string
     price: number
-    image: {
+    image?: {
         image1?: string,
         image2?: string,
         image3?: string,
