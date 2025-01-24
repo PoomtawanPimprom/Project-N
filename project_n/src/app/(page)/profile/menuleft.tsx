@@ -4,31 +4,36 @@ import { BsPersonVcard } from "react-icons/bs";
 import { IoIosGift } from "react-icons/io";
 import { MdPayment } from "react-icons/md";
 import Image from "next/image";
-import tree from "../../../../public/pngtree.png";
 import Link from "next/link";
 import { PlusCircle } from "lucide-react";
+import { userInterface } from "@/app/interface/userInterface";
 
 type MenuLeftProps = {
-  profile?: string | null;
+  profile: userInterface;
   checkCreatedStore: string | null | undefined;
 };
 
 export default function MenuLeft(props: MenuLeftProps) {
+  const userImage = "https://firebasestorage.googleapis.com/v0/b/project-n-eff9b.firebasestorage.app/o/user-profile.png?alt=media&token=30d9c36c-1638-42d5-82e7-fbd9e6f3e438"
   return (
     <div className="flex flex-col gap-5 lg:w-1/4  ">
-      <div className="max-w-sm mx-auto w-60 text-center border-0 shadow-md border-black rounded-xl px-4 py-3 gap-2 lg:flex lg:mx-0 lg:border lg:w-full lg:shadow-none lg:text-start lg:space-y-0 lg:space-x-6">
-        <Image
-          src={tree}
-          alt="Profile"
-          className="block mx-auto w-24 h-24  rounded-full border border-black object-cover lg:w-14 lg:h-14"
-          width={200}
-          height={200}
-        />
-        <div className="space-y-0.5">
-          <p className="text-lg text-black font-semibold">Thanawat</p>
-          <p className="text-slate-500 font-medium">Font End Engineering</p>
-        </div>
-      </div>
+      <div className="max-w-sm mx-auto w-60 text-center border-0 shadow-md border-black rounded-xl px-4 py-3 gap-4 lg:flex lg:mx-0 lg:border lg:w-full lg:shadow-none lg:text-start lg:space-x-6">
+  <div className="flex justify-center lg:justify-start lg:mr-4">
+    <Image
+      src={props.profile.profile ? String(props.profile.profile) : userImage}
+      alt="Profile Image"
+      className="block w-24 h-24 rounded-full border border-black object-cover lg:w-14 lg:h-14"
+      width={200}
+      height={200}
+    />
+  </div>
+  
+  <div className="mt-2 lg:mt-0">
+    <p className="text-lg text-black font-semibold">{props.profile.username}</p>
+    <p className="text-slate-500 font-medium">{props.profile.name}</p>
+  </div>
+</div>
+
 
       <div className="flex flex-col border-0 shadow-md border-black rounded-xl pl-2 pr-4 py-4 gap-3 sm:border sm:shadow-none">
         <ul className="gap-2 ">
