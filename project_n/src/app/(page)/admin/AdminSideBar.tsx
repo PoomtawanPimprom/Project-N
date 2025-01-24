@@ -9,7 +9,7 @@ const menuItems = [
   {
     href: "/admin/manage/promotion",
     icon: <Tag className="w-6 h-6" />,
-    label: "โปรโมชัน",
+    label: "โปรโมชั่น",
   },
   {
     href: "/admin/manage/transport",
