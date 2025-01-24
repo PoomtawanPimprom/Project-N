@@ -19,14 +19,14 @@ export default function ProductInfoCard({ userId, data }: ProductInfoCardprop) {
     revalidatePath(`/favorite/${userId}`);
   }
   return (
-    <div className="flex w-64 sm:w-[24rem] md:w-[26rem] lg:w-[48rem] mx-auto border border-gray-500 rounded-xl p-2 justify-between">
+    <div className="flex w-full mx-auto border border-gray-500 rounded-xl p-2 justify-between">
       <div className="flex rounded-xl ">
         <Image
           className="flex rounded-xl"
           alt={data.product!.name}
           width={150}
           height={150}
-          src={data.product!.image[0]}
+          src={data.product!.image.image1}
         />
       </div>
       <div className="flex flex-col w-full ml-2 ">

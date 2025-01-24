@@ -7,11 +7,6 @@ import { favoriteInterface } from "@/app/interface/favoriteInterface";
 import { redirect } from "next/navigation";
 
 export default async function favoriteByUserIdPage() {
-  // in case client component
-  // const { data: session, status } = useSession()
-  // {session.user.name}
-
-  //in case server component
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -39,9 +34,9 @@ export default async function favoriteByUserIdPage() {
 
   return (
     <>
-      <div className="flex w-full">
-        <div className="flex  flex-col mx-auto">
-          <div className="p-2 flex  my-2 text-4xl font-bold">
+      <div className="flex max-w-6xl  mx-auto">
+        <div className="flex p-2 flex-col w-full">
+          <div className="flex w-full my-2 text-4xl font-bold">
             <p>รายการที่ฉันชอบ</p>
           </div>
           <div className="flex flex-col space-y-2 px-4">
