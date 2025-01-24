@@ -84,6 +84,16 @@ export default function Navbar() {
                           Admin dashboard
                         </Link>
                       )}
+                      {session.user.storeId !== "" &&(
+                        <Link
+                        href={`/store/${session.user.storeId}`}
+                        className="px-12 py-2 hover:bg-gray-100 whitespace-nowrap text-center"
+                      >
+                        ร้านค้าของฉัน
+                      </Link>
+                      )
+
+                      }
                       <Link
                         href="/profile"
                         className="px-12 py-2 hover:bg-gray-100 text-center"
