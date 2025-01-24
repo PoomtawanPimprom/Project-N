@@ -8,6 +8,13 @@ export async function POST(request: NextRequest) {
     try {
 
         const { userId, items} = await request.json();
+        
+        const checkOrder = await prisma.orderDetail.findMany({
+            where:{ userId: userId}
+        })
+        if(checkOrder.length >=1){
+            return NextResponse.json({ message: "โปรดชำระรายการก่อนหน้านี้"},{status:400})
+        }
 
         const createOrderDetail = await prisma.orderDetail.create({
             data: {
@@ -19,8 +26,10 @@ export async function POST(request: NextRequest) {
         });
         const orderItems = items.map((item:any) => ({
             orderDetailId: createOrderDetail.id,
-            productId: Number(item.id),
+            productId: Number(item.productId),
             quantity: Number(item.quantity),
+            color: item.color ? item.color: "",
+            size:item.size ? item.size: ""
         }));
         await prisma.orderItem.createMany({
             data:orderItems
