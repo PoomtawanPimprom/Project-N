@@ -47,40 +47,8 @@ const reportStatusData = [
     { id: 3, name: "เรียบร้อยแล้ว" }
 ]
 
-const userAddressData =
-{
-    fullName: "test1 String",
-    houseNo: "String",
-    moo: "String",
-    province: "String",
-    district: "String",
-    subDistrict: "String",
-    postalCode: "123",
-    mobile: "1324",
-    userId: 1
-}
-    ;
-
-const userData =
-{
-    id: 1,
-    name: "test1",
-    username: "test1",
-    password: "test1",
-    email: "test1@gmail.com",
-    mobile: 1,
-    birthdate: new Date(1990, 0, 1),
-    profile: "test1",
-    saler: false,
-    genderId: 1,
-    roleId: 1,
-    userStatusId: 1,
-}
-
 const orderStatusData = [
-    {  name: "ยังไม่ชำระ" },
-    {  name: "รอร้านค้าจัดส่ง" },
-    {  name: "กำลังจัดส่ง" },
+    {  name: "กำลังดำเนินการ" },
     {  name: "ดำเนินการเสร็จสิ้น" },
     {  name: "ยกเลิกรายการ" },
 ]
@@ -91,16 +59,23 @@ const paymentStatusData = [
 ]
 
 const userAddressStatusData = [
-    { id: 0, name: "non" },
-    { id: 1, name: "set-Default" },
+    { id: 1, name: "non" },
+    { id: 2, name: "set-Default" },
 ]
 
 const transportData = [
     { id: 1, providerName: "Matter shipping", transportPrice: 50 }
 ]
 
+const orderItemStatus =[
+    {name: "ยังไม่ชำระ"},
+    {name:"ต้องจัดส่ง"},
+    {name:"จัดส่งสำเร็จ"},
+]
+
 async function main() {
     try {
+        await prisma.orderItemStatus.createMany({data:orderItemStatus})
         await prisma.orderStatus.createMany({ data: orderStatusData })
         await prisma.transport.createMany({ data: transportData })
         await prisma.addressStatus.createMany({ data: userAddressStatusData })
@@ -113,8 +88,6 @@ async function main() {
         await prisma.role.createMany({ data: roleData })
         await prisma.reportCategory.createMany({ data: reportCategoryData })
         await prisma.reportStatus.createMany({ data: reportStatusData })
-        await prisma.userAddress.create({ data: userAddressData });
-        await prisma.user.create({ data: userData });
     }
     catch (error) {
         console.log(error)
