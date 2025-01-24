@@ -8,6 +8,7 @@ export interface orderDetailInterface {
     id: number
     total: number
     createdAt: Date
+    discountId: number
 
     userId: number
     user?: userInterface
