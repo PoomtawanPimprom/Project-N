@@ -144,9 +144,7 @@ export default function CreateStorePage() {
       toast({
         description: "สร้างร้านค้าสำเร็จ",
       });
-      setTimeout(()=>{
-        router.push(`/store/${res.id}`)
-      },5000)
+
     } catch (error: any) {
       const deleteLogoRef = ref(storage, `store/logo/${logoFileName}`);
       const deleteBgRef = ref(storage, `store/background/${BgFileName}`);
