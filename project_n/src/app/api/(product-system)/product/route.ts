@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
             data: {
                 name: name,
                 description: description,
-                price: price,
+                price: Number(price),
                 storeID: storeID,
                 categoryID: categoryID,
                 image: image
