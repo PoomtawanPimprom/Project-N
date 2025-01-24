@@ -9,7 +9,7 @@ export interface userInterface{
     username  :string
     password  :string
     email     ?:string
-    mobile    ?:number
+    mobile    ?:string
     birthdate? :Date   //Optional   
     profile   ?:string
     saler     :boolean
