@@ -7,8 +7,6 @@ import { promotionInterface } from "@/app/interface/promotionInterface";
 import Link from "next/link";
 
 const AdminDashboard = async () => {
-  const activeDiscountCodes = 12;
-
   const reports = (await prisma.report.findMany({
     where: { reportStatusId: 1 },
   })) as reportInterface[]
