@@ -1,8 +1,10 @@
 import prisma from "@/lib/prisma/db";
 import StoreSideBar from "../StoreSideBar";
 import { productInterface } from "@/app/interface/productInterface";
-import { Box, Settings, Warehouse } from "lucide-react";
+import { Box, Settings, Truck, Warehouse } from "lucide-react";
 import Link from "next/link";
+import { orderItemInterface } from "@/app/interface/orderItemInterface";
+import CardInfo from "./cardInfo";
 
 export default async function ManageStorePage({
   params,
@@ -14,7 +16,18 @@ export default async function ManageStorePage({
     where: { storeID: storeId },
   })) as productInterface[];
 
+  const toShipItems = (await prisma.orderItem.findMany({
+    where:{storeId:storeId,orderItemStatusId:2}
+})) as orderItemInterface[]
+
   const statsBoxes = [
+    {
+      icon: <Truck className="w-8 h-8 text-red-500" />,
+      title: "สินค้าที่ต้องส่ง",
+      count: toShipItems.length,
+      bgColor: "bg-red-50",
+      href: `/store/manage/toShip/${storeId}`,
+    },
     {
       icon: <Box className="w-8 h-8 text-indigo-500" />,
       title: "สินค้าทั้งหมด",
@@ -54,21 +67,7 @@ export default async function ManageStorePage({
 
           <div className="grid grid-cols-2 gap-6">
             {statsBoxes.map((box, index) => (
-              <Link
-                href={box.href}
-                key={index}
-                className={`${box.bgColor} p-6 rounded-lg shadow-md flex items-center`}
-              >
-                <div className="mr-4">{box.icon}</div>
-                <div>
-                  <h3 className="text-lg font-medium text-gray-700">
-                    {box.title}
-                  </h3>
-                  <p className="text-3xl font-bold text-gray-900">
-                    {box.count ?  (<p>จำนวน {box.count} ชิ้น</p>) : ""}
-                  </p>
-                </div>
-              </Link>
+              <CardInfo box={box} key={index}/>
             ))}
           </div>
         </div>

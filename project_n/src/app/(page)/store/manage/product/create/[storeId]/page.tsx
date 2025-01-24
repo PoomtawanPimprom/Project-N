@@ -20,9 +20,11 @@ import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { v4 } from "uuid";
 import StoreSideBar from "../../../StoreSideBar";
+import { useRouter } from "next/navigation";
 
 const createProductpage = ({ params }: { params: { storeId: number } }) => {
   const { toast } = useToast();
+  const router = useRouter()
   const storeId = params.storeId;
   //data
   const [categoryData, setCategoryData] = useState<categoryInterface[]>([]);
@@ -38,7 +40,7 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
   //product
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState<number>(0);
+  const [price, setPrice] = useState("");
   const [category, setCategory] = useState<number>(0);
 
   //image
@@ -118,7 +120,7 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
         name: name,
         description: description,
         price: price,
-        storeID: 1,
+        storeID: Number(storeId),
         categoryID: category,
         image: imageUrls, // เปลี่ยนจาก image เป็น images และใช้ object แทน array
         inventory: inventory,
@@ -128,6 +130,9 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
       toast({
         description: "สร้างสินค้าเรียบร้อยแล้ว",
       });
+      setTimeout(()=>{
+        router.push(`/store/manage/${storeId}`)
+      },2000)
     } catch (error: any) {
       if (uploadedImages.length > 0) {
         await Promise.all(
@@ -153,6 +158,16 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
           description: "An unexpected error occurred.",
         });
       }
+      if (error.fieldErrors?.inventory) {
+        const inventoryErrorMessage =
+          typeof error.fieldErrors.inventory === "object" && error.fieldErrors.inventory.message
+            ? error.fieldErrors.inventory.message
+            : String(error.fieldErrors.inventory);
+        toast({
+          description: inventoryErrorMessage,
+        });
+      }
+      
 
       if (error.fieldErrors) {
         setError(error.fieldErrors);
@@ -208,7 +223,7 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
                   label="ราคา"
                   required={true}
                   name="price"
-                  onChange={(e) => setPrice(Number(e.target.value))}
+                  onChange={(e) => setPrice(e.target.value)}
                   value={price}
                   error={error?.price}
                   type="text"
@@ -216,12 +231,15 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
                   inputClassName="w-64"
                 />
                 {/* input inventory */}
-                <div className="space-y-2">
+                <div className="space-y-2 flex flex-col">
                   <p className="font-bold text-2xl">สินค้าในสต็อก</p>
                   {inventory.map((item, index) => (
-                    <div key={index} className="flex space-x-4">
+                    <div key={index} className="flex flex-col lg:flex-row gap-4">
                       <div>
+                        <div className="flex">
                         <p>จำนวน</p>
+                        <p className="text-red-500">*</p>
+                        </div>
                         <input
                           name={`quantity-${index}`}
                           onChange={(e) =>
@@ -285,7 +303,7 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
                 {/* input image */}
                 <div className="space-y-2">
                   <p className="text-xl font-bold">รูปสินค้า</p>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-3">
                     {images.map((file, index) => (
                       <div key={index} className="relative aspect-square">
                         <img
@@ -341,7 +359,7 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
                             name="image-logo"
                             id="image-logo"
                             type="file"
-                            className="hidden"
+                            className="absolute opacity-0 -z-10"
                             onChange={handleImageChange}
                           />
                         </label>
@@ -359,9 +377,9 @@ const createProductpage = ({ params }: { params: { storeId: number } }) => {
                     <option value={0} disabled>
                       เลือกหมวดหมู่
                     </option>
-                    {categoryData.map((item, index) => (
+                    {categoryData.map((item) => (
                       <>
-                        <option key={index} value={item.id}>
+                        <option key={item.id} value={item.id}>
                           {item.name}
                         </option>
                       </>

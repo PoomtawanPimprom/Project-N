@@ -1,4 +1,5 @@
-import { BarChart2, Box, Plus, Settings, Tag, Truck, Warehouse } from "lucide-react";
+"use client"
+import { Box, Plus, Settings,  Truck, Warehouse } from "lucide-react";
 import Link from "next/link";
 
 type prop = {
@@ -7,6 +8,11 @@ type prop = {
 
 export default function StoreSideBar({storeId}:prop) {
   const menuItems = [
+    {
+      href: `/store/manage/toShip/${storeId}`,
+      icon: <Truck   className="w-6 h-6" />,
+      label: "สินค้าที่ต้องส่ง",
+    },
     {
       href: `/store/manage/inventory/${storeId}`,
       icon: <Warehouse  className="w-6 h-6" />,
@@ -42,6 +48,7 @@ export default function StoreSideBar({storeId}:prop) {
           >
             {item.icon}
             <span className="ml-3 font-medium">{item.label}</span>
+           
           </Link>
         ))}
       </nav>
