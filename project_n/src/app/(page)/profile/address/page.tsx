@@ -14,11 +14,15 @@ import MenuLeft from '../menuleft';
 import { Separator } from "@/components/ui/separator"
 import { createAddress, deleteAddress, getUserAddress, updateUserAddress } from "@/app/service/address/service";
 import { userAddressInterface } from "@/app/interface/userAddressInterface";
+import { useSession } from "next-auth/react";
+import { userInterface } from "@/app/interface/userInterface";
+import { getUserById } from "@/app/service/profile/service";
 
 
 export default function editAddress() {
+    const { data: session } = useSession();
     const [addresses, setAddresses] = useState<userAddressInterface[]>([]);
-    const [updateAddressData, setUpdateAddressData] = useState<userAddressInterface>({
+    const [addressData, setAddressData] = useState<userAddressInterface>({
         id: 0,
         fullName: '',
         houseNo: '',
@@ -28,33 +32,40 @@ export default function editAddress() {
         subDistrict: '',
         postalCode: '',
         mobile: '',
-        userId: 1,
+        userId: 0,
         addressStatusId: 1,
     })
+    const [userData, setUserData] = useState<userInterface>({
+        id: 0,
+        name: "",
+        username: "",
+        password: "",
+        email: "",
+        mobile: "",
+        birthdate: new Date(),
+        profile: "",
+        saler: false,
+        genderId: 0,
+        roleId: 0,
+        userStatusId: 0,
+        resetToken: "",
+        resetTokenExp: new Date(),
+    });
 
-    const fetchAddressData = async () => {
-        const userAddress = await getUserAddress(1);
-        console.log(userAddress);
-        setAddresses(userAddress);
-    }
 
-    useEffect(() => {
-        fetchAddressData();
-    }, []);
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmitUpdateAddress = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            console.log(updateAddressData)
-            await updateUserAddress(updateAddressData.id, {
-                fullName: updateAddressData.fullName,
-                houseNo: updateAddressData.houseNo,
-                moo: updateAddressData.moo,
-                province: updateAddressData.province,
-                district: updateAddressData.district,
-                subDistrict: updateAddressData.subDistrict,
-                postalCode: updateAddressData.postalCode,
-                mobile: updateAddressData.mobile,
+            console.log(addressData)
+            await updateUserAddress(addressData.id, {
+                fullName: addressData.fullName,
+                houseNo: addressData.houseNo,
+                moo: addressData.moo,
+                province: addressData.province,
+                district: addressData.district,
+                subDistrict: addressData.subDistrict,
+                postalCode: addressData.postalCode,
+                mobile: addressData.mobile,
             });
             fetchAddressData();
 
@@ -67,30 +78,60 @@ export default function editAddress() {
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
-        setUpdateAddressData((prevState) => ({
+        setAddressData((prevState) => ({
             ...prevState,
             [name]: value,
         }));
     };
 
-    const addDataAddress = async (e: React.FormEvent) => {
-        // console.log(updateAddressData)
-        createAddress(updateAddressData);
+    const addDataAddress = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const data = {
+            fullName: addressData.fullName,
+            houseNo: addressData.houseNo,
+            moo: addressData.moo,
+            province: addressData.province,
+            district: addressData.district,
+            subDistrict: addressData.subDistrict,
+            postalCode: addressData.postalCode,
+            mobile: addressData.mobile,
+            userId: Number(session?.user.id),
+            addressStatusId: 1,
+        }
+        console.log(data);
+        createAddress(data);
         fetchAddressData();
     }
 
     const deleteDataAddress = async (id: Number) => {
-        // console.log(id);
         await deleteAddress(id);
         fetchAddressData();
     }
+
+
+    const fetchAddressData = async () => {
+        const userAddress = await getUserAddress(Number(session?.user.id));
+        setAddresses(userAddress)
+        console.log(userAddress);
+    }
+
+    const fetchUserData = async () => {
+        const res = await getUserById(Number(session?.user.id));
+        setUserData(res);
+    }
+
+
+    useEffect(() => {
+        fetchAddressData();
+        fetchUserData();
+    }, [session]);
 
 
 
     return (
         <section id="profile">
             <div className="container mx-auto flex flex-col lg:flex-row py-6 gap-4 px-4 sm:px-6 lg:px-8">
-                <MenuLeft />
+                <MenuLeft checkCreatedStore={session?.user.storeId} profile={userData} />
                 {/* Content right */}
                 <div className="flex flex-col lg:w-3/4 gap-4 bg-white border rounded-lg shadow-md p-4 sm:p-6 sm:shadow-none sm:border-black">
 
@@ -155,7 +196,9 @@ export default function editAddress() {
                                         <DialogClose asChild>
                                             <button type="button" className="px-4 py-2 text-sm text-gray-700 bg-white border rounded-lg shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Cancel</button>
                                         </DialogClose>
-                                        <button type="submit" className="px-4 py-2 text-sm text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Save</button>
+                                        <DialogClose asChild>
+                                            <button type="submit" className="px-4 py-2 text-sm text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Save</button>
+                                        </DialogClose>
                                     </div>
                                 </form>
                             </DialogContent>
@@ -171,7 +214,7 @@ export default function editAddress() {
 
                                 <div className="flex flex-wrap items-center gap-2 text-base">
                                     <h1 className="font-semibold">
-                                        {address.fullName} {address.fullName}
+                                        {address.fullName} 
                                     </h1>
                                     <Separator orientation="vertical" className="hidden sm:block" />
                                     <p className="text-gray-600">{address.mobile || "No Number"}</p>
@@ -201,7 +244,7 @@ export default function editAddress() {
                             {/* Dialog for editing the address */}
                             <Dialog>
                                 <DialogTrigger asChild onClick={() => {
-                                    setUpdateAddressData(address);
+                                    setAddressData(address);
                                 }}>
                                     <button className="self-end text-sm px-4 py-2 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                                         Edit
@@ -214,7 +257,7 @@ export default function editAddress() {
                                             Update your address information below.
                                         </DialogDescription>
                                     </DialogHeader>
-                                    <form className="space-y-4" onSubmit={handleSubmit} >
+                                    <form className="space-y-4" onSubmit={onSubmitUpdateAddress} >
                                         <div>
                                             <label htmlFor='firstName' className="block text-sm font-medium text-gray-700">
                                                 Full Name
@@ -223,7 +266,7 @@ export default function editAddress() {
                                                 type="text"
                                                 id="firstName"
                                                 name="firstName"
-                                                value={updateAddressData.fullName}
+                                                value={addressData.fullName}
                                                 onChange={handleInput}
                                                 className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
                                                 placeholder="First Name"
@@ -238,7 +281,7 @@ export default function editAddress() {
                                                 type="text"
                                                 id='houseNo'
                                                 name="houseNo"
-                                                value={updateAddressData.houseNo}
+                                                value={addressData.houseNo}
                                                 onChange={handleInput}
                                                 className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
                                                 placeholder="House No, Street Name"
@@ -253,7 +296,7 @@ export default function editAddress() {
                                                 type="text"
                                                 id='subDistrict'
                                                 name="subDistrict"
-                                                value={updateAddressData.subDistrict}
+                                                value={addressData.subDistrict}
                                                 onChange={handleInput}
                                                 className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
                                                 placeholder="Sub-District"
@@ -268,7 +311,7 @@ export default function editAddress() {
                                                 type="text"
                                                 id='district'
                                                 name="district"
-                                                value={updateAddressData.district}
+                                                value={addressData.district}
                                                 onChange={handleInput}
                                                 className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
                                                 placeholder="District"
@@ -283,7 +326,7 @@ export default function editAddress() {
                                                 type="text"
                                                 id='province'
                                                 name="province"
-                                                value={updateAddressData.province}
+                                                value={addressData.province}
                                                 onChange={handleInput}
                                                 className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
                                                 placeholder="Province"
@@ -307,19 +350,15 @@ export default function editAddress() {
 
                                         <div className="flex justify-end gap-2">
                                             <DialogClose asChild>
-                                                <button
-                                                    type="button"
-                                                    className="px-4 py-2 text-sm text-gray-700 bg-white border rounded-lg shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                                                >
+                                                <button type="button" className="px-4 py-2 text-sm text-gray-700 bg-white border rounded-lg shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                                                     Cancel
                                                 </button>
                                             </DialogClose>
-                                            <button
-                                                type="submit"
-                                                className="px-4 py-2 text-sm text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                                            >
-                                                Save
-                                            </button>
+                                            <DialogClose asChild>
+                                                <button type="submit" className="px-4 py-2 text-sm text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                                    Save
+                                                </button>
+                                            </DialogClose>
                                         </div>
                                     </form>
                                 </DialogContent>
