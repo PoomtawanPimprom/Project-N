@@ -27,9 +27,11 @@ export async function POST(request: NextRequest) {
         const orderItems = items.map((item:any) => ({
             orderDetailId: createOrderDetail.id,
             productId: Number(item.productId),
+            storeId:Number(item.storeId),
             quantity: Number(item.quantity),
             color: item.color ? item.color: "",
-            size:item.size ? item.size: ""
+            size:item.size ? item.size: "",
+            orderItemStatusId: 1
         }));
         await prisma.orderItem.createMany({
             data:orderItems
