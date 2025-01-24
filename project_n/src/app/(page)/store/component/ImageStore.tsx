@@ -57,27 +57,16 @@ const ImageStore = ({  ownerId, storeId, store }: prop) => {
               <>
                 <div className="flex items-end">
                   <button
-                    onClick={() => router.push(`/store/inventory/${storeId}`)}
-                    className="flex max-h-[60px] items-center p-3 bg-white rounded-xl hover:bg-gray-100 duration-200"
-                  >
-                    <MdOutlineInventory2 className="mr-1" />
-                    inventory
-                  </button>
-                </div>
-                <div className="flex items-end">
-                  <button
-                    onClick={() => router.push(`/store/edit/${storeId}`)}
+                    onClick={() => router.push(`/store/manage/${storeId}`)}
                     className="flex max-h-[60px] items-center p-3 bg-white rounded-xl hover:bg-gray-100 duration-200"
                   >
                     <IoSettingsOutline className="mr-1" />
-                    setting
+                    manage
                   </button>
                 </div>
               </>
             )}
-            <div className="flex items-end">
-              <ButtonFollow userId={Number(session?.user?.id)} storeId={storeId} />
-            </div>
+            
           </div>
         </div>
       </div>
