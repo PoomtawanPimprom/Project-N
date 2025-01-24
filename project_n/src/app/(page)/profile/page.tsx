@@ -21,7 +21,7 @@ function Profile() {
         username: "",
         password: "",
         email: "",
-        mobile: 0,
+        mobile: "",
         birthdate: new Date(),
         profile: "",
         saler: false,
@@ -91,11 +91,12 @@ function Profile() {
     const fetchUserData = async () => {
         const res = await getUserById(Number(session?.user.id));
         setUserData(res);
+        console.log(res);
     }
 
     useEffect(() => {
         fetchUserData();
-    }, []);
+    }, [session]);
 
     const onSubmitUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -160,7 +161,7 @@ function Profile() {
                                 onChange={(e) => {
                                     setUserData((prevData) => ({
                                         ...prevData,
-                                        mobile: Number(e.target.value),
+                                        mobile: e.target.value,
                                     }));
                                 }}
                                 className="w-1/2 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/3"
