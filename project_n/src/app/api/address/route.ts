@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
             postalCode,
             mobile,
             userId,
+            addressStatusId,
         } = await request.json();
         await prisma.userAddress.create({
             data: {
@@ -27,6 +28,7 @@ export async function POST(request: NextRequest) {
                 postalCode,
                 mobile,
                 userId,
+                addressStatusId,
             }
         });
         return new NextResponse("Address created successfully", { status: 201 });   
@@ -35,6 +37,7 @@ export async function POST(request: NextRequest) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             switch (e.code) {
                 case 'P2002':
+                    console.log(e)
                     return new NextResponse("Duplicate field value violates unique constraint", { status: 404});
                 default:
                     return new NextResponse(`Database error: ${e.message}`, { status: 500});
