@@ -13,7 +13,7 @@ model User {
   username      String    @unique
   password      String?
   email         String    @unique
-  mobile        Int?
+  mobile        String?   @unique
   birthdate     DateTime?
   profile       String?
   saler         Boolean   @default(false)
@@ -70,7 +70,7 @@ model UserAddress {
   district    String //อำเภอ
   subDistrict String? //ตำบล
   postalCode  String
-  mobile      String
+  mobile      String  @unique
 
   userId Int?
   user   User? @relation(fields: [userId], references: [id])
