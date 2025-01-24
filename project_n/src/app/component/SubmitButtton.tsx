@@ -5,18 +5,20 @@ type submitButton = {
   label: string;
   labelUploading: string;
   classnameButton?: string;
+  onClick?: () => void;
 };
 
 export default function SubmitButtton({
   label,
   labelUploading,
   disabled,
-  classnameButton,
+  classnameButton,onClick,
 }: submitButton) {
   return (
     <button
       type="submit"
       disabled={disabled}
+      onClick={onClick}
       className={cn(
         `${
           disabled ?? "bg-green-main/50"
