@@ -7,8 +7,10 @@ import SearchInput from "./navber/SearchInput";
 import { signOut, useSession } from "next-auth/react";
 import { getUserById } from "../service/profile/service";
 import { userInterface } from "../interface/userInterface";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const router = useRouter();
   const { data: session } = useSession();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [isMenuMore, setIsMenuMore] = useState(false);
@@ -60,10 +62,15 @@ export default function Navbar() {
           <li className="relative  text-lg  hover:text-gray-500 hover:cursor-pointer">
             {session ? (
               <>
-                <button 
-                className="flex items-center"
-                onClick={handleToggleDropdown}>
-                  <img className="w-7 h-7 rounded-full" src={user?.profile} alt={user?.name} />
+                <button
+                  className="flex items-center"
+                  onClick={handleToggleDropdown}
+                >
+                  <img
+                    className="w-7 h-7 rounded-full"
+                    src={user?.profile}
+                    alt={user?.name}
+                  />
                 </button>
               </>
             ) : (
@@ -127,7 +134,10 @@ export default function Navbar() {
                         สินค้าที่ชอบ
                       </Link>
                       <button
-                        onClick={() => signOut()}
+                        onClick={() => {
+                          signOut();
+                          router.push("/");
+                        }}
                         className="px-8 py-2  hover:bg-gray-100 text-center"
                       >
                         Log out
