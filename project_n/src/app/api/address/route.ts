@@ -6,32 +6,48 @@ const prisma = new PrismaClient();
 export async function POST(request: NextRequest) {
     try {
         const { 
+          fullName,
+          houseNo,
+          moo,
+          province,
+          district,
+          subDistrict,
+          postalCode,
+          mobile,
+          userId,
+          addressStatusId,
+        } = await request.json();
+    
+        // ตรวจสอบว่ามี addressStatusId = 1 ในฐานข้อมูลหรือไม่
+        if (addressStatusId === 1) {
+          await prisma.userAddress.updateMany({
+            where: {
+              addressStatusId: 1,
+              userId: userId, // เฉพาะข้อมูลของ userId นี้
+            },
+            data: {
+              addressStatusId: 3, // เปลี่ยนเป็น 3
+            },
+          });
+        }
+    
+        // เพิ่มข้อมูลใหม่
+        const newAddress = await prisma.userAddress.create({
+          data: {
             fullName,
             houseNo,
             moo,
             province,
             district,
-            subDistrict ,
+            subDistrict,
             postalCode,
             mobile,
             userId,
             addressStatusId,
-        } = await request.json();
-        await prisma.userAddress.create({
-            data: {
-                fullName,
-                houseNo,
-                moo,
-                province,
-                district,
-                subDistrict ,
-                postalCode,
-                mobile,
-                userId,
-                addressStatusId,
-            }
+          },
         });
-        return new NextResponse("Address created successfully", { status: 201 });   
+    
+        return NextResponse.json(newAddress);
     } catch (e: any) {
         console.error(e);
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
