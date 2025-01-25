@@ -31,14 +31,13 @@ const ProductCard = ({ product }: prop) => {
   const [quantity, setQuantity] = React.useState(1);
   const [inventory, setInventory] = useState<inventoryInterface[]>([]);
   const [filteredColors, setFilteredColors] = useState<string[]>([]); // เก็บสีที่กรองแล้ว
-  const [selectedSize, setSelectedSize] = useState<string>(""); // เก็บขนาดที่เลือก
-  const [selectedColor, setSelectedColor] = useState<string>(""); // เก็บสีที่เลือก
-
-
+  const [selectedSize, setSelectedSize] = useState<string>(""); 
+  const [selectedColor, setSelectedColor] = useState<string>("");
 
   function onClick(adjustment: number) {
     setQuantity(Math.max(1, Math.min(100, quantity + adjustment)));
   }
+
   const handleGotoProductPage = () => {
     if (!session) {
       router.push(`/login`);
@@ -81,7 +80,7 @@ const ProductCard = ({ product }: prop) => {
   const fetchInventoryData = async () => {
     const data = await getInventoriesByProductId(product.id, '');
     setInventory(data);
-    console.log(data)
+    // console.log(data)
   }
 
   useEffect(() => {
@@ -121,7 +120,13 @@ const ProductCard = ({ product }: prop) => {
                 {/* Add to Cart Drawer */}
                 <Drawer>
                   <DrawerTrigger asChild>
-                    <button onClick={(e) => e.stopPropagation()} className="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors" >
+                    <button onClick={(e) => {
+                      e.stopPropagation();
+                      if (!session) {
+                        router.push("/login");
+                        return null; // ป้องกันการ render อื่น ๆ
+                      }
+                    }} className="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors" >
                       <ShoppingCart className="w-5 h-5" />
                     </button>
                   </DrawerTrigger>

@@ -11,6 +11,7 @@ import { createCart } from "@/app/service/cart/service";
 import { useSession } from "next-auth/react";
 import { cartItemInterface } from "@/app/interface/cartItemInterface";
 import { useToast } from "@/hooks/use-toast";
+import router from "next/router";
 
 type SelectProp = {
   productId: number;
