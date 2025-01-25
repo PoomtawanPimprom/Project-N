@@ -29,3 +29,13 @@ export async function GetAllOrderItemsComplete(userId:number) {
     )
     return res.json()
 }
+
+export async function GetAllOrderItemsCancel(userId:number) {
+    const res = await fetch(`${API_URL}/cancel/${userId}`,
+        {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        }
+    )
+    return res.json()
+}
