@@ -56,7 +56,18 @@ export default function editAddress() {
     const onSubmitUpdateAddress = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            console.log(addressData)
+            // If the address is marked as default, update all other addresses to '2'
+            if (addressData.addressStatusId === 1) {
+                await Promise.all(
+                    addresses.map(async (addr) => {
+                        if (addr.addressStatusId === 1) {
+                            await updateUserAddress(addr.id, { ...addr, addressStatusId: 3 });
+                        }
+                    })
+                );
+            }
+
+            // Update the selected address
             await updateUserAddress(addressData.id, {
                 fullName: addressData.fullName,
                 houseNo: addressData.houseNo,
@@ -66,8 +77,10 @@ export default function editAddress() {
                 subDistrict: addressData.subDistrict,
                 postalCode: addressData.postalCode,
                 mobile: addressData.mobile,
+                addressStatusId: Number(addressData.addressStatusId),
             });
-            fetchAddressData();
+
+            fetchAddressData(); // Refresh addresses
 
         } catch (error: any) {
             console.error("Failed to update address:", error.message);
@@ -86,22 +99,41 @@ export default function editAddress() {
 
     const addDataAddress = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const data = {
-            fullName: addressData.fullName,
-            houseNo: addressData.houseNo,
-            moo: addressData.moo,
-            province: addressData.province,
-            district: addressData.district,
-            subDistrict: addressData.subDistrict,
-            postalCode: addressData.postalCode,
-            mobile: addressData.mobile,
-            userId: Number(session?.user.id),
-            addressStatusId: 1,
+        try {
+            // Ensure no other address is marked as default if this is the default
+            if (addressData.addressStatusId === 1) {
+                await Promise.all(
+                    addresses.map(async (addr) => {
+                        if (addr.addressStatusId === 1) {
+                            await updateUserAddress(addr.id, { ...addr, addressStatusId: 3 });
+                        }
+                    })
+                );
+            }
+
+            // Add the new address
+            const data = {
+                fullName: addressData.fullName,
+                houseNo: addressData.houseNo,
+                moo: addressData.moo,
+                province: addressData.province,
+                district: addressData.district,
+                subDistrict: addressData.subDistrict,
+                postalCode: addressData.postalCode,
+                mobile: addressData.mobile,
+                userId: Number(session?.user.id),
+                addressStatusId: Number(addressData.addressStatusId),
+            };
+            console.log(data)
+            await createAddress(data);
+            fetchAddressData(); // Refresh addresses
+
+        } catch (error: any) {
+            console.error("Failed to add address:", error.message);
+            alert(`Failed to add address: ${error.message}`);
         }
-        console.log(data);
-        createAddress(data);
-        fetchAddressData();
-    }
+    };
+
 
     const deleteDataAddress = async (id: Number) => {
         await deleteAddress(id);
@@ -192,6 +224,16 @@ export default function editAddress() {
                                         <input type="text" id="postalCode" name="postalCode" onChange={handleInput} className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm" placeholder="Postal Code" />
                                     </div>
 
+                                    <div>
+                                        <label className="flex items-center space-x-2">
+                                            <input type="radio" value={1} name="addressStatusId" onChange={handleInput} />
+                                            <span>Set as Default</span>
+                                            <input type="radio" value={3} name="addressStatusId" onChange={handleInput} />
+                                            <span>Set none</span>
+                                        </label>
+                                    </div>
+
+
                                     <div className="flex justify-end gap-2">
                                         <DialogClose asChild>
                                             <button type="button" className="px-4 py-2 text-sm text-gray-700 bg-white border rounded-lg shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Cancel</button>
@@ -214,7 +256,7 @@ export default function editAddress() {
 
                                 <div className="flex flex-wrap items-center gap-2 text-base">
                                     <h1 className="font-semibold">
-                                        {address.fullName} 
+                                        {address.fullName}
                                     </h1>
                                     <Separator orientation="vertical" className="hidden sm:block" />
                                     <p className="text-gray-600">{address.mobile || "No Number"}</p>
@@ -346,6 +388,14 @@ export default function editAddress() {
                                                 className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
                                                 placeholder="Postal Code"
                                             />
+                                        </div>
+                                        <div>
+                                            <label className="flex items-center space-x-2">
+                                                <input type="radio" value={1} name="addressStatusId" onChange={handleInput} />
+                                                <span>Set as Default</span>
+                                                <input type="radio" value={3} name="addressStatusId" onChange={handleInput} />
+                                                <span>Set none</span>
+                                            </label>
                                         </div>
 
                                         <div className="flex justify-end gap-2">
