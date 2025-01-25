@@ -57,7 +57,7 @@ export default function Navbar() {
                 {!session ? (
                   <>
                     <div
-                      className="fixed inset-0 z-30"
+                      className="fixed inset-0 z-50"
                       onClick={() => setToggleDropdown(false)}
                     />
                     <div className="absolute flex flex-col bg-white shadow-lg rounded-md mt-2 right-0">
