@@ -137,7 +137,7 @@ function Profile() {
                 <MenuLeft checkCreatedStore={session?.user.storeId} profile={userData} />
 
                 {/* Content right */}
-                <div className="flex flex-col gap-6 lg:w-3/4 z-50">
+                <div className="flex flex-col gap-6 lg:w-3/4 ">
                     {/* Form Section */}
                     <form onSubmit={onSubmitUpdate} action="" className="bg-white border-0 shadow-md border-black p-6 rounded-lg space-y-4 sm:border sm:shadow-none">
                         <div className="space-y-1">
