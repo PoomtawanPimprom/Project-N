@@ -33,6 +33,18 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       mobile,
       addressStatusId,
     } = await request.json();
+
+    if (addressStatusId === 1) {
+      await prisma.userAddress.updateMany({
+        where: {
+          addressStatusId: 1,
+          id: { not: addressId }, // ยกเว้น row ที่กำลังแก้ไข
+        },
+        data: {
+          addressStatusId: 3, // เปลี่ยนเป็น 3
+        },
+      });
+    }
     const updatePost = await prisma.userAddress.update({
       where: { id: addressId }, data: {
         fullName,
