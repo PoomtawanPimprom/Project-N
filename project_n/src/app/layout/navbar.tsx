@@ -1,20 +1,30 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { IoMdMore } from "react-icons/io";
 import { CircleUser, Moon, ShoppingCart } from "lucide-react";
 import SearchInput from "./navber/SearchInput";
 import { signOut, useSession } from "next-auth/react";
+import { getUserById } from "../service/profile/service";
+import { userInterface } from "../interface/userInterface";
 
 export default function Navbar() {
   const { data: session } = useSession();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [isMenuMore, setIsMenuMore] = useState(false);
-
+  const [user, setUser] = useState<userInterface>();
   const handleToggleDropdown = () => {
     setToggleDropdown(!toggleDropdown);
   };
 
+  const fetchdata = async () => {
+    const data = await getUserById(Number(session?.user.id));
+    setUser(data);
+  };
+
+  useEffect(() => {
+    fetchdata();
+  }, [session]);
   return (
     <>
       {toggleDropdown && (
@@ -48,9 +58,21 @@ export default function Navbar() {
             </Link>
           </li>
           <li className="relative  text-lg  hover:text-gray-500 hover:cursor-pointer">
-            <button onClick={handleToggleDropdown} className="flex ">
-              <CircleUser className="w-7 h-7" />
-            </button>
+            {session ? (
+              <>
+                <button 
+                className="flex items-center"
+                onClick={handleToggleDropdown}>
+                  <img className="w-7 h-7 rounded-full" src={user?.profile} alt={user?.name} />
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={handleToggleDropdown} className="flex ">
+                  <CircleUser className="w-7 h-7" />
+                </button>
+              </>
+            )}
 
             {toggleDropdown && (
               <>
@@ -84,16 +106,14 @@ export default function Navbar() {
                           Admin dashboard
                         </Link>
                       )}
-                      {session.user.storeId !== "" &&(
+                      {session.user.storeId !== "" && (
                         <Link
-                        href={`/store/${session.user.storeId}`}
-                        className="px-12 py-2 hover:bg-gray-100 whitespace-nowrap text-center"
-                      >
-                        ร้านค้าของฉัน
-                      </Link>
-                      )
-
-                      }
+                          href={`/store/${session.user.storeId}`}
+                          className="px-12 py-2 hover:bg-gray-100 whitespace-nowrap text-center"
+                        >
+                          ร้านค้าของฉัน
+                        </Link>
+                      )}
                       <Link
                         href="/profile"
                         className="px-12 py-2 hover:bg-gray-100 text-center"
