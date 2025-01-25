@@ -56,16 +56,6 @@ export default function editAddress() {
     const onSubmitUpdateAddress = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            // If the address is marked as default, update all other addresses to '2'
-            if (addressData.addressStatusId === 1) {
-                await Promise.all(
-                    addresses.map(async (addr) => {
-                        if (addr.addressStatusId === 1) {
-                            await updateUserAddress(addr.id, { ...addr, addressStatusId: 3 });
-                        }
-                    })
-                );
-            }
 
             // Update the selected address
             await updateUserAddress(addressData.id, {
@@ -100,16 +90,6 @@ export default function editAddress() {
     const addDataAddress = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            // Ensure no other address is marked as default if this is the default
-            if (addressData.addressStatusId === 1) {
-                await Promise.all(
-                    addresses.map(async (addr) => {
-                        if (addr.addressStatusId === 1) {
-                            await updateUserAddress(addr.id, { ...addr, addressStatusId: 3 });
-                        }
-                    })
-                );
-            }
 
             // Add the new address
             const data = {
@@ -124,7 +104,6 @@ export default function editAddress() {
                 userId: Number(session?.user.id),
                 addressStatusId: Number(addressData.addressStatusId),
             };
-            console.log(data)
             await createAddress(data);
             fetchAddressData(); // Refresh addresses
 
@@ -144,7 +123,6 @@ export default function editAddress() {
     const fetchAddressData = async () => {
         const userAddress = await getUserAddress(Number(session?.user.id));
         setAddresses(userAddress)
-        console.log(userAddress);
     }
 
     const fetchUserData = async () => {
