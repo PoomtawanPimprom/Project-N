@@ -34,7 +34,6 @@ export default function MyPurchase() {
   const tabs = [
     { id: "ALL", label: "All" },
     { id: "TO_PAY", label: "To Pay" },
-    { id: "TO_SHIP", label: "To Ship" },
     { id: "TO_RECEIVE", label: "To Receive" },
     { id: "COMPLETE", label: "Complete" },
     { id: "CANCELLED", label: "Cancelled" },
