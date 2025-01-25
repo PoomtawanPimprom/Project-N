@@ -71,6 +71,7 @@ const orderItemStatus =[
     {name: "ยังไม่ชำระ"},
     {name:"ต้องจัดส่ง"},
     {name:"จัดส่งสำเร็จ"},
+    {name:"ได้รับสินค้าแล้ว"},
 ]
 
 async function main() {
