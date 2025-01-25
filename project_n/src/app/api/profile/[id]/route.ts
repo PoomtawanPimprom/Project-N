@@ -5,8 +5,13 @@ const prisma = new PrismaClient()
 
 export async function GET(request: NextRequest, { params } : { params: { id: string}}) {
     const userId = Number(params.id);
-    const posts = await prisma.user.findUnique({ where: { id: userId } });
-    return NextResponse.json(posts)
+    try {
+        const posts = await prisma.user.findUnique({ where: { id: userId } });
+        return NextResponse.json(posts,{status: 200})
+    } catch (e:any) {
+        console.log(e)
+        return new NextResponse(e instanceof Error ? e.message : String(e), { status: 500 })
+    }
 }
 
 export async function PUT(request: NextRequest, { params } : { params: { id: string}}){
