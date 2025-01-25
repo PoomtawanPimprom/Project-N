@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
         const res = await fetch('https://developer.easyslip.com/api/v1/verify',{
             method: 'POST',
             headers:{
-                "Authorization": 'Bearer c58d8b03-3c9a-44e3-812b-5109137c53a0'
+                "Authorization": `Bearer ${process.env.EASYSLIP_TOKEN}`
             },
             body:formData
         })
