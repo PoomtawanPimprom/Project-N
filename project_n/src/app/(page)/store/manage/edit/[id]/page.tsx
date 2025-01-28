@@ -382,7 +382,7 @@ const UpdateStorePage = (props: { params: Promise<{ id: number }> }) => {
                     <button
                       disabled={uploading}
                       type="submit"
-                      className="bg-green-main px-4 py-2 text-white duration-200 rounded-xl"
+                      className="bg-primary px-4 py-2 text-white duration-200 rounded-xl"
                     >
                       {uploading ? "กำลังแก้ไข..." : "สร้าง"}
                     </button>

@@ -68,7 +68,7 @@ export default function SelectAddressModal({
                     <div className="flex text-sm">{concatAddress(item)}</div>
                     <div className="flex text-sm">{item.mobile}</div>
                   </div>
-                  <div className="flex text-green-main">
+                  <div className="flex text-primary">
                     <button type="button">แก้ไข</button>
                   </div>
                 </div>
@@ -96,7 +96,7 @@ export default function SelectAddressModal({
               </button>
               <button
                 onClick={onClose}
-                className="flex py-2 px-4 rounded-lg bg-green-main text-white  items-center"
+                className="flex py-2 px-4 rounded-lg bg-primary text-white  items-center"
               >
                 ยืนยัน
               </button>

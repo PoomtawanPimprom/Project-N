@@ -112,7 +112,7 @@ const ModalReportForm = ({ productId, open, onClose }: prop) => {
                 <div>
                   <button
                     disabled={loading}
-                    className="px-4 py-2 bg-green-main text-white rounded-xl font-semibold"
+                    className="px-4 py-2 bg-primary text-white rounded-xl font-semibold"
                   >
                     ส่ง
                   </button>
