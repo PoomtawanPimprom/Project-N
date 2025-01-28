@@ -8,6 +8,7 @@ import { signOut, useSession } from "next-auth/react";
 import { getUserById } from "../service/profile/service";
 import { userInterface } from "../interface/userInterface";
 import { useRouter } from "next/navigation";
+import SwitchTheme from "./navber/SwitchTheme";
 
 export default function Navbar() {
   const router = useRouter();
@@ -18,18 +19,27 @@ export default function Navbar() {
   const handleToggleDropdown = () => {
     setToggleDropdown(!toggleDropdown);
   };
-
+  const toggleTheme = () => {
+    document.documentElement.classList.toggle('dark')
+  }
   const fetchdata = async () => {
-    const data = await getUserById(Number(session?.user.id));
-    setUser(data);
+    if (!session?.user?.id) {
+      console.error("User ID is missing.");
+      return;
+    }
+    try {
+      const data = await getUserById(Number(session.user.id));
+      setUser(data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
   };
 
   useEffect(() => {
-    if(!session){
-      return 
-    }
-    fetchdata();
+    if (session?.user?.id) 
+      fetchdata();
   }, [session]);
+
   return (
     <>
       {toggleDropdown && (
@@ -39,10 +49,10 @@ export default function Navbar() {
         />
       )}
 
-      <div className="relative flex justify-between items-center text-black py-4 px-8 md:px-32 bg-white drop-shadow-md z-30">
+      <div className="relative dark:bg-black dark:border-b dark:text-white flex justify-between items-center text-black py-4 px-8 md:px-32 bg-white drop-shadow-md z-30">
         {/* Logo */}
         <Link href="/">
-          <p className="text-lg font-semibold hover:scale-105 transition-all">
+          <p className="text-lg font-bold text-primary hover:scale-105 transition-all">
             MATTER
           </p>
         </Link>
@@ -53,9 +63,7 @@ export default function Navbar() {
         {/* Menu */}
         <ul className="hidden md:flex items-center gap-10 text-base">
           <li className="text-lg  hover:text-gray-500 hover:cursor-pointer">
-            <Link href="">
-              <Moon className="w-7 h-7" />
-            </Link>
+            <SwitchTheme/>
           </li>
           <li className="text-lg  hover:text-gray-500 hover:cursor-pointer">
             <Link href="/cart">

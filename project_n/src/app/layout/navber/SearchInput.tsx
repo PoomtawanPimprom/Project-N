@@ -24,7 +24,7 @@ export default function SearchInput() {
       }
     }, [searchParams.get("search")]);
   return (
-    <div className="relative hidden lg:flex items-center justify-center gap-3 py-2 pl-10 pr-2 rounded-full border-2">
+    <div className="relative hidden  lg:flex items-center justify-center gap-3 py-2 pl-10 pr-2 rounded-full border-2">
         <Search className="w-5 h-5 absolute left-3" />
         {/* <FiSearch className='w-5 h-5 absolute left-3'/> */}
         <input
@@ -34,12 +34,12 @@ export default function SearchInput() {
           value={search}
           type="text"
           placeholder="Search..."
-          className="focus:outline-none w-full text-gray-600 placeholder-gray-400"
+          className="focus:outline-none w-full dark:text-white bg-transparent text-gray-800 placeholder-gray-400"
       />
       <button 
         />
          <button 
-        className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full text-sm font-medium transition-colors duration-200 flex items-center"
+        className="bg-primary hover:bg-primary-foreground text-white p-2 rounded-full text-sm font-medium transition-colors duration-200 flex items-center"
         onClick={handleClickSearch}
       >
         ค้นหา
