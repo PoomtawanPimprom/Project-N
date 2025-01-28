@@ -25,6 +25,9 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    if(!session){
+      return 
+    }
     fetchdata();
   }, [session]);
   return (

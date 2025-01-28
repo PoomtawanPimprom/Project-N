@@ -5,7 +5,6 @@ import Navbar from "./layout/navbar";
 import { Box, Store } from "lucide-react";
 import { productInterface } from "./interface/productInterface";
 import { storeInterface } from "./interface/storeInterface";
-import InfoStore from "./(page)/store/component/InfoStore";
 import StoreBox from "./(page)/product/component/StoreBox";
 
 const banners = [
