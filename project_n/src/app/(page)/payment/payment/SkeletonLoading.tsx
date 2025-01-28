@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/app/components/ui/skeleton";
 import { CreditCard } from "lucide-react";
 
 export default function SkeletonLoading() {

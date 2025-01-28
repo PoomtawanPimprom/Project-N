@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { productInterface } from "../interface/productInterface";
 import { useSession } from "next-auth/react";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/components/ui/button";
 
 import {
   Drawer,
@@ -15,7 +15,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
+} from "@/app/components/ui/drawer";
 import React, { useEffect, useState } from "react";
 import { getInventoriesByProductId } from "../service/inventory/service";
 import { inventoryInterface } from "../interface/inventoryInterface";

@@ -6,7 +6,7 @@ import { useState, ChangeEvent, useEffect } from "react";
 import { promotionInterface } from "@/app/interface/promotionInterface";
 import { createPromotion, deletePromotionById, getPromotionAll, updatePromotionById } from "@/app/service/promotion/service";
 import { useToast } from "@/hooks/use-toast";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/app/components/ui/dialog";
 import AdminSideBar from "../../AdminSideBar";
 
 
