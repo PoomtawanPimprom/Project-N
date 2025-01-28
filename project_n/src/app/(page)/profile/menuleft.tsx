@@ -18,21 +18,21 @@ export default function MenuLeft(props: MenuLeftProps) {
   return (
     <div className="flex flex-col gap-5 lg:w-1/4  ">
       <div className="max-w-sm mx-auto w-60 text-center border-0 shadow-md border-black rounded-xl px-4 py-3 gap-4 lg:flex lg:mx-0 lg:border lg:w-full lg:shadow-none lg:text-start lg:space-x-6">
-  <div className="flex justify-center lg:justify-start lg:mr-4">
-    <Image
-      src={props.profile.profile ? String(props.profile.profile) : userImage}
-      alt="Profile Image"
-      className="block w-24 h-24 rounded-full border border-black object-cover lg:w-14 lg:h-14"
-      width={200}
-      height={200}
-    />
-  </div>
-  
-  <div className="mt-2 lg:mt-0">
-    <p className="text-lg text-black font-semibold">{props.profile.username}</p>
-    <p className="text-slate-500 font-medium">{props.profile.name}</p>
-  </div>
-</div>
+        <div className="flex justify-center lg:justify-start lg:mr-4">
+          <Image
+            src={props.profile.profile ? String(props.profile.profile) : userImage}
+            alt="Profile Image"
+            className="block w-24 h-24 rounded-full border border-black object-cover lg:w-14 lg:h-14"
+            width={200}
+            height={200}
+          />
+        </div>
+
+        <div className="mt-2 lg:mt-0">
+          <p className="text-lg text-black font-semibold">{props.profile.username}</p>
+          <p className="text-slate-500 font-medium">{props.profile.name}</p>
+        </div>
+      </div>
 
 
       <div className="flex flex-col border-0 shadow-md border-black rounded-xl pl-2 pr-4 py-4 gap-3 sm:border sm:shadow-none">

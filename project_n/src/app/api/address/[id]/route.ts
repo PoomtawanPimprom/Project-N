@@ -36,14 +36,16 @@ export async function PUT(request: NextRequest, props: { params: Promise<{ id: s
       addressStatusId,
     } = await request.json();
 
-    if (addressStatusId === 1) {
+    if (addressStatusId === 2) {
       await prisma.userAddress.updateMany({
         where: {
-          addressStatusId: 1,
-          id: { not: addressId }, // ยกเว้น row ที่กำลังแก้ไข
+          addressStatusId: 2,
+          id: {
+            not: addressId
+          }, // ยกเว้น row ที่กำลังแก้ไข
         },
         data: {
-          addressStatusId: 3, // เปลี่ยนเป็น 3
+          addressStatusId: 1, // เปลี่ยนเป็น 1
         },
       });
     }
@@ -77,21 +79,21 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ id
   } catch (e: any) {
     console.error(e);
 
-        if (e instanceof Prisma.PrismaClientKnownRequestError) {
-            // Handle specific Prisma error codes
-            switch (e.code) {
-                case "P2025": // Record not found
-                    return new NextResponse("Address not found", { status: 404 });
-                case "P2003": // Foreign key constraint violation
-                    return new NextResponse(
-                        "Cannot delete address: It is referenced by other records.",
-                        { status: 409 } // 409 Conflict
-                    );
-                default:
-                    return new NextResponse(`Database error: ${e.message}`, { status: 500 });
-            }
-        } else {
-            return new NextResponse("Internal server error", { status: 500 });
-        }
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      // Handle specific Prisma error codes
+      switch (e.code) {
+        case "P2025": // Record not found
+          return new NextResponse("Address not found", { status: 404 });
+        case "P2003": // Foreign key constraint violation
+          return new NextResponse(
+            "Cannot delete address: It is referenced by other records.",
+            { status: 409 } // 409 Conflict
+          );
+        default:
+          return new NextResponse(`Database error: ${e.message}`, { status: 500 });
+      }
+    } else {
+      return new NextResponse("Internal server error", { status: 500 });
+    }
   }
 }
