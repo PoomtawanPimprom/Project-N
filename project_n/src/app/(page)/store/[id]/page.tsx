@@ -5,8 +5,9 @@ import InfoStore from "../component/InfoStore";
 import ShowProduct from "../component/ShowProduct";
 import prisma from "@/lib/prisma/db";
 
-export default async function StorePage({params}: {params: { id: number };}) {
-    
+export default async function StorePage(props: {params: Promise<{ id: number }>;}) {
+  const params = await props.params;
+
   const storeId = Number(params.id);
   const store = await prisma.store.findUnique({
     where: { id: storeId },

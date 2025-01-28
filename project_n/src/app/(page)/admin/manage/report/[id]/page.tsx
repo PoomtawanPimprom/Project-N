@@ -1,7 +1,8 @@
 import BackButton from "./BackButton";
 import InfoReportComponent from "./infoReport";
 
-const ManageReportByIdPage = async ({ params }: { params: { id: number } }) => {
+const ManageReportByIdPage = async (props: { params: Promise<{ id: number }> }) => {
+  const params = await props.params;
   const reportId = Number(params.id);
   return (
     <>

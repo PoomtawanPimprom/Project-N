@@ -29,11 +29,12 @@ const banners = [
   },
 ];
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: { search: string | "" };
-}) {
+export default async function Home(
+  props: {
+    searchParams: Promise<{ search: string | "" }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const search = searchParams.search;
   const products = (await prisma.product.findMany({
     where: { name: {contains:search} },
@@ -49,76 +50,73 @@ export default async function Home({
   const hasProducts = products.length > 0;
   const hasStores = stores.length > 0;
 
-  return (
-    <>
-      <Navbar />
-      <div className="min-h-screen bg-gray-50">
-        {!isSearching ? (
-          // แสดงหน้าปกติเมื่อไม่มีการค้นหา
-          <>
-            <ShowBanner banners={banners} />
-            <div className="max-w-7xl mx-auto px-4 py-6">
+  return (<>
+    <Navbar />
+    <div className="min-h-screen bg-gray-50">
+      {!isSearching ? (
+        // แสดงหน้าปกติเมื่อไม่มีการค้นหา
+        (<>
+          <ShowBanner banners={banners} />
+          <div className="max-w-7xl mx-auto px-4 py-6">
+            <div className="flex w-full text-3xl font-bold space-x-2 items-center mb-2">
+              <Box />
+              <p>สินค้า</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {products.map((product, index) => (
+                <ProductCard product={product} key={index} />
+              ))}
+            </div>
+          </div>
+        </>)
+      ) : (
+        // แสดงผลการค้นหา
+        (<div className="max-w-7xl mx-auto px-4 py-6">
+          {hasProducts ? (
+            // แสดงสินค้าที่ค้นพบ
+            (<>
               <div className="flex w-full text-3xl font-bold space-x-2 items-center mb-2">
                 <Box />
-                <p>สินค้า</p>
+                <p>สินค้าที่ค้นพบ</p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {products.map((product, index) => (
                   <ProductCard product={product} key={index} />
                 ))}
               </div>
-            </div>
-          </>
-        ) : (
-          // แสดงผลการค้นหา
-          <div className="max-w-7xl mx-auto px-4 py-6">
-            {hasProducts ? (
-              // แสดงสินค้าที่ค้นพบ
-              <>
-                <div className="flex w-full text-3xl font-bold space-x-2 items-center mb-2">
-                  <Box />
-                  <p>สินค้าที่ค้นพบ</p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {products.map((product, index) => (
-                    <ProductCard product={product} key={index} />
-                  ))}
-                </div>
-              </>
-            ) : (
-              // แสดงข้อความเมื่อไม่พบสินค้า
-              <>
-                <div className="flex w-full text-3xl font-bold space-x-2 items-center mb-2">
-                  <Box />
-                  <p>สินค้าที่ค้นพบ</p>
-                </div>
-                <div className="text-center py-10">
-                  <p className="text-xl text-gray-600">
-                    ไม่พบสินค้าที่คุณค้นหา "{search}"
-                  </p>
-                </div>
-              </>
-            )}
-
-            {hasStores && (
-              // แสดงร้านค้าที่ค้นพบ (ถ้ามี)
-              <div className="mt-8">
-                <div className="flex w-full text-3xl font-bold space-x-2 items-center mb-2">
-                  <Store />
-                  <p>ร้านค้าที่ค้นพบ</p>
-                </div>
-                <div className="grid grid-cols-1">
-                  {stores.map((store, index) => (
-                    <>
-                      <StoreBox store={store} key={index}/>
-                    </>
-                  ))}
-                </div>
+            </>)
+          ) : (
+            // แสดงข้อความเมื่อไม่พบสินค้า
+            (<>
+              <div className="flex w-full text-3xl font-bold space-x-2 items-center mb-2">
+                <Box />
+                <p>สินค้าที่ค้นพบ</p>
               </div>
-            )}
-          </div>
-        )}
-      </div>
-    </>
-  );
+              <div className="text-center py-10">
+                <p className="text-xl text-gray-600">
+                  ไม่พบสินค้าที่คุณค้นหา "{search}"
+                </p>
+              </div>
+            </>)
+          )}
+          {hasStores && (
+            // แสดงร้านค้าที่ค้นพบ (ถ้ามี)
+            (<div className="mt-8">
+              <div className="flex w-full text-3xl font-bold space-x-2 items-center mb-2">
+                <Store />
+                <p>ร้านค้าที่ค้นพบ</p>
+              </div>
+              <div className="grid grid-cols-1">
+                {stores.map((store, index) => (
+                  <>
+                    <StoreBox store={store} key={index}/>
+                  </>
+                ))}
+              </div>
+            </div>)
+          )}
+        </div>)
+      )}
+    </div>
+  </>);
 }

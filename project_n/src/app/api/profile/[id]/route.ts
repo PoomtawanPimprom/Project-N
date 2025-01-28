@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient()
 
-export async function GET(request: NextRequest, { params } : { params: { id: string}}) {
+export async function GET(request: NextRequest, props: { params: Promise<{ id: string}>}) {
+    const params = await props.params;
     const userId = Number(params.id);
     try {
         const posts = await prisma.user.findUnique({ where: { id: userId } });
@@ -14,7 +15,8 @@ export async function GET(request: NextRequest, { params } : { params: { id: str
     }
 }
 
-export async function PUT(request: NextRequest, { params } : { params: { id: string}}){
+export async function PUT(request: NextRequest, props: { params: Promise<{ id: string}>}) {
+    const params = await props.params;
     try {
         const { 
             name,
@@ -55,7 +57,8 @@ export async function PUT(request: NextRequest, { params } : { params: { id: str
     }
 }
 
-export async function DELETE(request: NextRequest, { params } : { params: { id: string}}){
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string}>}) {
+    const params = await props.params;
     try {
         const userID = Number(params.id);
         await prisma.user.delete({ where: { id: userID } });

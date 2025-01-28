@@ -6,11 +6,12 @@ import Link from "next/link";
 import { orderItemInterface } from "@/app/interface/orderItemInterface";
 import CardInfo from "./cardInfo";
 
-export default async function ManageStorePage({
-  params,
-}: {
-  params: { id: number };
-}) {
+export default async function ManageStorePage(
+  props: {
+    params: Promise<{ id: number }>;
+  }
+) {
+  const params = await props.params;
   const storeId = Number(params.id);
   const products = (await prisma.product.findMany({
     where: { storeID: storeId },
@@ -19,40 +20,40 @@ export default async function ManageStorePage({
     where:{storeId:storeId,orderItemStatusId:2}
 })) as orderItemInterface[]
 
-const statsBoxes = [
-  {
-    icon: <Truck className="w-8 h-8 text-red-500" />,
-    title: "สินค้าที่ต้องส่ง",
-    count: toShipItems.length,
-    bgColor: "bg-red-50",
-    href: `/store/manage/toShip/${storeId}`,
-  },
-  {
-    icon: <Box className="w-8 h-8 text-indigo-500" />,
-    title: "สินค้าทั้งหมด",
-    count: products.length,
-    bgColor: "bg-indigo-50",
-    href: `/store/manage/product/${storeId}`,
-  },
-  {
-    icon: <Warehouse className="w-8 h-8 text-teal-500" />,
-    title: "จัดการคลังสินค้า",
-    bgColor: "bg-teal-50",
-    href: `/store/manage/inventory/${storeId}`,
-  },
-  {
-    icon: <Settings className="w-8 h-8 text-emerald-500" />,
-    title: "แก้ไขรายละเอียดร้านค้า",
-    bgColor: "bg-emerald-50",
-    href: `/store/manage/edit/${storeId}`,
-  },
-  {
-    icon: <Settings className="w-8 h-8 text-amber-500" />,
-    title: "แก้ไขรายละเอียดร้านค้า",
-    bgColor: "bg-amber-50",
-    href: `/store/manage/product/${storeId}`,
-  },
-];
+  const statsBoxes = [
+    {
+      icon: <Truck className="w-8 h-8 text-red-500" />,
+      title: "สินค้าที่ต้องส่ง",
+      count: toShipItems.length,
+      bgColor: "bg-red-50",
+      href: `/store/manage/toShip/${storeId}`,
+    },
+    {
+      icon: <Box className="w-8 h-8 text-indigo-500" />,
+      title: "สินค้าทั้งหมด",
+      count: products.length,
+      bgColor: "bg-indigo-50",
+      href: `/store/manage/product/${storeId}`,
+    },
+    {
+      icon: <Warehouse className="w-8 h-8 text-teal-500" />,
+      title: "จัดการคลังสินค้า",
+      bgColor: "bg-teal-50",
+      href: `/store/manage/inventory/${storeId}`,
+    },
+    {
+      icon: <Settings className="w-8 h-8 text-emerald-500" />,
+      title: "แก้ไขรายละเอียดร้านค้า",
+      bgColor: "bg-emerald-50",
+      href: `/store/manage/edit/${storeId}`,
+    },
+    {
+      icon: <Settings className="w-8 h-8 text-amber-500" />,
+      title: "แก้ไขรายละเอียดร้านค้า",
+      bgColor: "bg-amber-50",
+      href: `/store/manage/product/${storeId}`,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-100 flex">

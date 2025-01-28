@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 const prisma = new PrismaClient()
 
 //deleteFollowByid
-export async function DELETE(request: NextRequest, { params }: { params: { userId: string } }) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ userId: string }> }) {
+    const params = await props.params;
     try {
         const followId = Number(params.userId)
         //get follow data by followId
@@ -40,7 +41,8 @@ export async function DELETE(request: NextRequest, { params }: { params: { userI
 
 
 //getAllFollowByUserID
-export async function GET(request: NextRequest, { params }: { params: { userId: string } }) {
+export async function GET(request: NextRequest, props: { params: Promise<{ userId: string }> }) {
+    const params = await props.params;
     try {
         const userId = Number(params.userId)
         const data = await prisma.follow.findMany({

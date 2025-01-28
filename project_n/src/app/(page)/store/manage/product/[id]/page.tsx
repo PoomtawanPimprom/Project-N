@@ -3,7 +3,8 @@ import StoreSideBar from "../../StoreSideBar";
 import DataTable from "./Table";
 import { productInterface } from "@/app/interface/productInterface";
 
-export default async function manageProductPage({params,}: {params: { id: number };}) {
+export default async function manageProductPage(props: {params: Promise<{ id: number }>;}) {
+  const params = await props.params;
   const storeID = Number(params.id);
   const products = (await prisma.product.findMany({
     where:{ storeID: storeID}

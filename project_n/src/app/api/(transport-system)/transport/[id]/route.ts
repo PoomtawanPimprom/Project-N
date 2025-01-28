@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export async function DELETE(req:NextRequest, {params}:{params:{id:number}}) {
+export async function DELETE(req:NextRequest, props:{params: Promise<{id:number}>}) {
+    const params = await props.params;
     const id = Number(params.id)
     try{
         await prisma.transport.delete({

@@ -9,7 +9,8 @@ import { productInterface } from "@/app/interface/productInterface";
 import { inventoryInterface } from "@/app/interface/inventoryInterface";
 import OtherProductFromSameStore from "../component/OtherProductFomSameStore";
 
-const ProductByIdPage = async ({params}: { params: { productId: number } }) => {
+const ProductByIdPage = async (props: { params: Promise<{ productId: number }> }) => {
+  const params = await props.params;
   const productId = Number(params.productId);
   const product = (await prisma.product.findUnique({
     where:{id:productId},

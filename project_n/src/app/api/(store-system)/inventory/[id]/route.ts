@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 const prisma = new PrismaClient()
 
 // getInventoriesByProductId
-export async function GET(NextRequest: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(NextRequest: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     try {
         const searchparams = NextRequest.nextUrl.searchParams
         const search = searchparams.get("search") || ""
@@ -52,7 +53,8 @@ export async function GET(NextRequest: NextRequest, { params }: { params: { id: 
 }
 
 // updateInventoryByInventoryId
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     try {
         const { quantity, size, color, productId } = await request.json();
         const inventoryId = Number(params.id);
@@ -93,7 +95,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 //  deleteInvenByInvenId
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const inventoryId = Number(params.id);
     try {
         await prisma.inventory.delete({ where: { id: inventoryId } })

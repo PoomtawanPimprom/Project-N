@@ -4,7 +4,11 @@ import { NextRequest, NextResponse } from 'next/server'
 const prisma = new PrismaClient()
 
 //getRavoriteByProductIdandUserId
-export async function GET(request: NextRequest, { params }: { params: { id: string, userId: string } }) {
+export async function GET(
+    request: NextRequest,
+    props: { params: Promise<{ id: string, userId: string }> }
+) {
+    const params = await props.params;
     const productId = Number(params.id)
     const userId = Number(params.userId)
     try {

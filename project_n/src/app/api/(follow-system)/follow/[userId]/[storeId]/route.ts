@@ -4,7 +4,11 @@ import { NextRequest, NextResponse } from 'next/server';
 const prisma = new PrismaClient()
 
 //checkFollowed
-export async function GET(request: NextRequest, { params }: { params: { userId: string, storeId: string } }) {
+export async function GET(
+    request: NextRequest,
+    props: { params: Promise<{ userId: string, storeId: string }> }
+) {
+    const params = await props.params;
     try {
         const userId = Number(params.userId)
         const storeId = Number(params.storeId)

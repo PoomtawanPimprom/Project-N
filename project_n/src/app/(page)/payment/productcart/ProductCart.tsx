@@ -1,11 +1,12 @@
 "use client";
 import { DollarSign } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import ChangeShipperModal from "./ChangeShipper-Modal";
 import { orderDetailInterface } from "@/app/interface/orderDetailInterface";
 import { orderItemInterface } from "@/app/interface/orderItemInterface";
 import { promotionInterface } from "@/app/interface/promotionInterface";
 import { AddDiscouteAction } from "./action-promotion";
+import { cancelDiscouteAction } from "./action-cancelPromotion";
 
 type prop = {
   discount?: promotionInterface;
@@ -18,9 +19,26 @@ export default function ProductCart({
   orderDetail,
   orderItems,
 }: prop) {
- console.log(discount)
+  console.log(discount);
   const [openModal, setOpenModal] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  const cancelDiscouteActionBindOrderDetail = cancelDiscouteAction.bind(null, {
+    orderDetailId: orderDetail.id,
+  })
+
+  const AddDiscouteActionBindOrderDetail = AddDiscouteAction.bind(null, {
+    orderDetailId: orderDetail.id,
+    userId: orderDetail.userId,
+  });
+
+  const handleCancel = async(event: React.FormEvent<HTMLFormElement>)=>{
+    event.preventDefault();
+    const formdata = new FormData(event.currentTarget);
+    const result = await cancelDiscouteAction({
+      orderDetailId: orderDetail.id, // ส่ง orderDetailId โดยตรง
+    }, formdata); 
+  }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -29,10 +47,6 @@ export default function ProductCart({
     setMessage(result?.message || "เกิดข้อผิดพลาด");
   };
 
-  const AddDiscouteActionBindOrderDetail = AddDiscouteAction.bind(null, {
-    orderDetailId: orderDetail.id,
-    userId: orderDetail.userId,
-  });
   return (
     <div className="flex flex-col w-full gap-5  p-4 border border-gray-300 rounded-xl">
       {/* product list */}
@@ -103,24 +117,46 @@ export default function ProductCart({
           <p>ส่วนลด</p>
         </div>
         <div className="p-2 border rounded-lg cursor-pointer transition-all ">
-          <form className="flex gap-2" onSubmit={handleSubmit}>
-            {/* <img src={product.image!.image1} alt={product.name} className="w-20 h-20 object-cover rounded" /> */}
-            <div className="flex w-full">
-              <input
-                name="discountCode"
-                placeholder="ใส่โค้ด..."
-                type="text"
-                className="p-2 w-full bg-gray-50 rounded-lg border "
-              />
-            </div>
-            <button className="py-2 px-4 border bg-green-main text-white font-semibold rounded-lg">
-              ยืนยัน
-            </button>
-          </form>
-          {message && (
-            <div className="p-2 mb-4 text-center text-white bg-red-500 rounded-lg">
-              {message}
-            </div>
+          {orderDetail.discountId != 0 ? (
+            <form onSubmit={handleCancel}>
+              <div className="flex gap-2">
+                <div className="flex flex-col w-full gap-1">
+                  <p className="flex text-xl font-semibold">
+                    ส่วนลด {discount?.discountAmount} บาท{" "}
+                  </p>
+                  <p className="flex text-sm">โค้ด {discount?.name}</p>
+                </div>
+                <div className="flex items-center">
+                  <button 
+                  type="button"
+                  className="py-2 px-4 border h-fit bg-green-main text-white font-semibold rounded-lg">
+                    ยกเลิก
+                  </button>
+                </div>
+              </div>
+            </form>
+          ) : (
+            <>
+              <form className="flex gap-2" onSubmit={handleSubmit}>
+                {/* <img src={product.image!.image1} alt={product.name} className="w-20 h-20 object-cover rounded" /> */}
+                <div className="flex w-full">
+                  <input
+                    name="discountCode"
+                    placeholder="ใส่โค้ด..."
+                    type="text"
+                    className="p-2 w-full bg-gray-50 rounded-lg border "
+                  />
+                </div>
+                <button className="py-2 px-4 border bg-green-main text-white font-semibold rounded-lg">
+                  ยืนยัน
+                </button>
+              </form>
+              {message && (
+                <div className="p-2 mb-4 text-center text-white bg-red-500 rounded-lg">
+                  {message}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -141,7 +177,7 @@ export default function ProductCart({
                 บาท
               </span>
             </div>
-            <div className="flex justify-between mb-2">
+            <div className="flex justify-between ">
               <span>จัดส่ง</span>
               <span>{orderDetail.transport?.transportPrice} บาท</span>
             </div>
@@ -150,7 +186,9 @@ export default function ProductCart({
                 <span>ส่วนลด</span>
                 <span>-{discount.discountAmount} บาท</span>
               </div>
-            ):(<></>)}
+            ) : (
+              <></>
+            )}
 
             <div className="border-t pt-4">
               <div className="flex justify-between font-semibold">
@@ -162,7 +200,7 @@ export default function ProductCart({
                   ) +
                     (orderDetail.transport?.transportPrice || 0) -
                     (discount?.discountAmount || 0)}{" "}
-                   บาท
+                  บาท
                 </span>
               </div>
             </div>

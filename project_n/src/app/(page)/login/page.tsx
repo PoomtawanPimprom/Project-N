@@ -1,5 +1,6 @@
 "use client";
 import Input from "@/app/component/Input";
+import { useToast } from "@/hooks/use-toast";
 import { LoginSchema, validateWithZod } from "@/lib/zod/Schema";
 import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
@@ -8,6 +9,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const LoginPage = () => {
+  const {toast} = useToast()
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -25,8 +27,17 @@ const LoginPage = () => {
         username,
         password,
       });
-      router.push("/");
+      if(!result?.ok){
+        toast({ title: "เกิดข้อผิดพลาด", description:result?.error, variant:"destructive"})
+        return
+      }
+      toast({ title:"ล็อคอินสำเร็จ", variant:"success"})
+      setTimeout(()=>{
+        router.push("/");
+
+      },1000)
     } catch (error: any) {
+
       //handle validation errors from zod
       if (error.fieldErrors) {
         setError(error.fieldErrors);

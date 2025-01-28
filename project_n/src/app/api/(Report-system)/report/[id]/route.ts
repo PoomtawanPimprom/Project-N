@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 const prisma = new PrismaClient()
 
 //getReportById
-export async function GET(request: NextRequest, { params }: { params: { id: number } }) {
+export async function GET(request: NextRequest, props: { params: Promise<{ id: number }> }) {
+    const params = await props.params;
     try {
         const reportId = Number(params.id)
         const data = await prisma.report.findUnique({
@@ -22,7 +23,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
     }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: number } }) {
+export async function PUT(request: NextRequest, props: { params: Promise<{ id: number }> }) {
+    const params = await props.params;
     try {
         const reportId = Number(params.id)
         const { comment, image, userId, productId } = await request.json();
@@ -41,7 +43,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
     }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: number } }) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: number }> }) {
+    const params = await props.params;
     try {
         const reportId = Number(params.id)
         const data = await prisma.report.delete({ where: { id: reportId } })

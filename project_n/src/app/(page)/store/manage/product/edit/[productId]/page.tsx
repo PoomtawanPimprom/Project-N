@@ -15,7 +15,7 @@ import {
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, use } from "react";
 import { IoMdClose } from "react-icons/io";
 import ModalDelete from "./ModalDelete";
 import { v4 } from "uuid";
@@ -29,11 +29,12 @@ interface ProductImage {
   [key: string]: string;
 }
 
-export default function editProductpage({
-  params,
-}: {
-  params: { productId: number };
-}) {
+export default function editProductpage(
+  props: {
+    params: Promise<{ productId: number }>;
+  }
+) {
+  const params = use(props.params);
   const searchparams = useSearchParams();
   const ProductId = params.productId;
   const { toast } = useToast();

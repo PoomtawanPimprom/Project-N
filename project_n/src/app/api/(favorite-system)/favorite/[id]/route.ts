@@ -5,7 +5,8 @@ const prisma = new PrismaClient()
 
 
 //getAllFavoriteByUserID
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     try {
         const userId = Number(params.id)
         if (userId === null || "") {
@@ -37,7 +38,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 //deleteByFavoriteID
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const favoriteID = Number(params.id)
     try {
         const data = await prisma.favorite.delete({ where: { id: favoriteID } })

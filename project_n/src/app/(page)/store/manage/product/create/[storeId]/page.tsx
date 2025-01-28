@@ -16,13 +16,14 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { IoMdClose } from "react-icons/io";
 import { v4 } from "uuid";
 import StoreSideBar from "../../../StoreSideBar";
 import { useRouter } from "next/navigation";
 
-const createProductpage = ({ params }: { params: { storeId: number } }) => {
+const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
+  const params = use(props.params);
   const { toast } = useToast();
   const router = useRouter()
   const storeId = params.storeId;

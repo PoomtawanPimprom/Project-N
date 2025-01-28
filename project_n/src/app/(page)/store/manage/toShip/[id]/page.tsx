@@ -5,17 +5,18 @@ import DataTable from "./Table";
 import { userAddressInterface } from "@/app/interface/userAddressInterface";
 
 
-export default async function toShipPage({params,}: {params: { id: number };}) {
-    const storeId = Number(params.id)
-    const toShipItems = (await prisma.orderItem.findMany({
-        where:{storeId:storeId},
-        orderBy:{ orderItemStatusId:"desc"},
-        include:{product:true,orderItemStatus:true}
-    })) as orderItemInterface[]
+export default async function toShipPage(props: {params: Promise<{ id: number }>;}) {
+  const params = await props.params;
+  const storeId = Number(params.id)
+  const toShipItems = (await prisma.orderItem.findMany({
+      where:{storeId:storeId},
+      orderBy:{ orderItemStatusId:"desc"},
+      include:{product:true,orderItemStatus:true}
+  })) as orderItemInterface[]
 
-    const userAddress = (await prisma.userAddress.findUnique({
-        where:{id:toShipItems[0].userAddressId}
-    })) as userAddressInterface
+  const userAddress = (await prisma.userAddress.findUnique({
+      where:{id:toShipItems[0].userAddressId}
+  })) as userAddressInterface
   return (
     <div className="min-h-screen bg-gray-100 flex">
       <StoreSideBar storeId={storeId.toString()} />

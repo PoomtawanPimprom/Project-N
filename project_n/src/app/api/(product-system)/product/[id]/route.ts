@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from 'next/server'
 const prisma = new PrismaClient()
 
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const productID = Number(params.id)
     try {
         const productData = await prisma.product.findUnique({ where: { id: productID }, include: { store:true} })
@@ -14,7 +15,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const productID = Number(params.id)
     try {
         const { name, price, description ,categoryId,image } = await request.json();
@@ -32,10 +34,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     } catch (error) {
         return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
     }
-
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const productID = Number(params.id)
     try {
         const deleteData = await prisma.product.delete({ where: { id: productID } })

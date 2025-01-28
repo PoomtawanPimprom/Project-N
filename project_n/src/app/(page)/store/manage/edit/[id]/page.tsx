@@ -16,12 +16,13 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { IoMdClose } from "react-icons/io";
 import { v4 } from "uuid";
 import StoreSideBar from "../../StoreSideBar";
 
-const UpdateStorePage = ({ params }: { params: { id: number } }) => {
+const UpdateStorePage = (props: { params: Promise<{ id: number }> }) => {
+  const params = use(props.params);
   const { toast } = useToast();
   const storeID = params.id;
 

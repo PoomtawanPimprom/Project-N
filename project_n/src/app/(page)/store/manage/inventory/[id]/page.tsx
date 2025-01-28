@@ -15,7 +15,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, use } from "react";
 import StoreSideBar from "../../StoreSideBar";
 
-const inventoryByStoreIdPage = ({ params }: { params: { id: number } }) => {
+const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
+  const params = use(props.params);
   const router = useRouter();
   const storeId = Number(params.id);
   const [products, setProducts] = useState<productInterface[]>([]);

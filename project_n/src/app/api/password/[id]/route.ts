@@ -4,7 +4,8 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     try {
         const { passwordCurrent, passwordNew } = await request.json(); // รับ passwordCurrent และ passwordNew จาก request body
         const userId = Number(params.id);

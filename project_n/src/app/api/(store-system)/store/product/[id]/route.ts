@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 const prisma = new PrismaClient()
 
 // getProductsByStoreId
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     try {
         const searchparams = request.nextUrl.searchParams
         const search = searchparams.get("search") || ""
