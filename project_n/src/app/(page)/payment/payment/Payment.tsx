@@ -205,7 +205,7 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
             </button>
             <button
               disabled={loading}
-              className="flex py-2 px-4 rounded-lg bg-primary text-white disabled:bg-primary/20"
+              className="flex py-2 px-4 rounded-lg bg-green-main text-white disabled:bg-green-main/20"
             >
               {loading ? "กำลังชำระ" : "ยืนยัน"}
             </button>

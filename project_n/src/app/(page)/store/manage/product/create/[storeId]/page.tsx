@@ -391,7 +391,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex px-4 py-2 bg-primary rounded-xl text-white  font-bold"
+                    className="flex px-4 py-2 bg-green-main rounded-xl text-white  font-bold"
                   >
                     {loading ? "กำลังบันทึก" : "บันทึก"}
                   </button>

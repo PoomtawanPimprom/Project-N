@@ -105,7 +105,7 @@ const ReportInfoTable = () => {
         </div>
         <div>
           <button
-            className=" bg-primary text-white px-4 py-2 rounded-xl hover:bg-green-900"
+            className=" bg-green-main text-white px-4 py-2 rounded-xl hover:bg-green-900"
             onClick={handlefilter}
           >
             ค้นหา

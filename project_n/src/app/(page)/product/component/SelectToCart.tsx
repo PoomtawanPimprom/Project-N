@@ -128,7 +128,7 @@ export default function SelectToCart({
                     )
                   }
                   className={`flex h-10 border rounded-xl justify-center items-center ${
-                    size === sizeItem ? "bg-primary text-white" : ""
+                    size === sizeItem ? "bg-green-main text-white" : ""
                   }`}
                 >
                   {sizeItem}
@@ -150,7 +150,7 @@ export default function SelectToCart({
                     )
                   }
                   className={`flex h-10 border rounded-xl justify-center items-center ${
-                    color === colorItem ? "bg-primary text-white" : ""
+                    color === colorItem ? "bg-green-main text-white" : ""
                   }`}
                 >
                   {colorItem}
@@ -190,7 +190,7 @@ export default function SelectToCart({
           <div className="flex w-full  border rounded-lg justify-center items-center">
             <button
               onClick={() => onSubmitAddToCart()}
-              className="px-4 py-2 rounded-lg h-full w-full justify-center items-center bg-primary text-white font-bold"
+              className="px-4 py-2 rounded-lg h-full w-full justify-center items-center bg-green-main text-white font-bold"
             >
               เพิ่มลงตะกร้า
             </button>

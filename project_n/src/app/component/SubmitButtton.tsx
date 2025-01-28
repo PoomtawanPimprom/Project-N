@@ -21,8 +21,8 @@ export default function SubmitButtton({
       onClick={onClick}
       className={cn(
         `${
-          disabled ?? "bg-primary/50"
-        } rounded-xl bg-primary py-2 px-6 font-bold text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed`,
+          disabled ?? "bg-green-main/50"
+        } rounded-xl bg-green-main py-2 px-6 font-bold text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed`,
         classnameButton
       )}
     >

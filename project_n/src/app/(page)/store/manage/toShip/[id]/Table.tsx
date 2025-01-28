@@ -86,7 +86,7 @@ const DataTable = ({ products, userAddress }: prop) => {
                     {item.orderItemStatusId !== 3 && (
                       <button
                         onClick={async () => await handleOnShip(item.id)}
-                        className="px-3 py-2 bg-primary text-white rounded-md hover:bg-green-600 transition"
+                        className="px-3 py-2 bg-green-main text-white rounded-md hover:bg-green-600 transition"
                       >
                         ดำเนินการ
                       </button>
@@ -141,7 +141,7 @@ const DataTable = ({ products, userAddress }: prop) => {
                     {item.orderItemStatusId !== 3 && (
                       <button
                         onClick={async () => await handleOnShip(item.id)}
-                        className="px-3 py-2 bg-primary text-white rounded-md hover:bg-green-600 transition"
+                        className="px-3 py-2 bg-green-main text-white rounded-md hover:bg-green-600 transition"
                       >
                         ดำเนินการ
                       </button>

@@ -96,7 +96,7 @@ export default function ProductCart({
             </div>
             <div className="flex items-center">
               <button
-                className="h-fit px-4 py-2 rounded-lg bg-primary text-white font-semibold"
+                className="h-fit px-4 py-2 rounded-lg bg-green-main text-white font-semibold"
                 type="button"
                 onClick={() => setOpenModal(true)}
               >
@@ -129,7 +129,7 @@ export default function ProductCart({
                 <div className="flex items-center">
                   <button 
                   type="button"
-                  className="py-2 px-4 border h-fit bg-primary text-white font-semibold rounded-lg">
+                  className="py-2 px-4 border h-fit bg-green-main text-white font-semibold rounded-lg">
                     ยกเลิก
                   </button>
                 </div>
@@ -147,7 +147,7 @@ export default function ProductCart({
                     className="p-2 w-full bg-gray-50 rounded-lg border "
                   />
                 </div>
-                <button className="py-2 px-4 border bg-primary text-white font-semibold rounded-lg">
+                <button className="py-2 px-4 border bg-green-main text-white font-semibold rounded-lg">
                   ยืนยัน
                 </button>
               </form>

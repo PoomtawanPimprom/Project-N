@@ -146,7 +146,7 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
               </div>
               <div className="flex">
                 <button
-                  className="py-2 px-4 rounded-lg bg-primary text-white"
+                  className="py-2 px-4 rounded-lg bg-green-main text-white"
                   type="submit"
                   onClick={handleFliterChange}
                 >
@@ -161,7 +161,7 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
                   onClick={handleDeleteSelected}
                   className={`py-2 px-4 rounded-lg  ${
                     selectedIds.length === 0
-                      ? "bg-gray-200 text-gray-700  dark:text-white"
+                      ? "bg-gray-200 text-gray-700 dark:bg-bg-dark dark:text-white"
                       : "bg-red-500 text-white dark:text-white"
                   }`}
                 >

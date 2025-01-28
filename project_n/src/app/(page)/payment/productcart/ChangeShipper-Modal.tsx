@@ -72,7 +72,7 @@ export default function ChangeShipperModal({ open, onClose,orderDetailId }: Moda
             </button>
             <button
               onClick={onClose}
-              className="flex py-2 px-4 rounded-lg bg-primary text-white"
+              className="flex py-2 px-4 rounded-lg bg-green-main text-white"
             >
               ยืนยัน
             </button>

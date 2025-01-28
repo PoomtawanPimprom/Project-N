@@ -50,7 +50,7 @@ export default function SelectAddress({
                 onClick={() => {
                   setOpenModalSelectAdd(true);
                 }}
-                className="h-fit px-4 py-2 rounded-lg bg-primary text-white font-semibold"
+                className="h-fit px-4 py-2 rounded-lg bg-green-main text-white font-semibold"
               >
                 เปลี่ยน
               </button>

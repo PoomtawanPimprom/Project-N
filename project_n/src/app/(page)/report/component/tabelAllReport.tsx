@@ -54,7 +54,7 @@ const TabelAllReport = ({ userId,reportDataByUserID }: prop) => {
                     onClick={() => {
                       setOpenModal(true);
                     }}
-                    className=" rounded-xl text-white px-6 py-2 bg-primary"
+                    className=" rounded-xl text-white px-6 py-2 bg-green-main"
                   >
                     ดู
                   </button>
