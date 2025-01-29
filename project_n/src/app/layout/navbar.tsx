@@ -33,7 +33,7 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    if (session?.user?.id) 
+    if (session?.user?.id)
       fetchdata();
   }, [session]);
 
@@ -46,7 +46,7 @@ export default function Navbar() {
         />
       )}
 
-      <div className="relative bg-white dark:bg-black dark:border-b  flex justify-between items-center text-black py-2 px-8 md:px-32  drop-shadow-md z-30">
+      <div className="h-18 md:h-20 relative bg-white dark:bg-black dark:border-b  flex justify-between items-center text-black py-2 px-8 md:px-32  drop-shadow-md z-30">
         {/* Logo */}
         <Link href="/">
           <p className="text-lg font-bold text-primary hover:scale-105 transition-all">
@@ -60,20 +60,24 @@ export default function Navbar() {
         {/* Menu */}
         <ul className="hidden md:flex items-center text-accent-foreground gap-10 text-base">
           <li className="text-lg  hover:text-gray-500 hover:cursor-pointer">
-            <SwitchTheme/>
+            <SwitchTheme />
           </li>
-          <li className="text-lg  hover:text-gray-500 hover:cursor-pointer">
+          <li className="text-lg  hover:text-gray-500 hover:cursor-pointer relative">
             <Link href="/cart">
               <ShoppingCart className="w-7 h-7" />
             </Link>
+            <div className="rounded-full bg-red-600 flex justify-center items-center text-white w-6 h-6 absolute bottom-0 right-0" style={{ transform: 'translate(50%, 50%)' }}>
+              3
+            </div>
+
           </li>
           <li className="relative  text-lg  hover:text-gray-500 hover:cursor-pointer">
             {session ? (
               <>
-                <button 
-                className="flex items-center"
-                onClick={handleToggleDropdown}>
-                  <img className="block w-10 h-10 rounded-full border border-black object-cover" src={user?.profile} alt={user?.name} width={200} height={200}/>
+                <button
+                  className="flex items-center"
+                  onClick={handleToggleDropdown}>
+                  <img className="block w-10 h-10 rounded-full border border-black object-cover" src={user?.profile} alt={user?.name} width={200} height={200} />
                 </button>
               </>
             ) : (
@@ -160,9 +164,8 @@ export default function Navbar() {
 
         <div
           className={`z-50 absolute md:hidden top-14 left-0 w-full bg-white flex flex-col items-center gap-6 
-        font-semibold text-lg transform transition-transform ${
-          isMenuMore ? "block" : "hidden"
-        }`}
+        font-semibold text-lg transform transition-transform ${isMenuMore ? "block" : "hidden"
+            }`}
           style={{ transition: "transform 0.3s ease, opacity 0.3s ease" }}
         >
           <li className="list-none w-full text-center p-4 transition-all cursor-pointer">
