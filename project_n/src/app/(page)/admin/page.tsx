@@ -1,10 +1,12 @@
 import React from "react";
 import { FileText, Tag } from "lucide-react";
-import AdminSideBar from "./AdminSideBar";
 import prisma from "@/lib/prisma/db";
 import { reportInterface } from "@/app/interface/reportInterface";
 import { promotionInterface } from "@/app/interface/promotionInterface";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const AdminSideBar = dynamic(()=> import("./AdminSideBar"))
 
 const AdminDashboard = async () => {
   const reports = (await prisma.report.findMany({
