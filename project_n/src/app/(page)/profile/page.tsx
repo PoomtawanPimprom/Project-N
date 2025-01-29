@@ -14,6 +14,7 @@ function Profile() {
     const { data: session } = useSession();
     const { toast } = useToast();
     const [profileImage, setProfileImage] = useState<string>("");
+    const [user, setUser] = useState<userInterface | null>(null);
     const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
     const [userData, setUserData] = useState<userInterface>({
         id: 0,
@@ -99,6 +100,7 @@ function Profile() {
     const fetchUserData = async () => {
         const res = await getUserById(Number(session?.user.id));
         setUserData(res);
+        setUser(res)
         console.log(res)
     }
 
@@ -136,9 +138,9 @@ function Profile() {
 
     return (
         <section id="profile">
-            <div className="container mx-auto flex flex-col lg:flex-row py-6 gap-4 px-4 sm:px-6 lg:px-8">
+            <div className="container   mx-auto flex flex-col lg:flex-row py-6 gap-4 px-4 sm:px-6 lg:px-8">
 
-                <MenuLeft checkCreatedStore={session?.user.storeId} profile={userData} />
+                <MenuLeft userdata={user} checkCreatedStore={session?.user.storeId} profile={userData} />
 
                 {/* Content right */}
                 <div className="flex flex-col gap-6 lg:w-3/4 ">

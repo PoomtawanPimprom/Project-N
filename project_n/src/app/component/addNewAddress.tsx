@@ -1,4 +1,4 @@
-import { DialogHeader } from '@/components/ui/dialog'
+import { DialogHeader } from '@/app/components/ui/dialog'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@radix-ui/react-dialog'
 import React, { useState } from 'react'
 import { userAddressInterface } from '../interface/userAddressInterface'
