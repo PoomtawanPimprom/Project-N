@@ -6,31 +6,33 @@
 
 @layer base {
   :root {
-    /* พื้นหลังและพื้นผิว */
+    /* พื้นหลังและพื้นผิว - สีขาวเป็นหลัก */
     --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+    --foreground: 240 10% 20%; /* ปรับให้เป็นสีเทาเข้มเพื่อให้อ่านง่ายขึ้น */
+    --card: 0 0% 98%; /* สีขาวที่เข้มขึ้นเล็กน้อยเพื่อแยกจากพื้นหลัก */
+    --card-foreground: 240 10% 20%;
+    --popover: 0 0% 98%;
+    --popover-foreground: 240 10% 20%;
 
-    /* ปรับสีใหม่ */
+    /* คงสี primary เดิมไว้ */
     --primary: 142.1 31.2% 36.1%;
     --primary-foreground: 355.7 100% 97.3%;
-    --secondary: 0 0% 0%; /* สีดำ */
+    
+    /* ปรับสีอื่นๆ */
+    --secondary: 240 5.9% 90%;
     --secondary-foreground: 240 5.9% 10%;
-    --muted: 0 0% 80%; /* สีเทาอ่อน */
-    --muted-foreground: 240 3.8% 46.1%;
-
-    /* สีอื่นๆ */
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 10% 40%;
     --accent: 240 4.8% 95.9%;
     --accent-foreground: 240 5.9% 10%;
-    --: 0 84.2% 60.2%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 142.1 76.2% 36.3%;
     --radius: 0.5rem;
+
+    /* คงสี chart เดิมไว้ */
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -39,35 +41,37 @@
   }
 
   .dark {
-    /* Dark Mode */
-    --background: 20 14.3% 4.1%;
-    --foreground: 0 0% 95%;
-    --card: 24 9.8% 10%;
+    /* พื้นหลังและพื้นผิว - โทนมืด */
+    --background: 240 10% 10%; /* สีดำที่นุ่มนวลกว่า pure black */
+    --foreground: 0 0% 95%; /* ข้อความสีขาวที่ไม่จัดจ้านเกินไป */
+    --card: 240 10% 15%; /* สีเข้มกว่าพื้นหลังเล็กน้อย */
     --card-foreground: 0 0% 95%;
-    --popover: 0 0% 9%;
+    --popover: 240 10% 15%;
     --popover-foreground: 0 0% 95%;
 
-    /* ปรับสีใน Dark Mode */
+    /* คงสี primary เดิมไว้ */
     --primary: 142.1 31.2% 36.1%;
     --primary-foreground: 144.9 80.4% 10%;
-    --secondary: 0 0% 0%; /* สีดำ */
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 25%; /* สีเทาเข้มขึ้นใน Dark Mode */
-    --muted-foreground: 240 5% 64.9%;
 
-    /* สีอื่นๆ */
-    --accent: 12 6.5% 15.1%;
+    /* ปรับสีอื่นๆให้เข้ากับ dark mode */
+    --secondary: 240 5.9% 20%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 4.8% 20%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 4.8% 20%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 85.7% 97.3%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 142.4 71.8% 29.2%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+
+    /* ปรับสี chart ให้สว่างขึ้นเล็กน้อยสำหรับ dark mode */
+    --chart-1: 220 70% 60%;
+    --chart-2: 160 60% 55%;
+    --chart-3: 30 80% 65%;
+    --chart-4: 280 65% 70%;
+    --chart-5: 340 75% 65%;
   }
 }
 
