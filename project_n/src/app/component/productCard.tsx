@@ -20,6 +20,7 @@ import React, { useEffect, useState } from "react";
 import { getInventoriesByProductId } from "../service/inventory/service";
 import { inventoryInterface } from "../interface/inventoryInterface";
 import { createCart } from "../service/cart/service";
+import { generateKey } from "@/lib/utils";
 
 interface prop {
   product: productInterface;
@@ -28,7 +29,7 @@ interface prop {
 const ProductCard = ({ product }: prop) => {
   const { data: session } = useSession();
   const router = useRouter();
-  const [quantity, setQuantity] = React.useState(1);
+  const [quantity, setQuantity] = useState(1);
   const [inventory, setInventory] = useState<inventoryInterface[]>([]);
   const [filteredColors, setFilteredColors] = useState<string[]>([]); // เก็บสีที่กรองแล้ว
   const [selectedSize, setSelectedSize] = useState<string>(""); 
@@ -92,24 +93,24 @@ const ProductCard = ({ product }: prop) => {
 
   return (
     <>
-      <div key={product.id} className="bg-white overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer flex flex-col justify-between h-full">
+      <div key={product.id} className=" overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer flex flex-col justify-between h-full">
         {/* Image Section */}
         <div onClick={handleGotoProductPage} className="relative h-64">
           <img src={product.image!.image1} alt={product.name} className="w-full h-full object-cover" />
         </div>
 
         {/* Content Section */}
-        <div className="p-4 flex flex-col flex-grow">
+        <div className="p-4 flex flex-col flex-grow dark:bg-card dark:text-white rounded-b-lg">
           <p className="text-sm text-gray-500 mb-1">{product.category?.name}</p>
-          <h3 onClick={handleGotoProductPage} className="text-lg font-semibold text-gray-900 mb-2" >
+          <h3 onClick={handleGotoProductPage} className="text-lg font-semibold  mb-2" >
             {product.name}
           </h3>
 
-          <div className="mt-auto">
+          <div className="mt-auto ">
             <div className="flex justify-between items-center">
 
               {/* Price */}
-              <span className="text-xl font-bold text-gray-900">
+              <span className="text-xl font-bold">
                 ${product.price}
               </span>
 
@@ -154,7 +155,7 @@ const ProductCard = ({ product }: prop) => {
                             <option value="">กรุณาเลือกขนาด</option>
                             {Array.from(new Set(inventory.map((item) => item.size))).map(
                               (size, index) => (
-                                <option key={index} value={size.toString()}>
+                                <option key={generateKey()} value={size.toString()}>
                                   {size}
                                 </option>
                               )
@@ -176,7 +177,7 @@ const ProductCard = ({ product }: prop) => {
                           >
                             <option value="">กรุณาเลือกสี</option>
                             {filteredColors.map((color, index) => (
-                              <option key={index} value={color}>
+                              <option key={generateKey()} value={color}>
                                 {color}
                               </option>
                             ))}

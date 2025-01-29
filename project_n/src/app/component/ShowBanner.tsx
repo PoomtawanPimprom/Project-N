@@ -31,7 +31,7 @@ export default function ShowBanner({ banners }: prop) {
     setCurrentBanner((prev) => (prev - 1 + banners.length) % banners.length);
   };
   return (
-    <div className="max-w-7xl mx-auto sm:mt-2  ">
+    <div className="max-w-7xl mx-auto sm:mt-4  ">
       <div className="relative overflow-hidden sm:rounded-lg">
         <div className="relative h-96">
           {banners.map((banner, index) => (
@@ -54,13 +54,14 @@ export default function ShowBanner({ banners }: prop) {
           {/* Navigation Buttons */}
           <button
             onClick={prevBanner}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 p-2 rounded-full hover:bg-white"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 dark:text-black p-2 rounded-full hover:bg-white"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className=" w-6 h-6" />
           </button>
+
           <button
             onClick={nextBanner}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 p-2 rounded-full hover:bg-white"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 dark:text-black p-2 rounded-full hover:bg-white"
           >
             <ChevronRight className="w-6 h-6" />
           </button>
