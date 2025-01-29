@@ -52,8 +52,9 @@ export default function Navbar() {
       <div className="h-18 md:h-20 relative bg-white dark:bg-black dark:border-b  flex justify-between items-center text-black py-2 px-8 md:px-32  drop-shadow-md z-30">
         {/* Logo */}
         <Link href="/">
-          <p className="text-lg w-[176px] font-bold text-primary hover:scale-105 transition-all">
-            MATTER
+          <p className="flex text-xl w-[176px]hover:scale-105 transition-all">
+            <p className="text-black dark:text-white font-extrabold">SHOP</p>
+            <p className="text-primary font-black">KUB</p>
           </p>
         </Link>
 
