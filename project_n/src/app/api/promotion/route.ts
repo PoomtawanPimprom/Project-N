@@ -12,20 +12,14 @@ export async function POST(request: NextRequest) {
     try {
         const {
             name,
-            description,
-            discountPercentage,
             discountAmount,
-            minimumPrice,
             isActive,
         } = await request.json();
 
         await prisma.discount.create({
             data: {
                 name,
-                description,
-                discountPercentage,
                 discountAmount,
-                minimumPrice,
                 isActive,
             }
         })

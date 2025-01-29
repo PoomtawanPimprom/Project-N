@@ -1,3 +1,14 @@
+
+export async function getPromotionEnadleAll(){
+    const res = await fetch(`/api/promotion/checkEnable`, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    return res.json();
+}
+
 // Get all
 export async function getPromotionAll(){
     const res = await fetch(`/api/promotion`, {
