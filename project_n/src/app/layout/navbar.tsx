@@ -49,7 +49,7 @@ export default function Navbar() {
       <div className="h-18 md:h-20 relative bg-white dark:bg-black dark:border-b  flex justify-between items-center text-black py-2 px-8 md:px-32  drop-shadow-md z-30">
         {/* Logo */}
         <Link href="/">
-          <p className="text-lg font-bold text-primary hover:scale-105 transition-all">
+          <p className="text-lg w-[176px] font-bold text-primary hover:scale-105 transition-all">
             MATTER
           </p>
         </Link>
@@ -93,10 +93,11 @@ export default function Navbar() {
                 {!session ? (
                   <>
                     <div
-                      className="fixed inset-0 z-50"
+                      
+                      className="fixed inset-0 z-50 "
                       onClick={() => setToggleDropdown(false)}
                     />
-                    <div className="absolute flex flex-col bg-white shadow-lg rounded-md mt-2 right-0">
+                    <div className="absolute flex flex-col bg-white dark:bg-black shadow-lg rounded-md mt-2 right-0">
                       <Link
                         href="/login"
                         className="flex px-12 py-4 hover:bg-gray-100 whitespace-nowrap"
@@ -111,11 +112,11 @@ export default function Navbar() {
                       className="fixed inset-0 z-30"
                       onClick={() => setToggleDropdown(false)}
                     />
-                    <div className="absolute flex flex-col bg-white shadow-lg rounded-md mt-2 right-0">
-                      {session.user.roleId === "2" && (
+                    <div className="absolute flex flex-col  shadow-lg rounded-md mt-2 right-0 bg-white dark:bg-gray-950">
+                      {session.user.roleId !== "1" && (
                         <Link
                           href="/admin"
-                          className="px-12 py-2 hover:bg-gray-100 whitespace-nowrap"
+                          className="px-12 py-2 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 whitespace-nowrap"
                         >
                           Admin dashboard
                         </Link>
@@ -123,20 +124,20 @@ export default function Navbar() {
                       {session.user.storeId !== "" && (
                         <Link
                           href={`/store/${session.user.storeId}`}
-                          className="px-12 py-2 hover:bg-gray-100 whitespace-nowrap text-center"
+                          className="px-12 py-2 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 whitespace-nowrap text-center"
                         >
                           ร้านค้าของฉัน
                         </Link>
                       )}
                       <Link
                         href="/profile"
-                        className="px-12 py-2 hover:bg-gray-100 text-center"
+                        className="px-12 py-2 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 text-center"
                       >
                         โปรไฟล์
                       </Link>
                       <Link
                         href="/favorite"
-                        className="px-8 py-2 hover:bg-gray-100 text-center"
+                        className="px-8 py-2 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 text-center"
                       >
                         สินค้าที่ชอบ
                       </Link>
@@ -145,7 +146,7 @@ export default function Navbar() {
                           signOut();
                           router.push("/");
                         }}
-                        className="px-8 py-2  hover:bg-gray-100 text-center"
+                        className="px-8 py-2  dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 text-center"
                       >
                         Log out
                       </button>

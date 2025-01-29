@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
     // If the pathname starts with /protected and the user is not an admin, redirect to the home page
     if (
         pathname.startsWith('/admin') &&
-        (!user || user.roleId !== '2')
+        (!user || user.roleId === '1' )
     ) {
         return NextResponse.redirect(new URL('/', request.url))
     }

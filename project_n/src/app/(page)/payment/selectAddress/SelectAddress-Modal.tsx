@@ -96,7 +96,7 @@ export default function SelectAddressModal({
               </button>
               <button
                 onClick={onClose}
-                className="flex py-2 px-4 rounded-lg bg-green-main text-white  items-center"
+                className="flex py-2 px-4 rounded-lg bg-primary text-white  items-center"
               >
                 ยืนยัน
               </button>
