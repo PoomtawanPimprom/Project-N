@@ -19,9 +19,6 @@ export default function Navbar() {
   const handleToggleDropdown = () => {
     setToggleDropdown(!toggleDropdown);
   };
-  const toggleTheme = () => {
-    document.documentElement.classList.toggle('dark')
-  }
   const fetchdata = async () => {
     if (!session?.user?.id) {
       console.error("User ID is missing.");
@@ -49,7 +46,7 @@ export default function Navbar() {
         />
       )}
 
-      <div className="relative flex justify-between items-center text-black py-2 px-8 md:px-32 bg-white drop-shadow-md z-30">
+      <div className="relative bg-white dark:bg-black dark:border-b  flex justify-between items-center text-black py-2 px-8 md:px-32  drop-shadow-md z-30">
         {/* Logo */}
         <Link href="/">
           <p className="text-lg font-bold text-primary hover:scale-105 transition-all">
@@ -61,7 +58,7 @@ export default function Navbar() {
         <SearchInput />
 
         {/* Menu */}
-        <ul className="hidden md:flex items-center gap-10 text-base">
+        <ul className="hidden md:flex items-center text-accent-foreground gap-10 text-base">
           <li className="text-lg  hover:text-gray-500 hover:cursor-pointer">
             <SwitchTheme/>
           </li>

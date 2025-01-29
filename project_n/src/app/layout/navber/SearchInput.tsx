@@ -25,7 +25,7 @@ export default function SearchInput() {
     }, [searchParams.get("search")]);
   return (
     <div className="relative hidden  lg:flex items-center justify-center gap-3 py-2 pl-10 pr-2 rounded-full border-2">
-        <Search className="w-5 h-5 absolute left-3" />
+        <Search className="w-5 h-5 text-accent-foreground absolute left-3" />
         {/* <FiSearch className='w-5 h-5 absolute left-3'/> */}
         <input
           onChange={(e) => {
