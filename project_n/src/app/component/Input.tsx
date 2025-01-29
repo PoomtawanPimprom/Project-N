@@ -98,6 +98,8 @@ export default function Input({
             disabled={disabled}
             className={cn(
               `
+              bg-white dark:bg-black
+             text-black dark:text-white
               w-96
               p-3
               border
@@ -128,7 +130,7 @@ export default function Input({
             <button
               type="button"
               onClick={togglePassword}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900 dark:text-white"
             >
               {showPassword ? (
                 <EyeOff size={20} className="text-gray-500" />
