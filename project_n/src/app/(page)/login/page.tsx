@@ -13,6 +13,7 @@ const LoginPage = () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading,setLoading] = useState(false);
 
   const [error, setError] = useState<{
     [key: string]: { message: string };
@@ -20,7 +21,9 @@ const LoginPage = () => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
+      setLoading(true);
       validateWithZod(LoginSchema, { username, password });
       const result = await signIn("credentials", {
         redirect: false,
@@ -42,6 +45,8 @@ const LoginPage = () => {
       if (error.fieldErrors) {
         setError(error.fieldErrors);
       }
+    } finally{
+      setLoading(false);
     }
   };
   return (
@@ -105,7 +110,8 @@ const LoginPage = () => {
           {/* <!-- Login Button --> */}
           <button
             type="submit"
-            className="bg-gray-900 hover:bg-gray-500 text-white font-semibold rounded-md py-2 px-4 w-full"
+            disabled={loading}
+            className="bg-primary disabled:button-disabled text-white font-semibold rounded-md py-2 px-4 w-full"
           >
             Login
           </button>
