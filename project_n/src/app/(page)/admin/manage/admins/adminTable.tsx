@@ -1,8 +1,16 @@
 "use client";
 import React, { useState } from "react";
-import { SquarePen, Trash2 } from "lucide-react";
+import { Search, SquarePen, Trash2 } from "lucide-react";
 import { userInterface } from "@/app/interface/userInterface";
 import { useSearchParams } from "next/navigation";
+import Table from "@/app/component/table/Table";
+import TableHeader from "@/app/component/table/TableHeader";
+import TableRow from "@/app/component/table/TableRow";
+import TableHead from "@/app/component/table/TableHead";
+import TableBody from "@/app/component/table/TableBody";
+import TableData from "@/app/component/table/Tabledata";
+import Input from "@/app/component/Input";
+import Link from "next/link";
 
 type prop = {
   userData: userInterface[];
@@ -10,48 +18,75 @@ type prop = {
 
 const DataAdminTable = ({ userData }: prop) => {
   const searchParams = useSearchParams();
+  const [search, setSearch] = useState("");
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [openModalDelete, setOpenModalDelete] = useState(false);
+
+  const handleOnChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value)
+  }
+
   return (
     <>
+      {/* search */}
       <div className="flex justify-between ">
-        <div className=""></div>
-        <div className=""></div>
+        <div  className="flex gap-2">
+            <Input placeholder=""
+            value={search}
+            onChange={handleOnChange}
+            name="search"
+            type="" />
+            <Link
+            className="flex text-lg font-semibold px-6 py-2 bg-primary rounded-lg text-center items-center" 
+            href={`/admin/manage/admins?search=${search}`}
+            >ค้นหา</Link>
+            <Link
+            className="flex text-lg font-semibold px-6 py-2 bg-secondary text-white rounded-lg text-center items-center text-nowrap" 
+            href={`/admin/manage/admins`}
+            >รีเซ๊ท</Link>
+        </div>
+        <div className="flex"></div>
       </div>
+
+      {/* table */}
       <div className="w-full overflow-x-auto rounded-lg border">
-        <div className="min-w-full inline-block align-middle  rounded-lg" >
+        <div className="min-w-full inline-block align-middle  rounded-lg">
           <div className="overflow-hidden  rounded-lg">
             {/* Desktop view */}
-            <table className="min-w-full hidden md:table  rounded-lg">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    ID
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Provider Name
-                  </th>
-                  <th className="px-6 py-3 text-right text-sm font-semibold text-gray-900">
-                    Price
-                  </th>
-                  <th className="px-6 py-3 text-right text-sm font-semibold text-gray-900">
+            <Table className="w-full text-sm text-left rtl:text-right text-accent-foreground hidden md:table">
+              <TableHeader className="text-sm 2xl:text-base  text-gray-800  bg-gray-50 dark:bg-black dark:text-accent-foreground">
+                <TableRow className="font-semibold">
+                  <TableHead className="px-6 py-3 text-left text-sm">
+                    User ID
+                  </TableHead>
+                  <TableHead className="px-6 py-3 text-left text-sm">
+                    Name
+                  </TableHead>
+                  <TableHead className="px-6 py-3 text-left text-sm">
+                    Email
+                  </TableHead>
+                  <TableHead className="px-6 py-3 text-right text-sm">
                     Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {userData.map((item, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <TableRow
+                    key={index}
+                    className="bg-white border-b dark:bg-zinc-900  hover:bg-gray-50 dark:hover:bg-zinc-600"
+                  >
+                    <TableData
+                      text-sm
+                      font-medium
+                      text-gray-900
+                      className="px-6 py-4 "
+                    >
                       {item.id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {item.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-600">
-                      {item.email}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                    </TableData>
+                    <TableData className="px-6 py-4 ">{item.name}</TableData>
+                    <TableData className="px-6 py-4  ">{item.email}</TableData>
+                    <TableData className="px-6 py-4 ">
                       <div className="flex justify-end gap-2">
                         <button
                           className="flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors bg-black hover:bg-gray-800 text-white"
@@ -69,11 +104,11 @@ const DataAdminTable = ({ userData }: prop) => {
                           Delete
                         </button>
                       </div>
-                    </td>
-                  </tr>
+                    </TableData>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
 
             {/* Mobile view */}
             <div className="md:hidden">
