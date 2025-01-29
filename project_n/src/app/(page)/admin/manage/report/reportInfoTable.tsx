@@ -1,5 +1,11 @@
 "use client";
 
+import Table from "@/app/component/table/Table";
+import TableBody from "@/app/component/table/TableBody";
+import TableData from "@/app/component/table/Tabledata";
+import TableHead from "@/app/component/table/TableHead";
+import TableHeader from "@/app/component/table/TableHeader";
+import TableRow from "@/app/component/table/TableRow";
 import { reportCategoryInterface } from "@/app/interface/reportCategoryInterface";
 import { reportInterface } from "@/app/interface/reportInterface";
 import { getAllReport } from "@/app/service/report/service";
@@ -114,43 +120,47 @@ const ReportInfoTable = () => {
       </div>
       <div className="w-full">
         <div className="relative overflow-x-auto sm:rounded-lg">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">
+          <Table className="w-full text-sm text-left rtl:text-right text-accent-foreground">
+            <TableHeader className="text-sm 2xl:text-base  text-gray-800  bg-gray-50 dark:bg-black dark:text-accent-foreground">
+              <TableRow className="font-semibold">
+                <TableHead className="px-6 py-3 text-left text-sm">
                   ข้อความ
-                </th>
-                <th scope="col" className="px-6 py-3">
+                </TableHead>
+                <TableHead className="px-6 py-3 text-left text-sm  ">
                   รายงานเมื่อ
-                </th>
-                <th scope="col" className="px-6 py-3">
+                </TableHead>
+                <TableHead className="px-6 py-3 text-left text-sm  ">
                   ผู้รายงาน
-                </th>
-                <th scope="col" className="px-6 py-3">
+                </TableHead>
+                <TableHead className="px-6 py-3 text-left text-sm  ">
                   ชื่อสินค้า
-                </th>
-                <th scope="col" className="px-6 py-3">
+                </TableHead>
+                <TableHead className="px-6 py-3 text-left text-sm  ">
                   หัวข้อรายงาน
-                </th>
-                <th scope="col" className="px-6 py-3 text-right">
+                </TableHead>
+                <TableHead className="px-6 py-3 text-right">
                   ดูรายละเอียดเพิ่มเติม
-                </th>
-              </tr>
-            </thead>
-            <tbody>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {reports.map((item, index) => (
-                <tr
+                <TableRow
                   key={index}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  className="bg-white border-b dark:bg-zinc-900  hover:bg-gray-50 dark:hover:bg-zinc-600"
                 >
-                  <td className="px-6 py-4">{item.comment}</td>
-                  <td className="px-6 py-4">
+                  <TableData className="px-6 py-4">{item.comment}</TableData>
+                  <TableData className="px-6 py-4">
                     {new Date(item.createdAt).toLocaleDateString("th-TH")}
-                  </td>
-                  <td className="px-6 py-4">{item.user?.name}</td>
-                  <td className="px-6 py-4">{item.product?.name}</td>
-                  <td className="px-6 py-4">{item.reportCategory?.name}</td>
-                  <td className="px-6 py-4 text-right">
+                  </TableData>
+                  <TableData className="px-6 py-4">{item.user?.name}</TableData>
+                  <TableData className="px-6 py-4">
+                    {item.product?.name}
+                  </TableData>
+                  <TableData className="px-6 py-4">
+                    {item.reportCategory?.name}
+                  </TableData>
+                  <TableData className="px-6 py-4 text-right">
                     <button
                       onClick={() =>
                         router.push(`/admin/manage/report/${item.id}`)
@@ -159,11 +169,11 @@ const ReportInfoTable = () => {
                     >
                       ดูเพิ่มเติม
                     </button>
-                  </td>
-                </tr>
+                  </TableData>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
           <div className="flex justify-end mt-2">
             <div className="flex  border-2 border-slate-800 rounded-lg bg-slate-500 ">
               <button
