@@ -49,7 +49,7 @@ export default function Navbar() {
         />
       )}
 
-      <div className="relative dark:bg-black dark:border-b dark:text-white flex justify-between items-center text-black py-4 px-8 md:px-32 bg-white drop-shadow-md z-30">
+      <div className="relative flex justify-between items-center text-black py-2 px-8 md:px-32 bg-white drop-shadow-md z-30">
         {/* Logo */}
         <Link href="/">
           <p className="text-lg font-bold text-primary hover:scale-105 transition-all">
@@ -73,15 +73,10 @@ export default function Navbar() {
           <li className="relative  text-lg  hover:text-gray-500 hover:cursor-pointer">
             {session ? (
               <>
-                <button
-                  className="flex items-center"
-                  onClick={handleToggleDropdown}
-                >
-                  <img
-                    className="w-7 h-7 rounded-full"
-                    src={user?.profile}
-                    alt={user?.name}
-                  />
+                <button 
+                className="flex items-center"
+                onClick={handleToggleDropdown}>
+                  <img className="block w-10 h-10 rounded-full border border-black object-cover" src={user?.profile} alt={user?.name} width={200} height={200}/>
                 </button>
               </>
             ) : (

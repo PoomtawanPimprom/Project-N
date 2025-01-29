@@ -9,6 +9,7 @@ import { PlusCircle } from "lucide-react";
 import { userInterface } from "@/app/interface/userInterface";
 
 type MenuLeftProps = {
+  userdata ?:userInterface | null
   profile: userInterface;
   checkCreatedStore: string | null | undefined;
 };
@@ -30,7 +31,7 @@ export default function MenuLeft(props: MenuLeftProps) {
 
         <div className="mt-2 lg:mt-0">
           <p className="text-lg text-black font-semibold">{props.profile.username}</p>
-          <p className="text-slate-500 font-medium">{props.profile.name}</p>
+          <p className="text-slate-500 font-medium">{props.userdata?.name ? props.userdata?.name : props.profile.name}</p>
         </div>
       </div>
 
