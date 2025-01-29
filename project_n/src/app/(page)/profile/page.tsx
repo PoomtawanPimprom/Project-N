@@ -74,7 +74,7 @@ function Profile() {
                 toast({
                     title: "Upload Successful",
                     description: "Your profile image has been uploaded successfully.",
-                    variant: "default",
+                    variant: "success",
                 });
             } catch (error) {
                 console.error("Error uploading the image:", error);
@@ -99,6 +99,7 @@ function Profile() {
     const fetchUserData = async () => {
         const res = await getUserById(Number(session?.user.id));
         setUserData(res);
+        console.log(res)
     }
 
     useEffect(() => {
@@ -123,7 +124,10 @@ function Profile() {
 
             await updateUserById(userData.id, data);
 
-            alert("Profile updated successfully!");
+            toast({
+                title: "แก้ไขโปรไฟล์เสร็จสิ้น",
+                variant: "success",
+            });
         } catch (error: any) {
             console.error("Failed to update profile:", error.message);
             alert(`Failed to update profile: ${error.message}`);
@@ -144,7 +148,7 @@ function Profile() {
                             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                                 ชื่อ
                             </label>
-                            <input name="name" type="name" id="name" value={userData.name}
+                            <input name="name" type="name" id="name" value={userData.name ? userData.name : ""}
                                 onChange={handleInputChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/2"
                             />
@@ -153,7 +157,7 @@ function Profile() {
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                                 อีเมล
                             </label>
-                            <input name="email" type="email" id="email" value={userData.email}
+                            <input name="email" type="email" id="email" value={userData.email ? userData.email :""}
                                 onChange={handleInputChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/2"
                             />
@@ -165,7 +169,7 @@ function Profile() {
                             <input name="mobile"
                                 type="text"
                                 id="mobile"
-                                value={userData.mobile}
+                                value={userData.mobile ? userData.mobile : ""}
                                 onChange={handleInputChange}
                                 className="w-1/2 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/3"
                             />
