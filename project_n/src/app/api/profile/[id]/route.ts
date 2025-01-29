@@ -6,13 +6,22 @@ const prisma = new PrismaClient()
 export async function GET(request: NextRequest, props: { params: Promise<{ id: string}>}) {
     const params = await props.params;
     const userId = Number(params.id);
-    try {
-        const posts = await prisma.user.findUnique({ where: { id: userId } });
-        return NextResponse.json(posts,{status: 200})
-    } catch (e:any) {
-        console.log(e)
-        return new NextResponse(e instanceof Error ? e.message : String(e), { status: 500 })
-    }
+    if (isNaN(userId)) {
+        return new NextResponse("Invalid user ID", { status: 400 });
+      }
+      try {
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (!user) {
+          return new NextResponse("User not found", { status: 404 });
+        }
+        return NextResponse.json(user, { status: 200 });
+      } catch (error: any) {
+        console.error("Error fetching user:", error);
+        return new NextResponse(
+          error instanceof Error ? error.message : "Internal server error",
+          { status: 500 }
+        );
+      }
 }
 
 export async function PUT(request: NextRequest, props: { params: Promise<{ id: string}>}) {
