@@ -2,6 +2,7 @@ import prisma from '@/lib/prisma/db';
 import { Prisma, PrismaClient } from '@prisma/client'
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from "bcrypt";
+import { generateKey } from '@/lib/utils';
 
 export async function POST(req: NextRequest) {
     const url = 'https://firebasestorage.googleapis.com/v0/b/project-n-eff9b.firebasestorage.app/o/user-profile.png?alt=media&token=30d9c36c-1638-42d5-82e7-fbd9e6f3e438'
@@ -19,8 +20,9 @@ export async function POST(req: NextRequest) {
     try {
         const hashpassword = bcrypt.hashSync(password, 10);
 
-        const user = await prisma.user.create({
+        await prisma.user.create({
             data: {
+                name: "user"+generateKey().slice(0,6),
                 username,
                 email,
                 password: hashpassword,
