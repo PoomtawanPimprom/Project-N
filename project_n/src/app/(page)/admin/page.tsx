@@ -34,12 +34,12 @@ const AdminDashboard = async () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
+    <div className="min-h-screen  flex">
       <AdminSideBar />
-      <main className="flex-grow p-6 bg-gray-100">
-        <div className="bg-white  shadow-md rounded-lg p-6 mb-6">
-          <div className=" shadow-md rounded-lg p-6 mb-6">
-            <h1 className="text-2xl font-semibold mb-4">
+      <main className="flex-grow p-6 bg-gray-100 dark:bg-background">
+        <div className="bg-card shadow-md rounded-lg p-6 mb-6">
+          <div className="dark:bg-black border-border shadow-md rounded-lg p-6 mb-6 dark:text-accent">
+            <h1 className="text-2xl dark:text-white font-semibold mb-4">
               ยินดีต้อนรับสู่ Admin Dashboard
             </h1>
           </div>
