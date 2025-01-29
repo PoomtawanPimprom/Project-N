@@ -6,6 +6,8 @@ import { Box, Store } from "lucide-react";
 import { productInterface } from "./interface/productInterface";
 import { storeInterface } from "./interface/storeInterface";
 import StoreBox from "./(page)/product/component/StoreBox";
+import { generateKey } from "@/lib/utils";
+import WelcomeBanner from "./component/WelcomBanner";
 
 const banners = [
   {
@@ -51,10 +53,12 @@ export default async function Home(
 
   return (<>
     <Navbar />
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-black ">
       {!isSearching ? (
         // แสดงหน้าปกติเมื่อไม่มีการค้นหา
         (<>
+
+          <WelcomeBanner />
           <ShowBanner banners={banners} />
           <div className="max-w-7xl mx-auto px-4 py-6">
             <div className="flex w-full text-3xl font-bold space-x-2 items-center mb-2">
@@ -63,7 +67,7 @@ export default async function Home(
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.map((product, index) => (
-                <ProductCard product={product} key={index} />
+                <ProductCard product={product} key={product.id} />
               ))}
             </div>
           </div>
@@ -108,7 +112,7 @@ export default async function Home(
               <div className="grid grid-cols-1">
                 {stores.map((store, index) => (
                   <>
-                    <StoreBox store={store} key={index}/>
+                    <StoreBox store={store} key={generateKey()}/>
                   </>
                 ))}
               </div>
