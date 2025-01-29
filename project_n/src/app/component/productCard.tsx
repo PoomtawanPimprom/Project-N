@@ -5,6 +5,8 @@ import { productInterface } from "../interface/productInterface";
 import { useSession } from "next-auth/react";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
+import { useCart } from "@/app/context/cartContext";
+import { useToast } from "@/hooks/use-toast";
 
 import {
   Drawer,
@@ -28,6 +30,8 @@ interface prop {
 
 const ProductCard = ({ product }: prop) => {
   const { data: session } = useSession();
+  const { toast } = useToast();
+  const { fetchCart } = useCart();
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [inventory, setInventory] = useState<inventoryInterface[]>([]);
@@ -63,6 +67,10 @@ const ProductCard = ({ product }: prop) => {
         size: selectedSize,
         quantity: quantity,
       })
+      await fetchCart(); // update quantity
+      toast({
+        description: "เพิ่มสินค้าเข้าตะกร้าเรียบร้อยแล้ว",
+      });
     } catch (error) {
       console.log(error);
     }
@@ -83,6 +91,7 @@ const ProductCard = ({ product }: prop) => {
     setInventory(data);
     // console.log(data)
   }
+
 
   useEffect(() => {
     if (session) {

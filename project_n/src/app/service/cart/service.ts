@@ -10,6 +10,16 @@ export async function getCartById(id: number){
     return res.json();
 }
 
+export async function getCountCartById(id: number){
+    const res = await fetch(`/api/countCart/${id}`, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    return res.json();
+}
+
 export const createCart = async (data: any) => {
     try {
         const res = await fetch(`/api/cart`, {

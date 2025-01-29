@@ -9,10 +9,13 @@ import { getUserById } from "../service/profile/service";
 import { userInterface } from "../interface/userInterface";
 import { useRouter } from "next/navigation";
 import SwitchTheme from "./SwitchTheme";
+import { getCartById, getCountCartById } from "../service/cart/service";
+import { useCart } from "@/app/context/cartContext";
 
 export default function Navbar() {
   const router = useRouter();
   const { data: session } = useSession();
+  const { amountItem } = useCart();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [isMenuMore, setIsMenuMore] = useState(false);
   const [user, setUser] = useState<userInterface>();
@@ -67,7 +70,7 @@ export default function Navbar() {
               <ShoppingCart className="w-7 h-7" />
             </Link>
             <div className="rounded-full bg-red-600 flex justify-center items-center text-white w-6 h-6 absolute bottom-0 right-0" style={{ transform: 'translate(50%, 50%)' }}>
-              3
+              {amountItem}
             </div>
 
           </li>
