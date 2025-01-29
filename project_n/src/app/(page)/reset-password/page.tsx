@@ -23,7 +23,7 @@ export default function ResetPasswordPage() {
           </h2>
         </div>
         <div>
-          <Link href={`/login`} className="w-full bg-green-main text-white hover:bg-green-900 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <Link href={`/login`} className="w-full bg-primary text-white hover:bg-green-900 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
             กลับไปยังหน้าหลัก
           </Link>
         </div>

@@ -32,7 +32,7 @@ const StoreBox =  ({ store }: prop) => {
         <div className="flex  flex-row mt-2 justify-end  lg:mt-0 ">
           <Link
             href={`/store/${store?.id}`}
-            className="flex py-2 px-4 h-fit  bg-green-main   dark:bg-black font-bold text-white rounded-xl dark:hover:bg-white dark:hover:text-black duration-150"
+            className="flex py-2 px-4 h-fit  bg-primary   dark:bg-black font-bold text-white rounded-xl dark:hover:bg-white dark:hover:text-black duration-150"
           >
             <p>เข้าชมร้าน</p>
           </Link>

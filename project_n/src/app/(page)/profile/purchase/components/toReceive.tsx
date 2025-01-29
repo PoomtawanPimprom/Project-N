@@ -72,7 +72,7 @@ export default function ToReceive() {
           <div className="flex p-4 border-gray-200 text-right justify-end">
             <button
               onClick={() => onClick(orderItem.id)}
-              className="px-6 py-2 bg-green-main text-white rounded-lg "
+              className="px-6 py-2 bg-primary text-white rounded-lg "
             >
               ได้รับสินค้าแล้ว
             </button>
