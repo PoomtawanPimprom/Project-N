@@ -123,9 +123,7 @@ function Profile() {
                 roleId: userData.roleId,
                 userStatusId: userData.userStatusId,
             };
-
             await updateUserById(userData.id, data);
-
             toast({
                 title: "แก้ไขโปรไฟล์เสร็จสิ้น",
                 variant: "success",

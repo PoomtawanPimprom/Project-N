@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { IoMdMore } from "react-icons/io";
 import { CircleUser, Moon, ShoppingCart } from "lucide-react";
-import SearchInput from "./navber/SearchInput";
+import SearchInput from "./SearchInput";
 import { signOut, useSession } from "next-auth/react";
 import { getUserById } from "../service/profile/service";
 import { userInterface } from "../interface/userInterface";
 import { useRouter } from "next/navigation";
-import SwitchTheme from "./navber/SwitchTheme";
+import SwitchTheme from "./SwitchTheme";
 
 export default function Navbar() {
   const router = useRouter();
