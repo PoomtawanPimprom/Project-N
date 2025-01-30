@@ -101,7 +101,7 @@ function Profile() {
         const res = await getUserById(Number(session?.user.id));
         setUserData(res);
         setUser(res)
-        console.log(res)
+        // console.log(res)
     }
 
     useEffect(() => {

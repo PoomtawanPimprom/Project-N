@@ -1,27 +1,36 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { IoMdMore } from "react-icons/io";
-import { CircleUser, Moon, ShoppingCart } from "lucide-react";
+import { CircleUser, ShoppingCart } from "lucide-react";
 import SearchInput from "./SearchInput";
 import { signOut, useSession } from "next-auth/react";
 import { getUserById } from "../service/profile/service";
 import { userInterface } from "../interface/userInterface";
 import { useRouter } from "next/navigation";
 import SwitchTheme from "./SwitchTheme";
-import { getCartById, getCountCartById } from "../service/cart/service";
 import { useCart } from "@/app/context/cartContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/app/components/ui/dropdown-menu"
+import SkeletonNavbarUI from "./skeletonNavbarUI";
+
 
 export default function Navbar() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const { amountItem } = useCart();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [isMenuMore, setIsMenuMore] = useState(false);
   const [user, setUser] = useState<userInterface>();
-  const handleToggleDropdown = () => {
-    setToggleDropdown(!toggleDropdown);
-  };
+  // const handleToggleDropdown = () => {
+  //   setToggleDropdown(!toggleDropdown);
+  // };
   const fetchdata = async () => {
     if (!session?.user?.id) {
       console.error("User ID is missing.");
@@ -35,6 +44,10 @@ export default function Navbar() {
     }
   };
 
+  if (status === "loading") {
+    return null;
+  }
+
   useEffect(() => {
     if (session?.user?.id)
       fetchdata();
@@ -42,21 +55,13 @@ export default function Navbar() {
 
   return (
     <>
-      {toggleDropdown && (
-        <div
-          className="fixed inset-0 bg-transparent z-30"
-          onClick={() => setToggleDropdown(false)}
-        />
-      )}
-
       <div className="h-18 md:h-20 relative bg-white dark:bg-black dark:border-b  flex justify-between items-center text-black py-2 px-8 md:px-32  drop-shadow-md z-30">
         {/* Logo */}
-        <Link href="/">
-          <p className="flex text-xl w-[176px]hover:scale-105 transition-all">
-            <p className="text-black dark:text-white font-extrabold">SHOP</p>
-            <p className="text-primary font-black">KUB</p>
-          </p>
+        <Link href="/" className="flex text-xl w-[176px] hover:scale-105 transition-all">
+          <span className="text-black dark:text-white font-extrabold">SHOP</span>
+          <span className="text-primary font-black">KUB</span>
         </Link>
+
 
         {/* Search */}
         <SearchInput />
@@ -75,90 +80,53 @@ export default function Navbar() {
             </div>
 
           </li>
-          <li className="relative  text-lg  hover:text-gray-500 hover:cursor-pointer">
-            {session ? (
-              <>
-                <button
-                  className="flex items-center"
-                  onClick={handleToggleDropdown}>
-                  <img className="block w-10 h-10 rounded-full border border-black object-cover" src={user?.profile} alt={user?.name} width={200} height={200} />
-                </button>
-              </>
-            ) : (
-              <>
-                <button onClick={handleToggleDropdown} className="flex ">
-                  <CircleUser className="w-7 h-7" />
-                </button>
-              </>
-            )}
 
-            {toggleDropdown && (
-              <>
-                {!session ? (
-                  <>
-                    <div
-                      
-                      className="fixed inset-0 z-50 "
-                      onClick={() => setToggleDropdown(false)}
-                    />
-                    <div className="absolute flex flex-col bg-white dark:bg-black shadow-lg rounded-md mt-2 right-0">
-                      <Link
-                        href="/login"
-                        className="flex px-12 py-4 hover:bg-gray-100 whitespace-nowrap"
-                      >
-                        Log in
-                      </Link>
+          <li className="text-lg  hover:text-gray-500 hover:cursor-pointer">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                  {session ? (
+                    <div className="flex items-center cursor-pointer">
+                      <img className="w-10 h-10 rounded-full border border-black object-cover" src={user?.profile} alt={user?.name} />
                     </div>
-                  </>
-                ) : (
-                  <>
-                    <div
-                      className="fixed inset-0 z-30"
-                      onClick={() => setToggleDropdown(false)}
-                    />
-                    <div className="absolute flex flex-col  shadow-lg rounded-md mt-2 right-0 bg-white dark:bg-gray-950">
+                  ) : (
+                    <span className="flex cursor-pointer">
+                      <CircleUser className="w-7 h-7" />
+                    </span>
+                  )}
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="end" className="w-48">
+                  {!session ? (
+                    <DropdownMenuItem>
+                      <Link href="/login" className="w-full">เข้าสู่ระบบ</Link>
+                    </DropdownMenuItem>
+                  ) : (
+                    <>
                       {session.user.roleId !== "1" && (
-                        <Link
-                          href="/admin"
-                          className="px-12 py-2 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 whitespace-nowrap"
-                        >
-                          Admin dashboard
-                        </Link>
+                        <DropdownMenuItem>
+                          <Link href="/admin" className="w-full">แดชบอร์ดผู้ดูแลระบบ</Link>
+                        </DropdownMenuItem>
                       )}
-                      {session.user.storeId !== "" && (
-                        <Link
-                          href={`/store/${session.user.storeId}`}
-                          className="px-12 py-2 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 whitespace-nowrap text-center"
-                        >
-                          ร้านค้าของฉัน
-                        </Link>
+                      {Boolean(session?.user?.storeId) && (
+                        <DropdownMenuItem>
+                          <Link href={`/store/${session.user.storeId}`} className="w-full">ร้านค้าของฉัน</Link>
+                        </DropdownMenuItem>
                       )}
-                      <Link
-                        href="/profile"
-                        className="px-12 py-2 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 text-center"
-                      >
-                        โปรไฟล์
-                      </Link>
-                      <Link
-                        href="/favorite"
-                        className="px-8 py-2 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 text-center"
-                      >
-                        สินค้าที่ชอบ
-                      </Link>
-                      <button
-                        onClick={() => {
-                          signOut();
-                          router.push("/");
-                        }}
-                        className="px-8 py-2  dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 text-center"
-                      >
-                        Log out
-                      </button>
-                    </div>
-                  </>
-                )}
-              </>
-            )}
+                      <DropdownMenuItem>
+                        <Link href="/profile" className="w-full">โปรไฟล์</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Link href="/favorite" className="w-full">สินค้าที่ชอบ</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => { signOut(); router.push("/"); }}>
+                        ออกจากระบบ
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                {/* </Suspense> */}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </li>
         </ul>
 
@@ -183,7 +151,7 @@ export default function Navbar() {
             <Link href="/profile">Account</Link>
           </li>
         </div>
-      </div>
+      </div >
     </>
   );
 }

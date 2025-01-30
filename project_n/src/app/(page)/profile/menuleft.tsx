@@ -9,7 +9,7 @@ import { PlusCircle } from "lucide-react";
 import { userInterface } from "@/app/interface/userInterface";
 
 type MenuLeftProps = {
-  userdata ?:userInterface | null
+  userdata?: userInterface | null
   profile: userInterface;
   checkCreatedStore: string | null | undefined;
 };
@@ -18,7 +18,7 @@ export default function MenuLeft(props: MenuLeftProps) {
   const userImage = "https://firebasestorage.googleapis.com/v0/b/project-n-eff9b.firebasestorage.app/o/user-profile.png?alt=media&token=30d9c36c-1638-42d5-82e7-fbd9e6f3e438"
   return (
     <div className="flex flex-col gap-5 lg:w-1/4  ">
-      <div className="max-w-sm mx-auto w-60 text-center border-0 shadow-md border-black rounded-xl px-4 py-3 gap-4 lg:flex lg:mx-0 lg:border lg:w-full lg:shadow-none lg:text-start lg:space-x-6">
+      <div className="max-w-sm mx-auto w-60 text-center border-0  border-black rounded-xl px-4 py-3 gap-4 lg:flex lg:mx-0 lg:border lg:w-full lg:shadow-none lg:text-start lg:space-x-6">
         <div className="flex justify-center lg:justify-start lg:mr-4">
           <Image
             src={props.profile.profile ? String(props.profile.profile) : userImage}
