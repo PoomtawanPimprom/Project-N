@@ -12,9 +12,8 @@ const WelcomeBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [isOpen, setIsOpen] = useState(true);
 
-  const fullText = `ยินดีต้อนรับสู่ MATTER ${
-    session?.user?.name ? "คุณ " + session.user.name : ""
-  }\nค้นหาสิ่งที่คุณต้องการได้เลย`;
+  const username = session?.user?.name ? `คุณ ${session.user.name}` : "";
+  const fullText = `ยินดีต้อนรับสู่ SHOPKUB ${username}\nค้นหาสิ่งที่คุณต้องการได้เลย`;
 
   useEffect(() => {
     if (text.length < fullText.length) {
@@ -40,21 +39,34 @@ const WelcomeBanner = () => {
   }, [isComplete, blinkCount, isVisible]);
 
   const formatText = (text: string) => {
-    return text.split(" ").map((word, index) => {
-      if (
-        word === "MATTER" ||
-        (session?.user?.name && word === session.user.name) ||
-        word === "คุณ"
-      ) {
+    return text.split(" ").map((word, index, array) => {
+      if (word === "SHOPKUB") {
         return (
-          <span key={index} className="text-primary">
-            {word}{" "}
+          <span key={index}>
+            <span className="dark:text-white text-black">SHOP</span>
+            <span className="text-primary">KUB</span>{" "}
           </span>
         );
       }
+  
+      // ตรวจสอบว่า "คุณ" และชื่อผู้ใช้ อยู่ติดกัน
+      if (word === "คุณ" && array[index + 1] === session?.user?.name) {
+        return (
+          <p key={index} className="text-primary">
+            {word} {array[index + 1]}
+          </p>
+        );
+      }
+  
+      // ข้ามชื่อผู้ใช้ เพราะรวมกับ "คุณ" ไปแล้ว
+      if (word === session?.user?.name) {
+        return null;
+      }
+  
       return word + " ";
-    });
+    }).filter(Boolean);
   };
+  
 
   return (
     <div className="flex flex-col justify-center items-center overflow-hidden">
@@ -67,7 +79,7 @@ const WelcomeBanner = () => {
             : "-translate-y-full opacity-0 absolute -top-full"
         )}
       >
-        {text.split('\n').map((line, index) => (
+        {text.split("\n").map((line, index) => (
           <div
             key={index}
             className={cn(
@@ -110,3 +122,4 @@ const WelcomeBanner = () => {
 };
 
 export default WelcomeBanner;
+ 
