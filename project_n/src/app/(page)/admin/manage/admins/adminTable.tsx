@@ -22,28 +22,34 @@ const DataAdminTable = ({ userData }: prop) => {
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [openModalDelete, setOpenModalDelete] = useState(false);
 
-  const handleOnChange = (e : React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value)
-  }
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
 
   return (
     <>
       {/* search */}
       <div className="flex justify-between ">
-        <div  className="flex gap-2">
-            <Input placeholder=""
+        <div className="flex gap-2">
+          <Input
+            placeholder=""
             value={search}
             onChange={handleOnChange}
             name="search"
-            type="" />
-            <Link
-            className="flex text-lg font-semibold px-6 py-2 bg-primary rounded-lg text-center items-center" 
+            type=""
+          />
+          <Link
+            className="flex text-lg font-semibold px-6 py-2 bg-primary rounded-lg text-center items-center"
             href={`/admin/manage/admins?search=${search}`}
-            >ค้นหา</Link>
-            <Link
-            className="flex text-lg font-semibold px-6 py-2 bg-secondary text-white rounded-lg text-center items-center text-nowrap" 
+          >
+            ค้นหา
+          </Link>
+          <Link
+            className="flex text-lg font-semibold px-6 py-2 bg-secondary text-white rounded-lg text-center items-center text-nowrap"
             href={`/admin/manage/admins`}
-            >รีเซ๊ท</Link>
+          >
+            รีเซ๊ท
+          </Link>
         </div>
         <div className="flex"></div>
       </div>
@@ -76,7 +82,7 @@ const DataAdminTable = ({ userData }: prop) => {
                     key={index}
                     className="bg-white border-b dark:bg-zinc-900  hover:bg-gray-50 dark:hover:bg-zinc-600"
                   >
-                    <TableData
+                    <TableData 
                       text-sm
                       font-medium
                       text-gray-900

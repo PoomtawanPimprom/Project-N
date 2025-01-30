@@ -15,8 +15,6 @@ export default function ToReceive() {
   const [OrderItemsToReceive, setOrderItemsToReceive] = useState<
     orderItemInterface[]
   >([]);
-  const image =
-    "https://firebasestorage.googleapis.com/v0/b/project-n-eff9b.firebasestorage.app/o/user-profile.png?alt=media&token=30d9c36c-1638-42d5-82e7-fbd9e6f3e438";
 
   const fecthdata = async () => {
     const data = await GetAllOrderItemsToRecevie(Number(session?.user.id));
@@ -26,7 +24,7 @@ export default function ToReceive() {
 
   const onClick = async (id: number) => {
     await updateStatusOrderItemsToRecevie(id);
-    router.refresh();
+    fecthdata()
   };
 
   useEffect(() => {
@@ -35,8 +33,8 @@ export default function ToReceive() {
 
   return (
     <div className="max-w-7xl mx-auto p-4 hover:shadow-lg rounded-lg">
-      {OrderItemsToReceive.map((orderItem) => (
-        <div className="space-y-4">
+      {OrderItemsToReceive.map((orderItem,index) => (
+        <div className="space-y-4" key={index}>
           <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 p-4 border-b border-gray-200">
             {/* Image */}
             <div className="w-24 h-24 sm:w-32 sm:h-32">
