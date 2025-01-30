@@ -12,11 +12,6 @@ const storeStatusData = [
     { id: 2, name: "unavailable" },
 ]
 
-const categoryData = [
-    { id: 1, name: "tech", },
-    { id: 2, name: "sport", },
-];
-
 const roleData = [
     { id: 1, name: "user", },
     { id: 2, name: "admin", },
@@ -84,7 +79,6 @@ async function main() {
         await prisma.paymentStatus.createMany({ data: paymentStatusData })
         await prisma.productStatus.createMany({ data: productStatusData })
         await prisma.storeStatus.createMany({ data: storeStatusData })
-        await prisma.category.createMany({ data: categoryData })
         await prisma.gender.createMany({ data: gednerData })
         await prisma.userStatus.createMany({ data: userStatusData })
         await prisma.role.createMany({ data: roleData })

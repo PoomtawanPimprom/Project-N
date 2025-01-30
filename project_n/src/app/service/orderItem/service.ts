@@ -1,5 +1,15 @@
 const API_URL = '/api/orderItem'
 
+export async function GetAllOrderItemsToPay(userId:number) {
+    const res = await fetch(`${API_URL}/toPay/${userId}`,
+        {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        }
+    )
+    return res.json()
+}
+
 export async function GetAllOrderItemsToRecevie(userId:number) {
     const res = await fetch(`${API_URL}/toReceive/${userId}`,
         {

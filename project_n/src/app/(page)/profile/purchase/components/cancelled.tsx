@@ -13,13 +13,11 @@ export default function Cancelled() {
   const [OrderItemsCannel, setOrderItemsCannel] = useState<
     orderItemInterface[]
   >([]);
-  const image =
-    "https://firebasestorage.googleapis.com/v0/b/project-n-eff9b.firebasestorage.app/o/user-profile.png?alt=media&token=30d9c36c-1638-42d5-82e7-fbd9e6f3e438";
-
+  
   const fecthdata = async () => {
     const data = await GetAllOrderItemsCancel(Number(session?.user.id));
     setOrderItemsCannel(data);
-    console.log(data);
+    fecthdata();
   };
 
   useEffect(() => {

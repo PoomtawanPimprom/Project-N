@@ -135,8 +135,6 @@ model Product {
   //fk 
   storeID         Int
   store           Store         @relation(fields: [storeID], references: [id])
-  categoryID      Int
-  category        Category      @relation(fields: [categoryID], references: [id])
   productStatusID Int           @default(1)
   productStatus   ProductStatus @relation(fields: [productStatusID], references: [id])
 
@@ -162,11 +160,7 @@ model Inventory {
   @@unique([productID, size, color])
 }
 
-model Category {
-  id      Int       @id @default(autoincrement())
-  name    String
-  Product Product[]
-}
+
 
 model Discount {
   id                 Int     @id @default(autoincrement())
