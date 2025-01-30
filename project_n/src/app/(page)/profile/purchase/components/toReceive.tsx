@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function ToReceive() {
-  const router = useRouter();
   const { data: session } = useSession();
   const [OrderItemsToReceive, setOrderItemsToReceive] = useState<
     orderItemInterface[]
