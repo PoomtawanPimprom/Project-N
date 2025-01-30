@@ -1,9 +1,7 @@
 "use client";
 import Input from "@/app/component/Input";
 //interfaces
-import { categoryInterface } from "@/app/interface/categoryInterface";
 
-import { getAllCategory } from "@/app/service/category/service";
 import { CreateProdcut } from "@/app/service/product/service";
 
 import { useToast } from "@/hooks/use-toast";
@@ -21,18 +19,17 @@ import { IoMdClose } from "react-icons/io";
 import { v4 } from "uuid";
 import StoreSideBar from "../../../StoreSideBar";
 import { useRouter } from "next/navigation";
+import { generateKey } from "@/lib/utils";
 
 const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
   const params = use(props.params);
   const { toast } = useToast();
   const router = useRouter()
   const storeId = params.storeId;
-  //data
-  const [categoryData, setCategoryData] = useState<categoryInterface[]>([]);
+
 
   //state
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState<{
     [key: string]: { message: string };
   } | null>(null);
@@ -42,7 +39,6 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [category, setCategory] = useState<number>(0);
 
   //image
   const [images, setImages] = useState<File[]>([]);
@@ -72,8 +68,8 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
 
   //inventory
   const [inventory, setInventory] = useState<
-    { quantity: number; size: string; color: string }[]
-  >([{ quantity: 0, size: "", color: "" }]);
+    { quantity: string; size: string; color: string }[]
+  >([{ quantity: "", size: "", color: "" }]);
 
   const removeInventoryRow = (index: number) => {
     if (index == 0) return;
@@ -82,13 +78,13 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
   };
 
   const addInventoryRow = () => {
-    setInventory([...inventory, { quantity: 0, size: "", color: "" }]);
+    setInventory([...inventory, { quantity: "", size: "", color: "" }]);
   };
 
   const updateInventoryRow = (
     index: number,
     field: string,
-    value: string | number
+    value: string
   ) => {
     const updatedInventory = inventory.map((item, i) =>
       i === index ? { ...item, [field]: value } : item
@@ -101,7 +97,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
     let uploadedImages: { index: number; url: string; ref: any }[] = [];
     try {
       setLoading(true);
-      if (images.length === 0) throw new Error("กรุ��าเลือกรูปสินค้า");
+      if (images.length === 0) throw new Error("กรุณาเลือกรูปสินค้า");
       const imageUrls: { [key: string]: string } = {};
       uploadedImages = await Promise.all(
         images.map(async (image, index) => {
@@ -122,7 +118,6 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
         description: description,
         price: price,
         storeID: Number(storeId),
-        categoryID: category,
         image: imageUrls, // เปลี่ยนจาก image เป็น images และใช้ object แทน array
         inventory: inventory,
       };
@@ -132,7 +127,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
         description: "สร้างสินค้าเรียบร้อยแล้ว",
       });
       setTimeout(()=>{
-        router.push(`/store/manage/${storeId}`)
+        router.push(`/store/manage/product/${storeId}`)
       },2000)
     } catch (error: any) {
       if (uploadedImages.length > 0) {
@@ -154,7 +149,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
           description: error.message,
         });
       } else {
-        console.error("Unexpected error", error);
+        console.log(error)
         toast({
           description: "An unexpected error occurred.",
         });
@@ -180,14 +175,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
     }
   };
 
-  const fetchDataCategory = async () => {
-    const data = await getAllCategory();
-    setCategoryData(data);
-  };
 
-  useEffect(() => {
-    fetchDataCategory();
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
@@ -247,10 +235,11 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                             updateInventoryRow(
                               index,
                               "quantity",
-                              Number(e.target.value)
+                              e.target.value
                             )
                           }
-                          type="number"
+                          value={item.quantity}
+                          type=""
                           className="p-2 border border-black rounded-lg"
                           placeholder="จำนวนสินค้า"
                         />
@@ -262,6 +251,8 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                           onChange={(e) =>
                             updateInventoryRow(index, "size", e.target.value)
                           }
+                          value={item.size}
+
                           type="text"
                           className="p-2 border border-black rounded-lg"
                           placeholder="ขนาดสินค้า"
@@ -274,6 +265,8 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                           onChange={(e) =>
                             updateInventoryRow(index, "color", e.target.value)
                           }
+                          value={item.color}
+
                           type="text"
                           className="p-2 border border-black rounded-lg"
                           placeholder="สีสินค้า"
@@ -368,25 +361,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                     )}
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <p>เลือกประเภทสินค้า</p>
-                  <select
-                    value={category || 0}
-                    onChange={(e) => setCategory(Number(e.target.value))}
-                    className="border rounded-xl p-2"
-                  >
-                    <option value={0} disabled>
-                      เลือกหมวดหมู่
-                    </option>
-                    {categoryData.map((item) => (
-                      <>
-                        <option key={item.id} value={item.id}>
-                          {item.name}
-                        </option>
-                      </>
-                    ))}
-                  </select>
-                </div>
+               
                 <div className="flex justify-end">
                   <button
                     type="submit"

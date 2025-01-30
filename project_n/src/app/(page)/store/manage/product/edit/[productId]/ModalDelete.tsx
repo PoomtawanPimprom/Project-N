@@ -16,6 +16,7 @@ export default function ModalDelete({ id, open, onClose,storeId }: ModalDeletepr
     const handleDelete = async (id:number) => {
         try {
             await deleteProductByID(id);
+            router.refresh();
         } catch (error) {
             if (error instanceof Error) {
                 console.error("Error uploading or submitting data", error);
@@ -32,11 +33,11 @@ export default function ModalDelete({ id, open, onClose,storeId }: ModalDeletepr
               }
         } finally{
             toast({
-                description: "แก้ไขสินค้าเรียบร้อยแล้ว",
+                description: "ลบสินค้าเรียบร้อยแล้ว",
             })
             setTimeout(()=>{
                 router.push(`/store/${storeId}`)
-            },1000)
+            },500)
         }
     }
     return (
