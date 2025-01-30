@@ -132,6 +132,7 @@ model Product {
   price           Int           @default(0)
   sales           Int           @default(0)
   createdAt       DateTime      @default(now())
+  deletedAt       DateTime? 
   //fk 
   storeID         Int
   store           Store         @relation(fields: [storeID], references: [id])
