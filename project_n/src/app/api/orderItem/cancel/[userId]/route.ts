@@ -16,11 +16,13 @@ export async function GET(request: NextRequest, props: { params: Promise<{ userI
         const orderDetailIds = allOrderDetail.map(order => order.id);
         //get all order item status complete
         const allOrderItemsComplete = await prisma.orderItem.findMany({
-            where: { orderDetailId: { in: orderDetailIds }, orderItemStatusId: 1 },
+            where: { orderDetailId: { in: orderDetailIds }, orderItemStatusId: 5 },
             include:{ product: true}
         })
 
 
+
+        
         return NextResponse.json(allOrderItemsComplete, { status: 200 })
     } catch (error) {
         console.error("Error fetching user address:", error);
