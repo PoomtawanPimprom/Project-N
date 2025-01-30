@@ -13,7 +13,7 @@ const ProductByIdPage = async (props: { params: Promise<{ productId: number }> }
   const params = await props.params;
   const productId = Number(params.productId);
   const product = (await prisma.product.findUnique({
-    where:{id:productId},
+    where:{id:productId, deletedAt: null},
     include : {store : true}
   }) ) as productInterface
 
@@ -27,7 +27,7 @@ const ProductByIdPage = async (props: { params: Promise<{ productId: number }> }
   }))as reivewInterface[]
 
   const otherProduct = (await prisma.product.findMany({
-    where:{storeID:product.id}
+    where:{storeID:product.id, deletedAt: null}
   })) as productInterface[]
   return (
     <>
