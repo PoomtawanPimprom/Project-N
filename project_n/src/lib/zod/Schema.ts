@@ -74,12 +74,11 @@ export const productSchema = z.object({
       .max(200, "รายละเอีดยสินค้าความยาวเกินกำหนด"),
     price: z.string().regex(/^\d+$/, "ราคาควรเป็นตัวเลข").min(1, "กรุณากรอกราคาสินค้า"),
     storeID: z.number().min(1),
-    categoryID: z.number().min(1, "กรุณากรอกราคาสินค้า"),
     image: z.object({}).optional(), // เปลี่ยนจาก image เป็น images และใช้ object แทน array
     inventory: z
     .array(
       z.object({
-        quantity: z.number().min(1, "กรุณากรอกจำนวนสินค้า"),
+        quantity: z.string().regex(/^\d+$/, "จำนวนสินค้าควรเป็นตัวเลข").min(1, "กรุณากรอกจำนวนสินค้า"),
         size: z.string().optional(),
         color: z.string().optional(),
       })
