@@ -4,10 +4,16 @@ import { orderItemInterface } from "@/app/interface/orderItemInterface";
 import { userAddressInterface } from "@/app/interface/userAddressInterface";
 import { useRouter } from "next/navigation";
 import { UpdateOrderStatus } from "@/app/service/(payment)/service";
+import Table from "@/app/component/table/Table";
+import TableHeader from "@/app/component/table/TableHeader";
+import TableRow from "@/app/component/table/TableRow";
+import TableHead from "@/app/component/table/TableHead";
+import TableBody from "@/app/component/table/TableBody";
+import TableData from "@/app/component/table/Tabledata";
 
 type prop = {
   products: orderItemInterface[];
-  userAddress: userAddressInterface;
+  userAddress: userAddressInterface[];
 };
 
 const DataTable = ({ products, userAddress }: prop) => {
@@ -25,64 +31,76 @@ const DataTable = ({ products, userAddress }: prop) => {
   };
   return (
     <div className="w-full overflow-x-auto rounded-lg border">
-      <div className="min-w-full inline-block align-middle">
-        <div className="overflow-hidden">
+      <div className="min-w-full inline-block align-middle  rounded-lg">
+        <div className="overflow-hidden  rounded-lg">
           {/* Desktop view */}
-          <table className="min-w-full hidden md:table">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+          <Table className="min-w-full hidden md:table">
+            <TableHeader className="text-sm 2xl:text-base  text-gray-800  bg-gray-50 dark:bg-black dark:text-accent-foreground">
+              <TableRow className="font-semibold">
+                <TableHead className="px-6 py-3 text-left text-sm  ">
                   ชื่อสินค้า
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                </TableHead>
+                <TableHead className="px-6 py-3 text-left text-sm  ">
                   สี
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                </TableHead>
+                <TableHead className="px-6 py-3 text-left text-sm  ">
                   ไซส์
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                </TableHead>
+                <TableHead className="px-6 py-3 text-left text-sm  ">
                   จำนวน
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                </TableHead>
+                <TableHead className="px-6 py-3 text-left text-sm  ">
                   ที่อยู่ผู้รับ
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                </TableHead>
+                <TableHead className="px-6 py-3 text-left text-sm  ">
                   สถานะ
-                </th>
-                <th className="px-6 py-3 text-right text-sm font-semibold text-gray-900">
+                </TableHead>
+                <TableHead className="px-6 py-3 text-right text-sm  ">
                   จัดการสถานะ
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {products.map((item, index) => (
-                <tr key={index} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <TableRow
+                  key={index}
+                  className="bg-white border-b dark:bg-zinc-900  hover:bg-gray-50 dark:hover:bg-zinc-600"
+                >
+                  <TableData className="px-6 py-4 whitespace-nowrap text-sm  ">
                     {item.product?.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                  </TableData>
+                  <TableData className="px-6 py-4 whitespace-nowrap text-sm">
                     {item.color ? item.color : "-"}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                  </TableData>
+                  <TableData className="px-6 py-4 whitespace-nowrap text-sm">
                     {item.size ? item.size : "-"}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm  text-gray-600">
+                  </TableData>
+                  <TableData className="px-6 py-4 whitespace-nowrap text-sm ">
                     {item.quantity}
-                  </td>
+                  </TableData>
 
-                  <td className="px-6 py-4 whitespace-nowrap text-sm  text-gray-600">
+                  <TableData className="px-6 py-4 whitespace-nowrap text-sm ">
                     {/* ที่อยู่ */}
-                    <div className="flex flex-col xl:flex-row gap-2">
-                      <p className="flex font-semibold">
-                        {userAddress.fullName}
-                      </p>
-                      <p className="flex">{concatAddress(userAddress)}</p>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm  text-gray-600">
+                    {(() => {
+                      const address = userAddress.find(
+                        (addr) => addr.id === item.userAddressId
+                      );
+                      return (
+                        <div className="flex flex-col xl:flex-row gap-2">
+                          <p className="flex font-semibold">
+                            {address?.fullName || "-"}
+                          </p>
+                          <p className="flex">
+                            {address ? concatAddress(address) : "-"}
+                          </p>
+                        </div>
+                      );
+                    })()}
+                  </TableData>
+                  <TableData className="px-6 py-4 whitespace-nowrap text-sm  ">
                     {item.orderItemStatus?.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                  </TableData>
+                  <TableData className="px-6 py-4 whitespace-nowrap text-right text-sm">
                     {item.orderItemStatusId !== 3 && (
                       <button
                         onClick={async () => await handleOnShip(item.id)}
@@ -91,11 +109,11 @@ const DataTable = ({ products, userAddress }: prop) => {
                         ดำเนินการ
                       </button>
                     )}
-                  </td>
-                </tr>
+                  </TableData>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
 
           {/* Mobile view */}
           <div className="w-full space-y-4 md:hidden">
@@ -121,15 +139,25 @@ const DataTable = ({ products, userAddress }: prop) => {
                 </div>
 
                 <div className="bg-gray-50 p-3 rounded-md mb-3">
-                  <div className="flex items-center mb-2">
-                    <MapPin className="w-5 h-5 mr-2 text-blue-500" />
-                    <span className="font-medium text-gray-700">
-                      {userAddress.fullName}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600">
-                    {concatAddress(userAddress)}
-                  </p>
+                  {(() => {
+                    const address = userAddress.find(
+                      (addr) => addr.id === item.userAddressId
+                    );
+
+                    return (
+                      <div>
+                        <div className="flex items-center mb-2">
+                          <MapPin className="w-5 h-5 mr-2 text-blue-500" />
+                          <span className="font-medium text-gray-700">
+                            {address?.fullName || "-"}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          {address ? concatAddress(address) : "-"}
+                        </p>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 <div className="flex justify-between items-center">
