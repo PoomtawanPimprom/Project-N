@@ -25,7 +25,6 @@ export default function Navbar() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const { amountItem } = useCart();
-  const [toggleDropdown, setToggleDropdown] = useState(false);
   const [isMenuMore, setIsMenuMore] = useState(false);
   const [user, setUser] = useState<userInterface>();
   // const handleToggleDropdown = () => {
