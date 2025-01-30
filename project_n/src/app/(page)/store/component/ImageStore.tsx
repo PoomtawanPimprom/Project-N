@@ -3,15 +3,10 @@
 import { IoSettingsOutline } from "react-icons/io5";
 
 //components
-import ButtonChat from "./buttonChat";
-import ButtonFollow from "./buttonFollow";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
-import { MdOutlineInventory2 } from "react-icons/md";
 import Image from "next/image";
-
-
 import { useSession } from "next-auth/react";
 
 interface prop {
@@ -58,7 +53,7 @@ const ImageStore = ({  ownerId, storeId, store }: prop) => {
                 <div className="flex items-end">
                   <button
                     onClick={() => router.push(`/store/manage/${storeId}`)}
-                    className="flex max-h-[60px] items-center p-3 bg-white rounded-xl hover:bg-gray-100 duration-200"
+                    className="flex max-h-[60px] items-center p-3 text-accent-foreground font-semibold bg-white dark:bg-zinc-800 rounded-xl hover:bg-gray-100 duration-200"
                   >
                     <IoSettingsOutline className="mr-1" />
                     manage
