@@ -35,7 +35,7 @@ export default function StoreSideBar({storeId}:prop) {
     },
   ];
   return (
-    <div className="w-72 bg-white shadow-md">
+    <div className="w-72 bg-white shadow-md dark:bg-black dark:border-r">
       <div className="p-5 border-b">
         <Link href={`/store/manage/${storeId}`} className="text-xl font-bold text-center">จัดการร้านค้า</Link>
       </div>
@@ -44,7 +44,7 @@ export default function StoreSideBar({storeId}:prop) {
           <Link
             key={item.href}
             href={item.href}
-            className="flex items-center p-3 hover:bg-gray-100 rounded-lg mb-2 transition-colors"
+            className="flex items-center p-3 hover:bg-gray-500 hover:text-white dark:hover:bg-background rounded-lg mb-2 transition-colors"
           >
             {item.icon}
             <span className="ml-3 font-medium">{item.label}</span>
