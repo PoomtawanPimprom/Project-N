@@ -9,7 +9,6 @@ export async function GET(NextRequest: NextRequest, props: { params: Promise<{ i
     try {
         const searchparams = NextRequest.nextUrl.searchParams
         const search = searchparams.get("search") || ""
-        const category = searchparams.get("category") || ""
         const sortDate = searchparams.get("sortDate") || "desc"
 
         const productId = Number(params.id);
@@ -31,9 +30,7 @@ export async function GET(NextRequest: NextRequest, props: { params: Promise<{ i
                         ],
                     }
                     : {},
-                category
-                    ? { product: { category: { id: Number(category) } } }
-                    : {},
+
             ],
         };
 
