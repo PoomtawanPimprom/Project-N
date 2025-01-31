@@ -15,7 +15,8 @@ export async function GET(request: NextRequest, props: { params: Promise<{ id: s
             select: { quantity: true }, // ดึงเฉพาะ quantity
         });
         if (cartItems.length === 0) {
-            return new NextResponse("User not found or no cart items", { status: 404 });
+            const number = 0
+            return NextResponse.json(number, { status: 200 });
         }
 
         // รวมค่า quantity ทั้งหมด
