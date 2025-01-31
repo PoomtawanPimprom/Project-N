@@ -6,7 +6,6 @@ import {
   updateStatusOrderItemsToRecevie,
 } from "@/app/service/orderItem/service";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function ToReceive() {

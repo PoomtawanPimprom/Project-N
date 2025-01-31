@@ -11,6 +11,7 @@ import Complete from "./components/complete";
 import Cancelled from "./components/cancelled";
 import { orderItemInterface } from "@/app/interface/orderItemInterface";
 import { GetAllOrderItemsToPay } from "@/app/service/orderItem/service";
+import WaitforShip from "./components/waitforShip";
 
 export default function MyPurchase() {
   const { data: session } = useSession();
@@ -36,11 +37,12 @@ export default function MyPurchase() {
   });
 
   const tabs = [
-    { id: "ALL", label: "All" },
-    { id: "TO_PAY", label: "To Pay" },
-    { id: "TO_RECEIVE", label: "To Receive" },
-    { id: "COMPLETE", label: "Complete" },
-    { id: "CANCELLED", label: "Cancelled" },
+    { id: "ALL", label: "ทั้งหมด" },
+    { id: "TO_PAY", label: "ต้องชำระ" },
+    { id: "WAIT_FOR_SHIP", label: "รอทางร้านจัดส่ง" },
+    { id: "TO_RECEIVE", label: "รอรับสินค้า" },
+    { id: "COMPLETE", label: "เสร็จสิ้น" },
+    { id: "CANCELLED", label: "ยกเลิกคำสั่งซื้อ" },
   ];
 
   const renderContent = () => {
@@ -49,6 +51,8 @@ export default function MyPurchase() {
         return <All />;
       case "TO_PAY":
         return <ToPay OrderItemsToPay={OrderItemsToPay} />;
+      case "WAIT_FOR_SHIP":
+        return <WaitforShip />;
       case "TO_RECEIVE":
         return <ToReceive />;
       case "COMPLETE":
