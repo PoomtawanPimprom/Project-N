@@ -83,7 +83,7 @@ const WelcomeBanner = () => {
           <div
             key={index}
             className={cn(
-              index === 0 ? "text-6xl font-extrabold" : "text-3xl font-bold",
+              index === 0 ? "text-2xl md:text-6xl font-extrabold" : "text-xl md:text-3xl font-bold",
               "transition-transform duration-500 ease-in-out"
             )}
           >

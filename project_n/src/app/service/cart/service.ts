@@ -10,13 +10,19 @@ export async function getCartById(id: number){
     return res.json();
 }
 
-export async function getCountCartById(id: number){
+export async function getCountCartById(id: number) {
     const res = await fetch(`/api/countCart/${id}`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json"
-        }
+        },
+        cache: "no-store"
     });
+
+    if (!res.ok) {
+        throw new Error(`Failed to fetch cart count: ${res.statusText}`);
+    }
+
     return res.json();
 }
 

@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { IoMdMore } from "react-icons/io";
 import { CircleUser, ShoppingCart } from "lucide-react";
@@ -18,19 +18,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu"
-import SkeletonNavbarUI from "./skeletonNavbarUI";
+import { getCartById } from "@/app/service/cart/service";
+import { cartItemInterface } from "@/app/interface/cartItemInterface";
 
 
 export default function Navbar() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const { amountItem } = useCart();
-  const [toggleDropdown, setToggleDropdown] = useState(false);
+  const { amountItem, cart } = useCart();
+  const [cartItems, setCartItems] = useState<cartItemInterface[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false); // state สำหรับ hover
   const [isMenuMore, setIsMenuMore] = useState(false);
   const [user, setUser] = useState<userInterface>();
-  // const handleToggleDropdown = () => {
-  //   setToggleDropdown(!toggleDropdown);
-  // };
+
   const fetchdata = async () => {
     if (!session?.user?.id) {
       console.error("User ID is missing.");
@@ -44,13 +44,21 @@ export default function Navbar() {
     }
   };
 
-  if (status === "loading") {
-    return null;
-  }
+  if (status === "loading") return null;
+
+  const fetchCartData = async () => {
+    if (!session?.user?.id) return;
+    try {
+      const res = await getCartById(Number(session.user.id));
+      setCartItems(res);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  };
 
   useEffect(() => {
-    if (session?.user?.id)
-      fetchdata();
+    if (session?.user?.id) fetchdata();
+    fetchCartData()
   }, [session]);
 
   return (
@@ -62,7 +70,6 @@ export default function Navbar() {
           <span className="text-primary font-black">KUB</span>
         </Link>
 
-
         {/* Search */}
         <SearchInput />
 
@@ -71,59 +78,103 @@ export default function Navbar() {
           <li className="text-lg  hover:text-gray-500 hover:cursor-pointer">
             <SwitchTheme />
           </li>
-          <li className="text-lg  hover:text-gray-500 hover:cursor-pointer relative">
-            <Link href="/cart">
-              <ShoppingCart className="w-7 h-7" />
-            </Link>
-            <div className="rounded-full bg-red-600 flex justify-center items-center text-white w-6 h-6 absolute bottom-0 right-0" style={{ transform: 'translate(50%, 50%)' }}>
-              {amountItem}
-            </div>
 
+          {/* Cart Dropdown */}
+          <li
+            className="text-lg relative hover:text-gray-500 hover:cursor-pointer"
+            onMouseEnter={() => setIsCartOpen(true)}
+            onMouseLeave={() => setIsCartOpen(false)}
+          >
+            <DropdownMenu open={isCartOpen}>
+              <DropdownMenuTrigger asChild>
+                <Link href="/cart" className="relative" onClick={(e) => e.stopPropagation()}>
+                  <ShoppingCart className="w-7 h-7 cursor-pointer" />
+                  <div
+                    className="rounded-full bg-red-600 flex justify-center items-center text-white w-6 h-6 absolute bottom-0 right-0"
+                    style={{ transform: 'translate(50%, 50%)' }}
+                  >
+                    {cartItems.length}
+                  </div>
+                </Link>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="end" className="w-64 bg-white dark:bg-black shadow-md">
+                {cartItems.length === 0 ? (
+                  <div className="p-4 text-center text-gray-500">ไม่มีสินค้าในตะกร้า</div>
+                ) : (
+                  <>
+                    <DropdownMenuLabel className="text-center font-semibold">
+                      สินค้าในตะกร้า ({cartItems.length} รายการ)
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+
+                    {cartItems.map((cart) => (
+                      <DropdownMenuItem key={cart.id} className="flex items-center gap-2 p-2">
+                        <img src={cart.product?.image!.image1} alt={cart.product?.name} className="w-12 h-12 rounded-md object-cover" />
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold">{cart.product?.name}</p>
+                          <p className="text-xs text-gray-500">฿{cart.product?.price} x {cart.quantity}</p>
+                        </div>
+                      </DropdownMenuItem>
+                    ))}
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem>
+                      <Link href="/cart" className="w-full text-center text-primary font-bold">
+                        ไปที่ตะกร้าสินค้า
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </li>
+
 
           <li className="text-lg  hover:text-gray-500 hover:cursor-pointer">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                  {session ? (
-                    <div className="flex items-center cursor-pointer">
-                      <img className="w-10 h-10 rounded-full border border-black object-cover" src={user?.profile} alt={user?.name} />
-                    </div>
-                  ) : (
-                    <span className="flex cursor-pointer">
-                      <CircleUser className="w-7 h-7" />
-                    </span>
-                  )}
+                {session ? (
+                  <div className="flex items-center cursor-pointer">
+                    <img className="w-10 h-10 rounded-full border border-black object-cover" src={user?.profile} alt={user?.name} />
+                  </div>
+                ) : (
+                  <span className="flex cursor-pointer">
+                    <CircleUser className="w-7 h-7" />
+                  </span>
+                )}
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end" className="w-48">
-                  {!session ? (
+                {!session ? (
+                  <DropdownMenuItem>
+                    <Link href="/login" className="w-full">เข้าสู่ระบบ</Link>
+                  </DropdownMenuItem>
+                ) : (
+                  <>
+                    {session.user.roleId !== "1" && (
+                      <DropdownMenuItem>
+                        <Link href="/admin" className="w-full">แดชบอร์ดผู้ดูแลระบบ</Link>
+                      </DropdownMenuItem>
+                    )}
+                    {Boolean(session?.user?.storeId) && (
+                      <DropdownMenuItem>
+                        <Link href={`/store/${session.user.storeId}`} className="w-full">ร้านค้าของฉัน</Link>
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem>
-                      <Link href="/login" className="w-full">เข้าสู่ระบบ</Link>
+                      <Link href="/profile" className="w-full">โปรไฟล์</Link>
                     </DropdownMenuItem>
-                  ) : (
-                    <>
-                      {session.user.roleId !== "1" && (
-                        <DropdownMenuItem>
-                          <Link href="/admin" className="w-full">แดชบอร์ดผู้ดูแลระบบ</Link>
-                        </DropdownMenuItem>
-                      )}
-                      {Boolean(session?.user?.storeId) && (
-                        <DropdownMenuItem>
-                          <Link href={`/store/${session.user.storeId}`} className="w-full">ร้านค้าของฉัน</Link>
-                        </DropdownMenuItem>
-                      )}
-                      <DropdownMenuItem>
-                        <Link href="/profile" className="w-full">โปรไฟล์</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Link href="/favorite" className="w-full">สินค้าที่ชอบ</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => { signOut(); router.push("/"); }}>
-                        ออกจากระบบ
-                      </DropdownMenuItem>
-                    </>
-                  )}
+                    <DropdownMenuItem>
+                      <Link href="/favorite" className="w-full">สินค้าที่ชอบ</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => { signOut(); router.push("/"); }}>
+                      ออกจากระบบ
+                    </DropdownMenuItem>
+                  </>
+                )}
                 {/* </Suspense> */}
               </DropdownMenuContent>
             </DropdownMenu>
@@ -135,6 +186,7 @@ export default function Navbar() {
           onClick={() => setIsMenuMore(!isMenuMore)}
         />
 
+        {/* Mobile Menu */}
         <div
           className={`z-50 absolute md:hidden top-14 left-0 w-full bg-white flex flex-col items-center gap-6 
         font-semibold text-lg transform transition-transform ${isMenuMore ? "block" : "hidden"

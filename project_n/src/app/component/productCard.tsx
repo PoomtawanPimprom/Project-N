@@ -36,8 +36,9 @@ const ProductCard = ({ product }: prop) => {
   const [quantity, setQuantity] = useState(1);
   const [inventory, setInventory] = useState<inventoryInterface[]>([]);
   const [filteredColors, setFilteredColors] = useState<string[]>([]); // เก็บสีที่กรองแล้ว
-  const [selectedSize, setSelectedSize] = useState<string>(""); 
+  const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
+  const [forceRender, setForceRender] = useState(false);
 
   function onClick(adjustment: number) {
     setQuantity(Math.max(1, Math.min(100, quantity + adjustment)));
@@ -67,7 +68,8 @@ const ProductCard = ({ product }: prop) => {
         size: selectedSize,
         quantity: quantity,
       })
-      await fetchCart(); // update quantity
+      fetchCart(); 
+      setForceRender((prev) => !prev);
       toast({
         description: "เพิ่มสินค้าเข้าตะกร้าเรียบร้อยแล้ว",
       });
@@ -89,7 +91,6 @@ const ProductCard = ({ product }: prop) => {
   const fetchInventoryData = async () => {
     const data = await getInventoriesByProductId(product.id, '');
     setInventory(data);
-    // console.log(data)
   }
 
 

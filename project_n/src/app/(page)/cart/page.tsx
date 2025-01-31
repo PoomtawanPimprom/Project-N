@@ -13,9 +13,10 @@ import { CreateOrder } from "@/app/service/(payment)/service";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/loading";
-
+import { useCart } from "@/app/context/cartContext";
 function cart() {
   const router = useRouter();
+  const { fetchCart } = useCart(); 
   const { data: session, status } = useSession();
   if (status === "loading") {
     return <Loading />; // แสดงข้อความระหว่างโหลด session
@@ -106,10 +107,11 @@ function cart() {
 
   const deleteDataAddress = async (id: Number) => {
     await deleteCartById(id);
-    fetchCartData();
+    fetchCartDatas();
+    fetchCart();
   };
 
-  const fetchCartData = async () => {
+  const fetchCartDatas = async () => {
     console.log("Fetching cart data for user ID:", session?.user?.id);
     if (!session?.user?.id) return; // ป้องกัน error
     const res = await getCartById(Number(session.user.id));
@@ -119,7 +121,7 @@ function cart() {
 
   useEffect(() => {
     if (status === "authenticated" && session?.user?.id) {
-      fetchCartData(); // เรียกใช้เมื่อ session พร้อมใช้งาน
+      fetchCartDatas(); // เรียกใช้เมื่อ session พร้อมใช้งาน
     }
   }, [status, session]);
 
