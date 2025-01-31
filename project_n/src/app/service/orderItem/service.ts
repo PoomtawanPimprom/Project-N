@@ -10,6 +10,16 @@ export async function GetAllOrderItemsToPay(userId:number) {
     return res.json()
 }
 
+export async function GetAllOrderItemsWaitToShip(userId:number) {
+    const res = await fetch(`${API_URL}/waitToShip/${userId}`,
+        {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        }
+    )
+    return res.json()
+}
+
 export async function GetAllOrderItemsToRecevie(userId:number) {
     const res = await fetch(`${API_URL}/toReceive/${userId}`,
         {

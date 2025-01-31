@@ -12,14 +12,14 @@ export async function GET(request: NextRequest, props: { params: Promise<{ userI
             where: { userId: userId, orderStatusId: 2 },
             select: { id: true }
         });
-
         const orderDetailIds = allOrderDetail.map(order => order.id);
+
         //get all order item status complete
         const allOrderItemsComplete = await prisma.orderItem.findMany({
             where: { orderDetailId: { in: orderDetailIds }, orderItemStatusId: 4 },
             include:{ product: true}
         })
-
+        console.log(allOrderItemsComplete)
 
         return NextResponse.json(allOrderItemsComplete, { status: 200 })
     } catch (error) {
