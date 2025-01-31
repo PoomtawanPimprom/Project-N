@@ -32,7 +32,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const { data: session } = useSession();
   const [amountItem, setAmountItem] = useState(0);
   const [cart, setCart] = useState<CartItem[]>([]);
-  // const [cartItems, setCartItems] = useState<cartItemInterface[]>([]);
 
   // fetch amount cart items
   const fetchCart = async () => {
@@ -42,11 +41,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setAmountItem(res);
   };
 
-  // const fetchCartData = async () => {
-  //   if (!session?.user?.id) return;
-  //   const res = await getCartById(Number(session.user.id));
-  //   setCartItems(res);
-  // };
 
   useEffect(() => {
     fetchCart();
