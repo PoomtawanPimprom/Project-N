@@ -16,9 +16,7 @@ const InfoReportComponent = async ({ reportId }: prop) => {
   const report = (await prisma.report.findUnique({
     where: { id: reportId },
     include: {
-      product: {
-        include: { category: { select: { id: true, name: true } } },
-      },
+
       user: { select: { id: true, name: true } },
       reportStatus: { select: { id: true, name: true } },
     },
@@ -72,12 +70,6 @@ const InfoReportComponent = async ({ reportId }: prop) => {
               </div>
             </div>
             <div className="grid grid-rows-3">
-              <div>
-                <p className="text-gray-500">หมวดหมู่สินค้า</p>
-                <p className="font-semibold">
-                  {report?.product?.category?.name}
-                </p>
-              </div>
               <div>
                 <p className="text-gray-500">สถานะของรายงาน</p>
                 <p className="font-semibold">{report?.reportStatus?.name}</p>
