@@ -201,11 +201,11 @@ const UpdateStorePage = (props: { params: Promise<{ id: number }> }) => {
   }, [description]);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
+    <div className="min-h-screen  flex">
       <StoreSideBar storeId={storeID.toString()} />
       <div className="w-full border p-4">
         <div className="flex flex-col w-full border p-4 rounded-lg bg-white  dark:bg-black dark:border-gray-600 dark:border-x">
-          <div className="header  p-2  ">
+          <div className="p-2">
             <div className="text-3xl font-bold">แก้ไขข้อมูล</div>
           </div>
           <div>
@@ -243,7 +243,7 @@ const UpdateStorePage = (props: { params: Promise<{ id: number }> }) => {
                       <div className="flex items-start justify-start w-full">
                         <label
                           htmlFor="image-logo"
-                          className="flex flex-col items-center justify-center h-[400px] w-[400px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+                          className="flex flex-col items-center justify-center h-[400px] w-[400px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100  dark:hover:bg-zinc-800 dark:bg-zinc-700 transition-colors duration-200"
                         >
                           <div className="flex flex-col h-[400px] w-[400px] items-center justify-center pt-5 pb-6">
                             <svg
@@ -314,7 +314,7 @@ const UpdateStorePage = (props: { params: Promise<{ id: number }> }) => {
                       <div className="flex items-start justify-start w-full">
                         <label
                           htmlFor="image-background"
-                          className="flex flex-col items-center justify-center h-[400px] w-[400px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+                          className="flex flex-col items-center justify-center h-[400px] w-[400px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100  dark:hover:bg-zinc-800 dark:bg-zinc-700 transition-colors duration-200"
                         >
                           <div className="flex flex-col h-[400px] w-[400px] items-center justify-center pt-5 pb-6">
                             <svg
@@ -382,9 +382,9 @@ const UpdateStorePage = (props: { params: Promise<{ id: number }> }) => {
                     <button
                       disabled={uploading}
                       type="submit"
-                      className="bg-primary px-4 py-2 text-white duration-200 rounded-xl"
+                      className="bg-primary px-6 py-3 font-semibold text-white duration-200 rounded-xl"
                     >
-                      {uploading ? "กำลังแก้ไข..." : "สร้าง"}
+                      {uploading ? "กำลังแก้ไข..." : "แก้ไข"}
                     </button>
                   </div>
                 </div>

@@ -22,16 +22,15 @@ import { deleteObject, ref, uploadBytes } from "firebase/storage";
 import Form from "@/app/component/Form";
 import Input from "@/app/component/Input";
 import StoreSideBar from "../../../StoreSideBar";
+import { productSchema, validateWithZod } from "@/lib/zod/Schema";
 
 interface ProductImage {
   [key: string]: string;
 }
 
-export default function editProductpage(
-  props: {
-    params: Promise<{ productId: number }>;
-  }
-) {
+export default function editProductpage(props: {
+  params: Promise<{ productId: number }>;
+}) {
   const params = use(props.params);
   const searchparams = useSearchParams();
   const ProductId = params.productId;
@@ -65,8 +64,8 @@ export default function editProductpage(
   //inventory
   const [inventories, setInventories] = useState<inventoryInterface[]>([]);
   const [inventory, setInventory] = useState<
-    { quantity: number; size: string; color: string }[]
-  >([{ quantity: 0, size: "", color: "" }]);
+    { quantity: string; size: string; color: string }[]
+  >([{ quantity: "", size: "", color: "" }]);
 
   //image upload
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,7 +99,7 @@ export default function editProductpage(
   };
 
   const addInventoryRow = () => {
-    setInventory([...inventory, { quantity: 0, size: "", color: "" }]);
+    setInventory([...inventory, { quantity: "", size: "", color: "" }]);
   };
 
   const updateInventoryRow = (
@@ -158,13 +157,32 @@ export default function editProductpage(
             ])
           ),
         },
-        categoryID: categoryId,
       };
 
-      // Step 4: อัปเดตข้อมูลสินค้า
+      const validateData = {
+        name: name,
+        price: price,
+        description: description,
+        image: {
+          ...Object.fromEntries(
+            oldImages.map((url, idx) => [`image${idx + 1}`, url])
+          ),
+          ...Object.fromEntries(
+            uploadedImages.map((img, idx) => [
+              `image${oldImages.length + idx + 1}`,
+              img.url,
+            ])
+          ),
+        },
+        inventory:inventories
+      };
+
+      validateWithZod(productSchema,validateData)
+
+      // Step 5: อัปเดตข้อมูลสินค้า
       await updateProductbyID(ProductId, ProductData);
 
-      // Step 5: อัปเดตข้อมูลสินค้าคงคลัง
+      // Step 6: อัปเดตข้อมูลสินค้าคงคลัง
       await Promise.all(
         inventories.map(async (inventory) => {
           await updateInventoryByInventoryId(inventory.id, {
@@ -181,21 +199,40 @@ export default function editProductpage(
       });
       fetchData();
     } catch (error: any) {
-      // Step 6: ลบรูปใหม่หากเกิดข้อผิดพลาด
       if (uploadedImages.length > 0) {
         await deleteUploadedImages(uploadedImages.map((image) => image.url));
       }
 
-      console.error("Error uploading or submitting data", error);
-      toast({
-        variant: "destructive",
-        description:
-          error instanceof Error ? error.message : "Unexpected error occurred.",
-      });
+
+      if (error instanceof Error) {
+        console.error("Error uploading or submitting data", error);
+        toast({
+          description: error.message,
+        });
+      } else {
+        console.log(error);
+        toast({
+          description: "An unexpected error occurred.",
+        });
+      }
+
 
       if (error.fieldErrors) {
         setError(error.fieldErrors);
       }
+
+      if (error.fieldErrors?.inventory) {
+        const inventoryErrorMessage =
+          typeof error.fieldErrors.inventory === "object" &&
+          error.fieldErrors.inventory.message
+            ? error.fieldErrors.inventory.message
+            : String(error.fieldErrors.inventory);
+        toast({
+          description: inventoryErrorMessage,
+          variant:"destructive"
+        });
+      }
+
     } finally {
       setLoading(false);
     }
@@ -227,7 +264,15 @@ export default function editProductpage(
   const fetchData = async () => {
     const invenData = await getInventoriesByProductId(ProductId, "");
     setInventories(invenData);
-
+    if (invenData.length > 0) {
+      setInventory(
+        invenData.map((item:any) => ({
+          quantity: item.quantity.toString(),
+          size: item.size,
+          color: item.color,
+        }))
+      );
+    }
     const productData = await getProductById(ProductId);
     setProduct(productData);
     setName(productData.name);
@@ -240,35 +285,33 @@ export default function editProductpage(
     );
     setOldImages(imageUrls);
     setOldImagesURL(imageUrls);
-
   };
   useEffect(() => {
     fetchData();
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex ">
+    <div className="min-h-screen flex ">
       <StoreSideBar storeId={storeId!} />
-      <div className="w-full h-full border p-4">
-        <div className="flex flex-col w-full border p-4 rounded-lg bg-white">
-          <div className="Header flex justify-between  my-2">
-            <div className="text-4xl font-bold">
+      <div className="w-full border p-4">
+        <div className="flex flex-col w-full border p-4 rounded-lg bg-white  dark:bg-black dark:border-gray-600 dark:border-x">
+          {/* header */}
+          <div className="flex justify-between p-2">
+            <div className="text-3xl font-bold">
               <p>แก้ไขสินค้า</p>
             </div>
-            <div className="flex justify-center items-center">
-              <button
-                onClick={onclickDeleteProduct}
-                className="flex rounded-xl p-2 border text-white bg-red-600"
+            <button
+              onClick={onclickDeleteProduct}
+              className="flex rounded-xl p-2 border font-bold text-white bg-red-600"
               >
-                <p>DELETE</p>
-              </button>
-              <ModalDelete
-                storeId={product?.store?.id}
-                id={ProductId}
-                open={openDeleteModal}
-                onClose={() => setOpenDeleteModal(false)}
-              />
-            </div>
+              ลบสินค้า
+            </button>
+            <ModalDelete
+              storeId={product?.store?.id}
+              id={ProductId}
+              open={openDeleteModal}
+              onClose={() => setOpenDeleteModal(false)}
+            />
           </div>
           <div className="body flex flex-col">
             <div className="flex flex-col  w-full  rounded-xl p-4">
@@ -317,11 +360,10 @@ export default function editProductpage(
                             updateInventoryRow(
                               index,
                               "quantity",
-                              Number(e.target.value)
+                              e.target.value
                             )
                           }
-                          type="number"
-                          className="p-2 border border-black rounded-lg"
+                          className="p-2 border  rounded-lg"
                           placeholder="จำนวนสินค้า"
                         />
                       </div>
@@ -334,8 +376,8 @@ export default function editProductpage(
                             updateInventoryRow(index, "size", e.target.value)
                           }
                           type="text"
-                          className="p-2 border border-black rounded-lg"
-                          placeholder="ขนาดสินค้า"
+                          className="p-2 border  rounded-lg"
+                          placeholder="ขนาดของสินค้า"
                         />
                       </div>
                       <div>
@@ -347,8 +389,8 @@ export default function editProductpage(
                             updateInventoryRow(index, "color", e.target.value)
                           }
                           type="text"
-                          className="p-2 border border-black rounded-lg"
-                          placeholder="สีสินค้า"
+                          className="p-2 border  rounded-lg"
+                          placeholder="สีของสินค้า"
                         />
                       </div>
                       <div className="flex items-end">
@@ -367,7 +409,7 @@ export default function editProductpage(
                   <button
                     type="button"
                     onClick={addInventoryRow}
-                    className="p-2 bg-gray-300 rounded-lg"
+                    className="p-2 bg-gray-300 dark:bg-zinc-600 dark:hover:bg-zinc-700 text-accent-foreground rounded-lg"
                   >
                     เพิ่มตัวเลือก
                   </button>
@@ -377,10 +419,7 @@ export default function editProductpage(
                   <p>รูปภาพสินค้า</p>
                   <div className="grid grid-cols-2 gap-3">
                     {oldImages.map((imageUrl, index) => (
-                      <div
-                        key={`existing-${index}`}
-                        className="relative"
-                      >
+                      <div key={`existing-${index}`} className="relative w-fit">
                         <Image
                           width={400}
                           height={400}
@@ -401,14 +440,14 @@ export default function editProductpage(
                     {newImages.map((file, index) => (
                       <div
                         key={`new-${index}`}
-                        className="relative aspect-square"
+                        className="relative w-fit  aspect-square"
                       >
                         <Image
                           width={400}
                           height={400}
                           src={URL.createObjectURL(file)}
                           alt={`New ${index + 1}`}
-                          className="w-full h-full object-cover rounded-lg"
+                          className="w-[400px] h-[400px] object-cover rounded-lg"
                           loading="lazy"
                         />
                         <button
@@ -469,7 +508,7 @@ export default function editProductpage(
                     <p className="text-red-500 text-sm mt-2">{errorImage}</p>
                   )}
                 </div>
-                
+
                 <div className="flex justify-end">
                   <button
                     type="submit"

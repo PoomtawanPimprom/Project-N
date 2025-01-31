@@ -12,6 +12,12 @@ import { getProductsByStoreId } from "@/app/service/product/service";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, use } from "react";
 import StoreSideBar from "../../StoreSideBar";
+import Table from "@/app/component/table/Table";
+import TableHeader from "@/app/component/table/TableHeader";
+import TableRow from "@/app/component/table/TableRow";
+import TableHead from "@/app/component/table/TableHead";
+import TableBody from "@/app/component/table/TableBody";
+import TableData from "@/app/component/table/Tabledata";
 
 const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
   const params = use(props.params);
@@ -22,14 +28,12 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
 
   //filter
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
   const [sortDate, setSortDate] = useState("desc");
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const fetchData = async () => {
     const query = new URLSearchParams({
-      category,
       search,
       sortDate,
     }).toString();
@@ -39,7 +43,6 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
 
   const fetchInventoriesByProductId = async (productId: number) => {
     const query = new URLSearchParams({
-      category,
       search,
       sortDate,
     }).toString();
@@ -93,13 +96,14 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
     }
   };
   return (
-    <div className="min-h-screen bg-gray-100 flex">
-      <StoreSideBar  storeId={storeId.toString()}/>
-      <div className="flex w-full dark:bg-black p-4">
-        <div className="flex flex-col w-full border p-4 rounded-lg bg-white  dark:bg-black dark:border-gray-600 dark:border-x">
-          <div className="header flex my-2 text-3xl font-bold dark:text-white ">
+    <div className="min-h-screen  flex">
+      <StoreSideBar storeId={storeId.toString()} />
+      <div className="w-full border p-4">
+        <div className="flex flex-col w-full border dark:border-none p-6 rounded-lg bg-white h-full  dark:bg-black dark:border-gray-600 dark:border-x gap-2">
+          <div className="text-3xl font-bold">
             <p>คลังสินค้า</p>
           </div>
+          {/* search */}
           <div className="flex my-2 ">
             <div className="flex space-x-2">
               <div>
@@ -150,70 +154,78 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
               </div>
             </div>
           </div>
-          <div className="relative overflow-x-auto sm:rounded-lg border dark:border-gray-600">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead className="text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-2 py-3"></th>
-                  <th scope="col" className="px-6 py-3">
-                    ชื่อสินค้า
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    สี
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    ไซส์
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    สินค้าในคลัง
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    ราคา
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-right">
-                    แก้ไข
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {inventories.map((item, index) => (
-                  <tr 
-                  key={index}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td className="flex justify-center items-center px-2 py-4">
-                      <input
-                        className="flex"
-                        type="checkbox"
-                        checked={selectedIds.includes(item.id)}
-                        onChange={(e) =>
-                          handleCheckboxChange(item.id, e.target.checked)
-                        }
-                      />
-                    </td>
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap overflow-hidden dark:text-white"
-                    >
-                      {item.product?.name}
-                    </th>
-                    <td className="px-6 py-4">{item.color}</td>
-                    <td className="px-6 py-4">{item.size}</td>
-                    <td className="px-6 py-4">{item.quantity}</td>
-                    <td className="px-6 py-4">{item.product?.price}</td>
-                    <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() =>
-                          router.push(`/product/edit/${item.product?.id}`)
-                        }
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                      >
+
+          <div className="w-full overflow-x-auto rounded-lg border">
+            <div className="min-w-full inline-block align-middle  rounded-lg">
+              <div className="overflow-hidden  rounded-lg">
+                <Table className="min-w-full">
+                  <TableHeader className="text-sm 2xl:text-base  text-gray-800  bg-gray-50 dark:bg-black dark:text-accent-foreground">
+                    <TableRow className="font-semibold">
+                    <TableHead  className="px-2 py-3">
+                        เลือก
+                      </TableHead>
+                      <TableHead  className="px-6 py-3">
+                        ชื่อสินค้า
+                      </TableHead>
+                      <TableHead  className="px-6 py-3">
+                        สี
+                      </TableHead>
+                      <TableHead  className="px-6 py-3">
+                        ไซส์
+                      </TableHead>
+                      <TableHead  className="px-6 py-3">
+                        สินค้าในคลัง
+                      </TableHead>
+                      <TableHead  className="px-6 py-3">
+                        ราคา
+                      </TableHead>
+                      <TableHead  className="px-6 py-3 text-right">
                         แก้ไข
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {inventories.map((item, index) => (
+                      <TableRow
+                        key={index}
+                                          className="bg-white border-b dark:bg-zinc-900  hover:bg-gray-50 dark:hover:bg-zinc-600"
+                      >
+                        <TableData className="flex justify-center items-center px-2 py-4">
+                          <input
+                            className="flex"
+                            type="checkbox"
+                            checked={selectedIds.includes(item.id)}
+                            onChange={(e) =>
+                              handleCheckboxChange(item.id, e.target.checked)
+                            }
+                          />
+                        </TableData>
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap overflow-hidden dark:text-white"
+                        >
+                          {item.product?.name}
+                        </th>
+                        <TableData className="px-6 py-4">{item.color}</TableData>
+                        <TableData className="px-6 py-4">{item.size}</TableData>
+                        <TableData className="px-6 py-4 text-center">{item.quantity}</TableData>
+                        <TableData className="px-6 py-4 text-center">{item.product?.price}</TableData>
+                        <TableData className="px-6 py-4 text-right">
+                          <button
+                            onClick={() =>
+                              router.push(`/product/edit/${item.product?.id}`)
+                            }
+                            className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                          >
+                            แก้ไข
+                          </button>
+                        </TableData>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           </div>
         </div>
       </div>

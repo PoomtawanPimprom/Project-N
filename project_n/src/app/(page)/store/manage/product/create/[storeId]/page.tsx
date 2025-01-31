@@ -1,11 +1,7 @@
 "use client";
 import Input from "@/app/component/Input";
-//interfaces
-
 import { CreateProdcut } from "@/app/service/product/service";
-
 import { useToast } from "@/hooks/use-toast";
-
 import { storage } from "@/lib/firebase/firebase";
 import { productSchema, validateWithZod } from "@/lib/zod/Schema";
 import {
@@ -14,19 +10,17 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage";
-import { useEffect, useState, use } from "react";
+import { useState, use } from "react";
 import { IoMdClose } from "react-icons/io";
 import { v4 } from "uuid";
 import StoreSideBar from "../../../StoreSideBar";
 import { useRouter } from "next/navigation";
-import { generateKey } from "@/lib/utils";
 
 const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
   const params = use(props.params);
   const { toast } = useToast();
-  const router = useRouter()
+  const router = useRouter();
   const storeId = params.storeId;
-
 
   //state
   const [loading, setLoading] = useState(false);
@@ -81,11 +75,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
     setInventory([...inventory, { quantity: "", size: "", color: "" }]);
   };
 
-  const updateInventoryRow = (
-    index: number,
-    field: string,
-    value: string
-  ) => {
+  const updateInventoryRow = (index: number, field: string, value: string) => {
     const updatedInventory = inventory.map((item, i) =>
       i === index ? { ...item, [field]: value } : item
     );
@@ -126,9 +116,9 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
       toast({
         description: "สร้างสินค้าเรียบร้อยแล้ว",
       });
-      setTimeout(()=>{
-        router.push(`/store/manage/product/${storeId}`)
-      },2000)
+      setTimeout(() => {
+        router.push(`/store/manage/product/${storeId}`);
+      }, 2000);
     } catch (error: any) {
       if (uploadedImages.length > 0) {
         await Promise.all(
@@ -149,46 +139,47 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
           description: error.message,
         });
       } else {
-        console.log(error)
+        console.log(error);
         toast({
           description: "An unexpected error occurred.",
         });
       }
       if (error.fieldErrors?.inventory) {
         const inventoryErrorMessage =
-          typeof error.fieldErrors.inventory === "object" && error.fieldErrors.inventory.message
+          typeof error.fieldErrors.inventory === "object" &&
+          error.fieldErrors.inventory.message
             ? error.fieldErrors.inventory.message
             : String(error.fieldErrors.inventory);
         toast({
           description: inventoryErrorMessage,
+          variant:"destructive"
         });
       }
-      
 
       if (error.fieldErrors) {
         setError(error.fieldErrors);
       }
     } finally {
       setLoading(false);
-
-      // Router.push(`/store/inventory/${1}`); โ
+      router.push(`/store/manage/inventory/${storeId}`);
     }
   };
 
-
-
   return (
-    <div className="min-h-screen bg-gray-100 flex">
+    <div className="min-h-screen flex">
       <StoreSideBar storeId={storeId.toString()} />
-      <div className="flex w-full flex-col items-center p-4">
-        <div className="flex  flex-col w-full border p-4 rounded-lg bg-white border-x dark:border-gray-500">
-          <div className="text-3xl font-bold my-4">
-            <p>เพิ่มสินค้า</p>
+      <div className=" w-full border p-4">
+        <div className="flex flex-col w-full border p-4 rounded-lg bg-white  dark:bg-black dark:border-gray-600 dark:border-x">
+          <div className="p-2">
+            <div className="text-3xl font-bold">
+              <p>เพิ่มสินค้า</p>
+            </div>
           </div>
-          <div className="flex w-full">
+          <div className="flex w-full p-2">
             <div className="flex flex-col w-full">
               <form className="space-y-2" onSubmit={onSubmitCreateProduct}>
                 <Input
+                labelClassName="text-lg"
                   required={true}
                   label="ชื่อสินค้า"
                   name="name"
@@ -199,6 +190,8 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                   error={error?.name}
                 />
                 <Input
+                labelClassName="text-lg"
+
                   label="รายละเอียดสินค้า"
                   required={true}
                   type="textarea"
@@ -209,6 +202,8 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                   error={error?.description}
                 />
                 <Input
+                labelClassName="text-lg"
+
                   label="ราคา"
                   required={true}
                   name="price"
@@ -223,11 +218,14 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                 <div className="space-y-2 flex flex-col">
                   <p className="font-bold text-2xl">สินค้าในสต็อก</p>
                   {inventory.map((item, index) => (
-                    <div key={index} className="flex flex-col lg:flex-row gap-4">
+                    <div
+                      key={index}
+                      className="flex flex-col lg:flex-row gap-4"
+                    >
                       <div>
                         <div className="flex">
-                        <p>จำนวน</p>
-                        <p className="text-red-500">*</p>
+                          <p>จำนวน</p>
+                          <p className="text-red-500">*</p>
                         </div>
                         <input
                           name={`quantity-${index}`}
@@ -240,7 +238,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                           }
                           value={item.quantity}
                           type=""
-                          className="p-2 border border-black rounded-lg"
+                          className="p-2 border  rounded-lg"
                           placeholder="จำนวนสินค้า"
                         />
                       </div>
@@ -252,9 +250,8 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                             updateInventoryRow(index, "size", e.target.value)
                           }
                           value={item.size}
-
                           type="text"
-                          className="p-2 border border-black rounded-lg"
+                          className="p-2 border  rounded-lg"
                           placeholder="ขนาดสินค้า"
                         />
                       </div>
@@ -266,9 +263,8 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                             updateInventoryRow(index, "color", e.target.value)
                           }
                           value={item.color}
-
                           type="text"
-                          className="p-2 border border-black rounded-lg"
+                          className="p-2 border  rounded-lg"
                           placeholder="สีสินค้า"
                         />
                       </div>
@@ -276,7 +272,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                         <div className="flex rounded-lg">
                           <button
                             type="button"
-                            className="px-4 py-2  rounded-lg  text-center bg-red text-white bg-red-500"
+                            className="px-4 py-2  rounded-lg  text-center bg-red text-accent-foreground bg-red-500"
                             onClick={() => removeInventoryRow(index)}
                           >
                             -
@@ -288,7 +284,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                   <button
                     type="button"
                     onClick={addInventoryRow}
-                    className="p-2 bg-gray-300 rounded-lg"
+                    className="p-2 bg-gray-300 dark:bg-zinc-600 dark:hover:bg-zinc-700 text-accent-foreground rounded-lg"
                   >
                     เพิ่มตัวเลือก
                   </button>
@@ -318,11 +314,11 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                       <div className="flex items-center justify-center w-full">
                         <label
                           htmlFor="image-logo"
-                          className="flex flex-col items-center justify-center w-full h-[369px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 "
+                          className="flex flex-col items-center justify-center w-full h-[369px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-zinc-800 dark:bg-zinc-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 "
                         >
                           <div className="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg
-                              className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                              className="w-8 h-8 mb-4 text-gray-500 dark:text-zinc-400"
                               aria-hidden="true"
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
@@ -361,7 +357,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                     )}
                   </div>
                 </div>
-               
+
                 <div className="flex justify-end">
                   <button
                     type="submit"
