@@ -59,6 +59,7 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
       console.log("payment id",createPayment.payment.id)
 
       //verify payment
+
       // const formData = new FormData();
       // formData.append('file', image); 
       // const result = await verifySlip(formData);
@@ -79,6 +80,7 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
       console.log(dataupdate)
       await UpdatePaymentStatusWhenChecked(dataupdate)
       toast({
+        variant:"success",
         description: "ทำรายการเสร็จสิ้น",
       });
       setTimeout(()=>{
