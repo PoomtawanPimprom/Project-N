@@ -11,10 +11,14 @@ export async function middleware(request: NextRequest) {
     // // Get the pathname of the request
     const { pathname } = request.nextUrl
 
-    if (pathname.startsWith('/store/create') && (!user)) {
+    if (pathname.startsWith('/profile') && (!user)) {
         return NextResponse.redirect(new URL('/login', request.url))
     }
-    if (pathname.startsWith('/product/create') && (!user)) {
+
+    if (pathname.startsWith('/store/manage') && (!user)) {
+        return NextResponse.redirect(new URL('/login', request.url))
+    }
+    if (pathname.startsWith('/store/create') && (!user)) {
         return NextResponse.redirect(new URL('/login', request.url))
     }
 
