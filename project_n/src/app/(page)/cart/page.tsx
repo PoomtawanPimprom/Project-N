@@ -14,9 +14,9 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/loading";
 import { useCart } from "@/app/context/cartContext";
+
 function cart() {
   const router = useRouter();
-  const { fetchCart } = useCart(); 
   const { data: session, status } = useSession();
   if (status === "loading") {
     return <Loading />; // แสดงข้อความระหว่างโหลด session
@@ -108,7 +108,7 @@ function cart() {
   const deleteDataAddress = async (id: Number) => {
     await deleteCartById(id);
     fetchCartDatas();
-    fetchCart();
+    fetchCartDatas();
   };
 
   const fetchCartDatas = async () => {
