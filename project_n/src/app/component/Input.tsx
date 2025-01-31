@@ -34,7 +34,6 @@ export default function Input({
   const [showPassword, setShowPassword] = useState(false);
   const togglePassword = () => {
     setShowPassword(!showPassword);
-    
   };
   //check if input is a password and show/hide password icon
   const inputType = type === "password" && showPassword ? "text" : type;
@@ -61,6 +60,8 @@ export default function Input({
             disabled={disabled}
             className={cn(
               `
+                            bg-white dark:bg-black
+             text-black dark:text-white
               w-96
               h-32
               p-3
@@ -91,7 +92,7 @@ export default function Input({
           <input
             id={name}
             name={name}
-            type={inputType} 
+            type={inputType}
             value={value}
             placeholder={placeholder}
             onChange={onChange}

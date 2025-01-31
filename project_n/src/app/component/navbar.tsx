@@ -20,29 +20,17 @@ import {
 } from "@/app/components/ui/dropdown-menu"
 import { getCartById } from "@/app/service/cart/service";
 import { cartItemInterface } from "@/app/interface/cartItemInterface";
+import { useUser } from "../context/userContext";
 
 
 export default function Navbar() {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const {user} = useUser()
   const { amountItem, cart } = useCart();
   const [cartItems, setCartItems] = useState<cartItemInterface[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false); // state สำหรับ hover
   const [isMenuMore, setIsMenuMore] = useState(false);
-  const [user, setUser] = useState<userInterface>();
-
-  const fetchdata = async () => {
-    if (!session?.user?.id) {
-      console.error("User ID is missing.");
-      return;
-    }
-    try {
-      const data = await getUserById(Number(session.user.id));
-      setUser(data);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
 
   if (status === "loading") return null;
 
@@ -57,7 +45,6 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    if (session?.user?.id) fetchdata();
     fetchCartData()
   }, [session]);
 

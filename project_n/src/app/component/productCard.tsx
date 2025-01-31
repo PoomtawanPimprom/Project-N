@@ -94,11 +94,7 @@ const ProductCard = ({ product }: prop) => {
   }
 
 
-  useEffect(() => {
-    if (session) {
-      fetchInventoryData();
-    }
-  }, [session]);
+
 
 
   return (
@@ -136,6 +132,7 @@ const ProductCard = ({ product }: prop) => {
                         router.push("/login");
                         return null; // ป้องกันการ render อื่น ๆ
                       }
+                      fetchInventoryData()
                     }} className="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors" >
                       <ShoppingCart className="w-5 h-5" />
                     </button>
