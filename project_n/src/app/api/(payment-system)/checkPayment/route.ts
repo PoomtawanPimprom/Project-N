@@ -52,7 +52,10 @@ export async function PUT(request: NextRequest) {
                 })
             }))
 
-
+            //3.delete at cart
+            await prisma.cartItem.deleteMany({
+                where:{ userId: userId,productId: {in : allOrderItems.map((item)=> item.productId)} }
+            })
         });
         return NextResponse.json({ message: "done" }, { status: 200 });
     } catch (error: any) {
