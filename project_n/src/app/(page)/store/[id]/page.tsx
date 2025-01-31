@@ -1,8 +1,10 @@
 // components
-import Discout from "../component/Discout";
-import ImageStore from "../component/ImageStore";
-import InfoStore from "../component/InfoStore";
-import ShowProduct from "../component/ShowProduct";
+import dynamic from "next/dynamic";
+const Discout = dynamic(()=> import("../component/Discout"))
+const ImageStore = dynamic(()=> import("../component/ImageStore"))
+const InfoStore = dynamic(()=> import("../component/InfoStore"))
+const ShowProduct = dynamic(()=> import( "../component/ShowProduct"))
+
 import prisma from "@/lib/prisma/db";
 
 export default async function StorePage(props: {params: Promise<{ id: number }>;}) {
@@ -15,7 +17,7 @@ export default async function StorePage(props: {params: Promise<{ id: number }>;
   });
   return (
     <>
-      <div className="flex flex-col w-full space-y-2  bg-white ">
+      <div className="flex flex-col w-full space-y-2  ">
         <ImageStore
           ownerId={store?.user!.id}
           store={store}

@@ -111,7 +111,6 @@ const ProductCard = ({ product }: prop) => {
 
         {/* Content Section */}
         <div className="p-4 flex flex-col flex-grow dark:bg-card dark:text-white rounded-b-lg">
-          <p className="text-sm text-gray-500 mb-1">{product.category?.name}</p>
           <h3 onClick={handleGotoProductPage} className="text-lg font-semibold  mb-2" >
             {product.name}
           </h3>
@@ -121,7 +120,7 @@ const ProductCard = ({ product }: prop) => {
 
               {/* Price */}
               <span className="text-xl font-bold">
-                ${product.price}
+                {product.price} บาท
               </span>
 
               {/* Action Buttons */}

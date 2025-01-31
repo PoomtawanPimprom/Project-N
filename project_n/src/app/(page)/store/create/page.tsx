@@ -140,11 +140,12 @@ export default function CreateStorePage() {
       //validate
       validateWithZod(StoreSchema, data);
 
-      const res:any = await CreateStore(data);
+      await CreateStore(data);
       toast({
+        variant:"success",
         description: "สร้างร้านค้าสำเร็จ",
       });
-
+      router.push(`/`)
     } catch (error: any) {
       const deleteLogoRef = ref(storage, `store/logo/${logoFileName}`);
       const deleteBgRef = ref(storage, `store/background/${BgFileName}`);

@@ -1,4 +1,3 @@
-import { categoryInterface } from "./categoryInterface";
 import { productStatusInterface } from "./productStatusInterface";
 import { storeInterface } from "./storeInterface";
 
@@ -20,8 +19,6 @@ export interface productInterface {
     storeID: number
     store?: storeInterface
 
-    categoryID: number
-    category?:categoryInterface
 
     //discountID :number
     //discount :discountInterface

@@ -38,7 +38,7 @@ export default async function Home(
   const searchParams = await props.searchParams;
   const search = searchParams.search;
   const products = (await prisma.product.findMany({
-    where: { name: { contains: search } },
+    where: { name: { contains: search },deletedAt: null },
   })) as productInterface[];
 
   const stores = (await prisma.store.findMany({

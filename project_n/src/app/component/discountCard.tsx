@@ -40,7 +40,7 @@ const DiscountCard = ({
           </div>
           <button 
           onClick={handleCopy}
-          className="flex px-4 py-2 rounded-xl space-y-2 font-bold justify-center items-center text-blue-400 hover:bg-blue-400 hover:text-white duration-150 ">
+          className="flex px-4 py-2 rounded-xl space-y-2 font-bold justify-center items-center text-primary hover:bg-primary hover:text-white duration-150 ">
             <MdContentCopy className="mr-1" />
             {copying ? 'คัดลอกแล้ว' : 'คัดลอก'}
           </button>

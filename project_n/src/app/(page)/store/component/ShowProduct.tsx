@@ -25,7 +25,7 @@ const ShowProduct = ({ storeId }: prop) => {
   }, []);
   return (
     <div className="flex   mx-auto">
-      <div className="flex flex-col md:w-[747px] lg:w-[1000px] xl:w-[1400px] h-full bg-white border rounded-xl">
+      <div className="flex flex-col md:w-[747px] lg:w-[1000px] xl:w-[1400px] h-full dark:bg-zinc-950 border rounded-xl">
         <div className="header flex w-full p-2 text-3xl font-bold space-x-2 items-center">
         <Box />
           <p>รายการสินค้า</p>

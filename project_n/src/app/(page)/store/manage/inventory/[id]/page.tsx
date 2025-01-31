@@ -1,10 +1,8 @@
 "use client";
 
-import { categoryInterface } from "@/app/interface/categoryInterface";
 import { inventoryInterface } from "@/app/interface/inventoryInterface";
 import { productInterface } from "@/app/interface/productInterface";
 
-import { getAllCategory } from "@/app/service/category/service";
 import {
   deleteInventoryByInventoryId,
   getInventoriesByProductId,
@@ -21,7 +19,6 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
   const storeId = Number(params.id);
   const [products, setProducts] = useState<productInterface[]>([]);
   const [inventories, setInventories] = useState<inventoryInterface[]>([]);
-  const [categoryData, setCategoryData] = useState<categoryInterface[]>([]);
 
   //filter
   const [search, setSearch] = useState("");
@@ -38,8 +35,6 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
     }).toString();
     const data = await getProductsByStoreId(storeId, query);
     setProducts(data);
-    const categoryData = await getAllCategory();
-    setCategoryData(categoryData);
   };
 
   const fetchInventoriesByProductId = async (productId: number) => {
@@ -103,7 +98,7 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
       <div className="flex w-full dark:bg-black p-4">
         <div className="flex flex-col w-full border p-4 rounded-lg bg-white  dark:bg-black dark:border-gray-600 dark:border-x">
           <div className="header flex my-2 text-3xl font-bold dark:text-white ">
-            <p>จัดการสินค้าในสต็อก</p>
+            <p>คลังสินค้า</p>
           </div>
           <div className="flex my-2 ">
             <div className="flex space-x-2">
@@ -114,21 +109,6 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
                   placeholder="search..."
                   onChange={(e) => setSearch(e.target.value)}
                 />
-              </div>
-              <div className="flex">
-                <select
-                  value={category || 0}
-                  className="p-2 rounded-lg border border-gray-400"
-                  onChange={(e) => setCategory(e.target.value)}
-                >
-                  <option value={0} disabled>
-                    เลือกหมวดหมู่
-                  </option>
-                  <option value={""}>-</option>
-                  {categoryData.map((item, index) => (
-                    <option value={item.id}>{item.name}</option>
-                  ))}
-                </select>
               </div>
               <div className="flex">
                 <select
@@ -197,7 +177,9 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
               </thead>
               <tbody>
                 {inventories.map((item, index) => (
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <tr 
+                  key={index}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td className="flex justify-center items-center px-2 py-4">
                       <input
                         className="flex"

@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 
 export async function GET(request: NextRequest) {
     try {
-        const data = await prisma.product.findMany();
+        const data = await prisma.product.findMany({where:{deletedAt: null}});
         return NextResponse.json(data)
     } catch (error) {
         return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
             inventory.map((item: { quantity: number; size: string; color: string }) => {
                 return prisma.inventory.create({
                     data: {
-                        quantity: item.quantity,
+                        quantity: Number(item.quantity),
                         size: item.size,
                         color: item.color,
                         productID: createProductData.id

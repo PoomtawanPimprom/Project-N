@@ -7,42 +7,34 @@ const prisma = new PrismaClient()
 export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
     try {
-        const searchparams = request.nextUrl.searchParams
-        const search = searchparams.get("search") || ""
-        const category = searchparams.get("category") || ""
-        const sortDate = searchparams.get("sortDate") || "desc"
+        const searchparams = request.nextUrl.searchParams;
+        const search = searchparams.get("search") || "";
+        const sortDate = searchparams.get("sortDate") || "desc";
 
         const storeId = Number(params.id);
 
-        //where condition
-        const whereClause = {
+        // where condition
+        const whereClause: any = {
             storeID: storeId,
-            AND: [
-                search
-                    ? {
-                        OR: [
-                            { product: { name: { contains: search, mode: 'insensitive' } } },
-                        ],
-                    }
-                    : {},
-                category
-                    ? { product: { category: { id: Number(category) } } }
-                    : {},
-            ],
+            deletedAt: null, 
         };
 
-        //query
+        // ถ้ามีการค้นหา ให้เพิ่มเงื่อนไข
+        if (search) {
+            whereClause.name = { contains: search }; 
+        }
+
+        // query
         const data = await prisma.product.findMany({
-            where: { storeID: storeId },
+            where: whereClause,
             orderBy: {
-                createdAt: sortDate === 'asc' ? 'asc' : 'desc'
+                createdAt: sortDate === 'asc' ? 'asc' : 'desc',
             },
-            include:{category:true}
-        })
-        
-        return NextResponse.json(data)
+        });
+
+        return NextResponse.json(data);
     } catch (error: any) {
-        console.error(error.message)
-        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
+        console.error(error.message);
+        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 });
     }
 }

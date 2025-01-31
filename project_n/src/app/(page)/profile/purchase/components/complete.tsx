@@ -16,25 +16,16 @@ export default function Complete() {
     const [OrderItemsComplete, setOrderItemsComplete] = useState<
       orderItemInterface[]
     >([]);
-    const image =
-      "https://firebasestorage.googleapis.com/v0/b/project-n-eff9b.firebasestorage.app/o/user-profile.png?alt=media&token=30d9c36c-1638-42d5-82e7-fbd9e6f3e438";
-  
+
     const fecthdata = async () => {
       const data = await GetAllOrderItemsComplete(Number(session?.user.id));
       setOrderItemsComplete(data);
       console.log(data);
     };
   
-    const onClick = async (id: number) => {
-      await updateStatusOrderItemsToRecevie(id);
-      router.refresh();
-    };
-  
     useEffect(() => {
       fecthdata();
     }, [session]);
-
-
 
     return (
         <div className="max-w-7xl mx-auto p-4 hover:shadow-lg rounded-lg">

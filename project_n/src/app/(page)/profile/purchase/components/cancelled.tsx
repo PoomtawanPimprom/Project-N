@@ -15,14 +15,15 @@ export default function Cancelled() {
   >([]);
   
   const fecthdata = async () => {
+    if (!session?.user?.id) return; // ป้องกันการ fetch ถ้า session ยังไม่พร้อม
     const data = await GetAllOrderItemsCancel(Number(session?.user.id));
     setOrderItemsCannel(data);
-    fecthdata();
   };
-
+  
   useEffect(() => {
     fecthdata();
-  }, [session]);
+  }, [session]); // ให้ fetch ข้อมูลแค่ตอนที่ session เปลี่ยน
+  
 
   return (
     <div className="max-w-7xl mx-auto p-4 hover:shadow-lg rounded-lg">

@@ -1,9 +1,7 @@
 "use client";
 
-import { categoryInterface } from "@/app/interface/categoryInterface";
 import { inventoryInterface } from "@/app/interface/inventoryInterface";
 import { productInterface } from "@/app/interface/productInterface";
-import { getAllCategory } from "@/app/service/category/service";
 import {
   getInventoriesByProductId,
   updateInventoryByInventoryId,
@@ -50,7 +48,6 @@ export default function editProductpage(
   } | null>(null);
   const [errorImage, setErrorImage] = useState("");
   //data
-  const [categoryData, setCategoryData] = useState<categoryInterface[]>([]);
   const [product, setProduct] = useState<productInterface>();
 
   //Product
@@ -244,8 +241,6 @@ export default function editProductpage(
     setOldImages(imageUrls);
     setOldImagesURL(imageUrls);
 
-    const cateData = await getAllCategory();
-    setCategoryData(cateData);
   };
   useEffect(() => {
     fetchData();
@@ -474,25 +469,7 @@ export default function editProductpage(
                     <p className="text-red-500 text-sm mt-2">{errorImage}</p>
                   )}
                 </div>
-                <div className="space-y-2">
-                  <p>option</p>
-                  <select
-                    value={categoryId}
-                    onChange={(e) => {
-                      setCategoryId(Number(e.target.value));
-                    }}
-                    className="border rounded-xl p-2"
-                  >
-                    <option value={0} disabled>
-                      เลือกหมวดหมู่
-                    </option>
-                    {categoryData.map((item, index) => (
-                      <option key={index} value={item.id}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                
                 <div className="flex justify-end">
                   <button
                     type="submit"

@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ message: 'ชื่อร้านค้าถูกใช้งานแล้ว' }, { status: 400 })
         }
 
-        const newStore = await prisma.store.create({
+        await prisma.store.create({
             data: {
                 name,
                 description,
@@ -26,7 +26,12 @@ export async function POST(request: NextRequest) {
                 imageBgFileName,
             }
         });
-        return NextResponse.json(newStore)
+        await prisma.user.update({
+            where:{id:userId},
+            data:{ saler:true}
+        })
+
+        return NextResponse.json({message:"create successfuly"},{status: 200})
     } catch (error: any) {
         console.error(error.message || error);
 
