@@ -9,15 +9,17 @@ import { Heart } from "lucide-react";
 import { useUser } from "../context/userContext";
 import { FaHeart } from "react-icons/fa";
 import React, { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface propInterface {
   productId: number;
 }
 
 const LikeButton = (prop: propInterface) => {
+  const {toast} = useToast()
   const { user } = useUser();
   const [isFavoritedStatus, setIsFavoritedStatus] = useState<boolean | undefined>(undefined);
-  const [favoriteData, setFavoriteData] = useState<favoriteInterface[]>([]);
+  const [favoriteData, setFavoriteData] = useState<favoriteInterface>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchData = async () => {
@@ -27,7 +29,7 @@ const LikeButton = (prop: propInterface) => {
       user.id
     );
     setFavoriteData(dataFavorite);
-    setIsFavoritedStatus(dataFavorite.length > 0); // อัปเดตสถานะทันที
+    setIsFavoritedStatus(dataFavorite ? true: false); // อัปเดตสถานะทันที
   };
 
   const handleOnClick = async () => {
@@ -42,15 +44,22 @@ const LikeButton = (prop: propInterface) => {
 
     // ตรวจสอบสถานะอัปเดตล่าสุด
     if (isFavoritedStatus) {
-      if (favoriteData.length > 0) {
-        await deleteFavoriteByid(favoriteData[0].id);
-        
+      if (favoriteData) {
+        await deleteFavoriteByid(favoriteData.id);
+        toast({
+          variant:"default",
+          title:"ยกเลิกกดถูกใจแล้ว"
+        })
       }
     } else {
       await createFavorite({
         userId: Number(user.id),
         productId: prop.productId,
       });
+      toast({
+        variant:"default",
+        title:"กดถูกใจแล้ว"
+      })
     }
 
     await fetchData(); // ดึงข้อมูลใหม่หลังจากเพิ่ม/ลบ Favorite
