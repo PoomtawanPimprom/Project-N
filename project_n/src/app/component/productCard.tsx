@@ -121,7 +121,7 @@ const ProductCard = ({ product }: prop) => {
 
               {/* Action Buttons */}
               <div className="gap-2 flex">
-                <LikeButton productId={product.id} />
+                {/* <LikeButton productId={product.id} /> */}
 
                 {/* Add to Cart Drawer */}
                 <Drawer>
