@@ -41,13 +41,13 @@ export default function Navbar() {
         <SearchInput />
 
         {/* Menu */}
-        <ul className="hidden md:flex items-center text-accent-foreground gap-x-6 text-base whitespace-nowrap flex-nowrap">
+        <ul className="hidden md:flex items-center text-accent-foreground gap-x-8 text-base whitespace-nowrap flex-nowrap">
           <li className=" hover:text-gray-500 hover:cursor-pointer">
             <SwitchTheme />
           </li>
 
           {/* Cart Dropdown */}
-          <li className="relative flex items-center justify-center hover:text-gray-500 hover:cursor-pointer"
+          <li className="relative flex items-center justify-center hover:text-gray-500 hover:cursor-pointer "
             onMouseEnter={() => setIsCartOpen(true)}
             onMouseLeave={() => setIsCartOpen(false)}
           >

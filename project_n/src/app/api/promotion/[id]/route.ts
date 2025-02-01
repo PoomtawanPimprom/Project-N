@@ -16,20 +16,16 @@ export async function PUT(request: NextRequest, props: { params: Promise<{ id: s
     try {
         const {
             name,
-            description,
-            discountPercentage,
+            code,
             discountAmount,
-            minimumPrice,
             isActive,
         } = await request.json();
         const promoId = Number(params.id)
         const updatePost = await prisma.discount.update({
             where: { id: promoId }, data: { 
                 name,
-                description,
-                discountPercentage,
+                code,
                 discountAmount,
-                minimumPrice,
                 isActive,
             }
         });

@@ -99,11 +99,11 @@ export default function Password() {
                 <MenuLeft checkCreatedStore={session?.user.storeId} profile={userData} />
                 {/* Content right */}
                 <div className="flex flex-col lg:w-3/4 gap-4 bg-white border rounded-lg shadow-md p-4 sm:p-6 sm:shadow-none sm:border-black">
-                    <h2 className="text-lg font-semibold">Change Password</h2>
+                    <h2 className="text-lg font-semibold">เปลี่ยนรหัสผ่าน</h2>
                     <form className="space-y-4" onSubmit={handleSubmit}>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Current Password</label>
+                            <label className="block text-sm font-medium text-gray-700">รหัสผ่านปัจจุบัน</label>
                             <div className="relative">
                                 <input
                                     type={showCurPass ? "text" : "password"}
@@ -120,7 +120,7 @@ export default function Password() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">New Password</label>
+                            <label className="block text-sm font-medium text-gray-700">รหัสผ่านใหม่</label>
                             <div className="relative">
                                 <input
                                     type={showNewPass ? "text" : "password"}
@@ -140,7 +140,7 @@ export default function Password() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+                            <label className="block text-sm font-medium text-gray-700">ยืนยันรหัสผ่าน</label>
                             <div className="relative">
                                 <input
                                     type={showConfirmPass ? "text" : "password"}
