@@ -1,12 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { IoMdMore } from "react-icons/io";
 import { CircleUser, ShoppingCart } from "lucide-react";
 import SearchInput from "./SearchInput";
 import { signOut, useSession } from "next-auth/react";
-import { getUserById } from "../service/profile/service";
-import { userInterface } from "../interface/userInterface";
 import { useRouter } from "next/navigation";
 import SwitchTheme from "./SwitchTheme";
 import { useCart } from "@/app/context/cartContext";
@@ -18,35 +16,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu"
-import { getCartById } from "@/app/service/cart/service";
-import { cartItemInterface } from "@/app/interface/cartItemInterface";
 import { useUser } from "../context/userContext";
-
 
 export default function Navbar() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const {user} = useUser()
-  const { amountItem, cart } = useCart();
-  const [cartItems, setCartItems] = useState<cartItemInterface[]>([]);
+  const {  item, itemCount } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false); // state สำหรับ hover
   const [isMenuMore, setIsMenuMore] = useState(false);
 
   if (status === "loading") return null;
-
-  const fetchCartData = async () => {
-    if (!session?.user?.id) return;
-    try {
-      const res = await getCartById(Number(session.user.id));
-      setCartItems(res);
-    } catch (error) {
-      console.error("Error fetching cart data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCartData()
-  }, [session]);
 
   return (
     <>
@@ -61,14 +41,13 @@ export default function Navbar() {
         <SearchInput />
 
         {/* Menu */}
-        <ul className="hidden md:flex items-center text-accent-foreground gap-10 text-base">
+        <ul className="hidden md:flex items-center text-accent-foreground gap-x-6 text-base whitespace-nowrap flex-nowrap">
           <li className="text-lg  hover:text-gray-500 hover:cursor-pointer">
             <SwitchTheme />
           </li>
 
           {/* Cart Dropdown */}
-          <li
-            className="text-lg relative hover:text-gray-500 hover:cursor-pointer"
+          <li className="text-lg relative hover:text-gray-500 hover:cursor-pointer"
             onMouseEnter={() => setIsCartOpen(true)}
             onMouseLeave={() => setIsCartOpen(false)}
           >
@@ -76,26 +55,23 @@ export default function Navbar() {
               <DropdownMenuTrigger asChild>
                 <Link href="/cart" className="relative" onClick={(e) => e.stopPropagation()}>
                   <ShoppingCart className="w-7 h-7 cursor-pointer" />
-                  <div
-                    className="rounded-full bg-red-600 flex justify-center items-center text-white w-6 h-6 absolute bottom-0 right-0"
-                    style={{ transform: 'translate(50%, 50%)' }}
-                  >
-                    {cartItems.length}
+                  <div className="rounded-full bg-red-600 flex justify-center items-center text-white w-5 h-5 absolute bottom-0 right-0" style={{ transform: 'translate(50%, 50%)' }}>
+                    {itemCount}
                   </div>
                 </Link>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="end" className="w-64 bg-white dark:bg-black shadow-md">
-                {cartItems.length === 0 ? (
+              <DropdownMenuContent align="center" className="w-64 bg-white dark:bg-black shadow-md">
+                {item.length === 0 ? (
                   <div className="p-4 text-center text-gray-500">ไม่มีสินค้าในตะกร้า</div>
                 ) : (
                   <>
                     <DropdownMenuLabel className="text-center font-semibold">
-                      สินค้าในตะกร้า ({cartItems.length} รายการ)
+                      สินค้าในตะกร้า ({item.length} รายการ)
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
 
-                    {cartItems.map((cart) => (
+                    {item.map((cart) => (
                       <DropdownMenuItem key={cart.id} className="flex items-center gap-2 p-2">
                         <img src={cart.product?.image!.image1} alt={cart.product?.name} className="w-12 h-12 rounded-md object-cover" />
                         <div className="flex-1">
@@ -118,8 +94,7 @@ export default function Navbar() {
             </DropdownMenu>
           </li>
 
-
-          <li className="text-lg  hover:text-gray-500 hover:cursor-pointer">
+          <li className="text-lg hover:text-gray-500 hover:cursor-pointer">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 {session ? (
@@ -133,7 +108,7 @@ export default function Navbar() {
                 )}
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuContent align="center" className="w-48">
                 {!session ? (
                   <DropdownMenuItem>
                     <Link href="/login" className="w-full">เข้าสู่ระบบ</Link>

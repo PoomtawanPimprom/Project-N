@@ -18,7 +18,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/app/components/ui/drawer";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { getInventoriesByProductId } from "../service/inventory/service";
 import { inventoryInterface } from "../interface/inventoryInterface";
 import { createCart } from "../service/cart/service";
@@ -31,14 +31,13 @@ interface prop {
 const ProductCard = ({ product }: prop) => {
   const { data: session } = useSession();
   const { toast } = useToast();
-  const { fetchCart } = useCart();
+  const { fetchCartAll } = useCart();
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [inventory, setInventory] = useState<inventoryInterface[]>([]);
   const [filteredColors, setFilteredColors] = useState<string[]>([]); // เก็บสีที่กรองแล้ว
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
-  const [forceRender, setForceRender] = useState(false);
 
   function onClick(adjustment: number) {
     setQuantity(Math.max(1, Math.min(100, quantity + adjustment)));
@@ -68,8 +67,7 @@ const ProductCard = ({ product }: prop) => {
         size: selectedSize,
         quantity: quantity,
       })
-      fetchCart(); 
-      setForceRender((prev) => !prev);
+      await fetchCartAll(); 
       toast({
         description: "เพิ่มสินค้าเข้าตะกร้าเรียบร้อยแล้ว",
       });
@@ -92,10 +90,6 @@ const ProductCard = ({ product }: prop) => {
     const data = await getInventoriesByProductId(product.id, '');
     setInventory(data);
   }
-
-
-
-
 
   return (
     <>
@@ -138,7 +132,7 @@ const ProductCard = ({ product }: prop) => {
                     </button>
                   </DrawerTrigger>
 
-                  <DrawerContent onClick={(e) => e.stopPropagation()}>
+                  <DrawerContent onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}>
                     <div className="mx-auto w-full max-w-sm">
                       <DrawerHeader>
                         <DrawerTitle>{product.name}</DrawerTitle>

@@ -17,6 +17,7 @@ import { useCart } from "@/app/context/cartContext";
 
 function cart() {
   const router = useRouter();
+  const { fetchCartAll } = useCart();
   const { data: session, status } = useSession();
   if (status === "loading") {
     return <Loading />; // แสดงข้อความระหว่างโหลด session
@@ -108,7 +109,7 @@ function cart() {
   const deleteDataAddress = async (id: Number) => {
     await deleteCartById(id);
     fetchCartDatas();
-    fetchCartDatas();
+    fetchCartAll();
   };
 
   const fetchCartDatas = async () => {

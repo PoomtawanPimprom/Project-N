@@ -9,9 +9,7 @@ import { productInterface } from "@/app/interface/productInterface";
 import Description from "./Desription";
 import { createCart } from "@/app/service/cart/service";
 import { useSession } from "next-auth/react";
-import { cartItemInterface } from "@/app/interface/cartItemInterface";
 import { useToast } from "@/hooks/use-toast";
-import router from "next/router";
 import { useCart } from "@/app/context/cartContext";
 
 type SelectProp = {
@@ -26,7 +24,7 @@ export default function SelectToCart({
   productId,
 }: SelectProp) {
   const { toast } = useToast();
-  const { fetchCart } = useCart();
+  const { fetchCartAll } = useCart();
   const [size, setSize] = useState<string | undefined>();
   const [color, setColor] = useState<string | undefined>();
   const [count, setCount] = useState(1);
@@ -64,7 +62,7 @@ export default function SelectToCart({
         size: size,
         quantity: count,
       });
-      await fetchCart(); // update quantity
+      await fetchCartAll(); // update quantity
       toast({
         description: "เพิ่มสินค้าเข้าตะกร้าเรียบร้อยแล้ว",
       });

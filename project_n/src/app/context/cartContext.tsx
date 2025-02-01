@@ -1,7 +1,8 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
-import { getCountCartById } from "@/app/service/cart/service";
+import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { getCartById, getCountCartById } from "@/app/service/cart/service";
 import { useSession } from "next-auth/react";
+import { cartItemInterface } from "../interface/cartItemInterface";
 
 // hover cart interface
 interface CartItem {
@@ -14,59 +15,45 @@ interface CartItem {
 
 // Context for cart interface
 interface CartContextType {
-  amountItem: number;
-  cart: CartItem[];
+  itemCount: number;
+  item: cartItemInterface[];
   fetchCart: () => Promise<void>;
-  addToCart: (item: CartItem) => void;
+  fetchCartAll: () => Promise<void>;
 }
 
 // Default Context
 const CartContext = createContext<CartContextType>({
-  amountItem: 0,
-  cart: [],
+  itemCount: 0,
+  item: [],
   fetchCart: async () => { },
-  addToCart: () => { },
+  fetchCartAll: async () => { },
 });
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const { data: session } = useSession();
-  const [amountItem, setAmountItem] = useState(0);
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [ amountItem, setAmountItem] = useState(0);
+  const [item, setItem] = useState<cartItemInterface[]>([]);
+  const itemCount = useMemo(() => item.length, [item]);
 
+  const fetchCartAll = async () => {
+    const res = await getCartById(Number(session!.user.id));
+    console.log("Cart updated:", res);
+    setItem(res);
+  }
   // fetch amount cart items
   const fetchCart = async () => {
     if (!session?.user?.id) return;
     const res = await getCountCartById(Number(session!.user.id));
-    console.log("Cart updated:", res); // ✅ ตรวจสอบค่าที่รีเทิร์นมา
     setAmountItem(res);
   };
 
-
   useEffect(() => {
     fetchCart();
-  }, [session, cart]);
-
-  const addToCart = (item: CartItem) => {
-    setCart((prevCart) => {
-      const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
-      let updatedCart;
-      if (existingItem) {
-        updatedCart = prevCart.map((cartItem) =>
-          cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : cartItem
-        );
-      } else {
-        updatedCart = [...prevCart, { ...item, quantity: 1 }];
-      }
-  
-      setAmountItem(updatedCart.reduce((total, item) => total + item.quantity, 0));
-      return updatedCart;
-    });
-  };
+    fetchCartAll();
+  }, [session]);
 
   return (
-    <CartContext.Provider value={{ amountItem, cart, fetchCart, addToCart }}>
+    <CartContext.Provider value={{ item, itemCount, fetchCart, fetchCartAll }}>
       {children}
     </CartContext.Provider>
   );
