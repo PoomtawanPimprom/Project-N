@@ -146,7 +146,7 @@ model Product {
   price           Int           @default(0)
   sales           Int           @default(0)
   createdAt       DateTime      @default(now())
-  deletedAt       DateTime? 
+  deletedAt       DateTime?
   //fk 
   storeID         Int
   store           Store         @relation(fields: [storeID], references: [id])
@@ -170,12 +170,10 @@ model Inventory {
   createdAt DateTime @default(now())
 
   productID Int
-  product   Product  @relation(fields: [productID], references: [id])
+  product   Product @relation(fields: [productID], references: [id])
 
   @@unique([productID, size, color])
 }
-
-
 
 model Discount {
   id                 Int     @id @default(autoincrement())
@@ -246,13 +244,13 @@ model ReportStatus {
 
 //payment system
 model OrderItem {
-  id                Int              @id @default(autoincrement())
-  color             String?
-  size              String?
-  quantity          Int
-  storeId           Int?
+  id            Int      @id @default(autoincrement())
+  color         String?
+  size          String?
+  quantity      Int
+  storeId       Int?
   userAddressId Int?
-
+  createdAt      DateTime @default(now())
 
   orderDetailId     Int
   orderDetail       OrderDetail?     @relation(fields: [orderDetailId], references: [id])
@@ -276,9 +274,9 @@ model OrderDetail {
   discountId Int      @default(0)
 
   userId        Int
-  user          User?       @relation(fields: [userId], references: [id])
-  paymentId     Int? @unique
-  payment       Payment?    @relation(fields: [paymentId], references: [id])
+  user          User?        @relation(fields: [userId], references: [id])
+  paymentId     Int?         @unique
+  payment       Payment?     @relation(fields: [paymentId], references: [id])
   transportId   Int
   transport     Transport?   @relation(fields: [transportId], references: [id])
   orderStatusId Int
@@ -303,7 +301,7 @@ model Transport {
 
 model Payment {
   id              Int           @id @default(autoincrement())
-  orderId         Int
+  orderDatailId         Int
   amount          Float
   moneySlip       String?
   createAt        DateTime      @default(now())
