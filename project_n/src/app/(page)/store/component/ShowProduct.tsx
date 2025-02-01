@@ -33,7 +33,7 @@ const ShowProduct = ({ storeId }: prop) => {
         <div className="header flex flex-col h-full w-full p-2">
           <div className="grid h-full grid-cols-2 md:grid-cols-3  xl:grid-cols-5 gap-2 grid-flow-row auto-rows-auto items-center justify-center">
             {products.map((item, index) => (
-              <div className="flex mx-auto" key={index}>
+              <div className="flex mx-auto w-full" key={index}>
                 <ProductCard product={item} />
               </div>
             ))}
