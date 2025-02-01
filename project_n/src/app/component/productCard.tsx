@@ -93,7 +93,7 @@ const ProductCard = ({ product }: prop) => {
 
   return (
     <>
-      <div key={product.id} className=" overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer flex flex-col justify-between h-full">
+      <div key={product.id} className="w-full overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer flex flex-col justify-between h-full">
         {/* Image Section */}
         <div onClick={handleGotoProductPage} className="relative h-64">
           <img src={product.image!.image1} alt={product.name} className="w-full h-full object-cover" />
