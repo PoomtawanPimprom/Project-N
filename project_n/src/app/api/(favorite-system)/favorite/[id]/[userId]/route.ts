@@ -12,7 +12,7 @@ export async function GET(
     const productId = Number(params.id)
     const userId = Number(params.userId)
     try {
-        const data = await prisma.favorite.findMany({ where: { userId: userId, productId: productId } })
+        const data = await prisma.favorite.findFirst({ where: { userId: userId, productId: productId } })
         return NextResponse.json(data, { status: 200})
     } catch (error: any) {
         console.error(error.message)
