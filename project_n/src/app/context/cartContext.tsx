@@ -36,6 +36,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const itemCount = useMemo(() => item.length, [item]);
 
   const fetchCartAll = async () => {
+    if(!session)  return
     const res = await getCartById(Number(session!.user.id));
     console.log("Cart updated:", res);
     setItem(res);

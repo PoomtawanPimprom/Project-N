@@ -19,6 +19,10 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     
     
     const fetchUser = async () => {
+        if(!session){
+            setUser(null);
+            return;
+        }
         const res = await getUserById(Number(session?.user.id))
         setUser(res)
     }
