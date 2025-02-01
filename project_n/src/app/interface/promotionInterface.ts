@@ -1,9 +1,7 @@
 export interface promotionInterface {
     id: number;
     name: string;
-    description: string;
-    discountPercentage: number;
+    code: string;
     discountAmount: number;
-    minimumPrice: number;
     isActive: boolean;
 }
