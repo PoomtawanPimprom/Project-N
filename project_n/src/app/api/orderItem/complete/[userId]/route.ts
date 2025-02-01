@@ -7,21 +7,24 @@ export async function GET(request: NextRequest, props: { params: Promise<{ userI
     const params = await props.params;
     try {
         const userId = Number(params.userId);
-        //get all order datail status complete
+        //get all order datail status complete and order items status complete
         const allOrderDetail = await prisma.orderDetail.findMany({
             where: { userId: userId, orderStatusId: 2 },
-            select: { id: true }
+            include: {
+                OrderItem: {
+                    where: { orderItemStatusId: 4 },
+                    include: { product: true }
+                },
+                payment: true,
+                transport:true
+            },
+            orderBy:{ id: "desc"}
         });
-        const orderDetailIds = allOrderDetail.map(order => order.id);
 
-        //get all order item status complete
-        const allOrderItemsComplete = await prisma.orderItem.findMany({
-            where: { orderDetailId: { in: orderDetailIds }, orderItemStatusId: 4 },
-            include:{ product: true}
-        })
-        console.log(allOrderItemsComplete)
 
-        return NextResponse.json(allOrderItemsComplete, { status: 200 })
+        const filterAllOrderDetail = allOrderDetail.filter((item)=> item.OrderItem.length>0)
+
+        return NextResponse.json(filterAllOrderDetail, { status: 200 })
     } catch (error) {
         console.error("Error fetching user address:", error);
         throw new Error("Failed to fetch user address");

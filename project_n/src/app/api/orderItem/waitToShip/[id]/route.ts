@@ -17,7 +17,8 @@ export async function GET(request: NextRequest, props: { params: Promise<{ id: s
         //get all order item status to ship
         const allOrderItemsToReive = await prisma.orderItem.findMany({
             where: { orderDetailId: { in: orderDetailIds }, orderItemStatusId: 2 },
-            include: { product: true }
+            include: { product: true },
+            orderBy:{ orderDetailId: "desc"}
         })
 
 
