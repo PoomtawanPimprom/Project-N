@@ -97,7 +97,7 @@ export default function Navbar() {
           <li className=" hover:text-gray-500 hover:cursor-pointer">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                {session ? (
+                {user !== null ? (
                   <div className="flex items-center cursor-pointer">
                     <img className="w-10 h-10 rounded-full border border-black object-cover" src={user?.profile} alt={user?.name} />
                   </div>

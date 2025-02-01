@@ -119,6 +119,7 @@ export const userAddressSchema = z.object({
         message: "เบอร์โทรศัพท์ควรเป็นตัวเลข 10 หลัก",
       }),
     userId: z.number().int(),
+    addressStatusId: z.number().optional()
   });
 
 export const transportSchema = z.object({
