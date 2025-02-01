@@ -44,13 +44,22 @@ export default function MyPurchase() {
     { id: "COMPLETE", label: "เสร็จสิ้น" },
     { id: "CANCELLED", label: "ยกเลิกคำสั่งซื้อ" },
   ];
+  const fecthdata2 = async () => {
+    const data = await GetAllOrderItemsToPay(Number(session?.user.id));
+    setOrderItemsToPay(data);
+    console.log(data);
+  };
 
+  const fetchUserData = async () => {
+    const res = await getUserById(Number(session?.user.id));
+    setUserData(res);
+  };
   const renderContent = () => {
     switch (activeTab) {
       case "ALL":
         return <All />;
       case "TO_PAY":
-        return <ToPay OrderItemsToPay={OrderItemsToPay} />;
+        return <ToPay OrderItemsToPay={OrderItemsToPay} refesh={fecthdata2}/>;
       case "WAIT_FOR_SHIP":
         return <WaitforShip />;
       case "TO_RECEIVE":
@@ -62,17 +71,6 @@ export default function MyPurchase() {
       default:
         return <p>Unknown tab selected.</p>;
     }
-  };
-
-  const fecthdata2 = async () => {
-    const data = await GetAllOrderItemsToPay(Number(session?.user.id));
-    setOrderItemsToPay(data);
-    console.log(data);
-  };
-
-  const fetchUserData = async () => {
-    const res = await getUserById(Number(session?.user.id));
-    setUserData(res);
   };
 
   useEffect(() => {
@@ -113,7 +111,7 @@ export default function MyPurchase() {
             })}
           </div>
 
-          <div className="mt-4">{renderContent()}</div>
+          <div className="">{renderContent()}</div>
         </div>
       </div>
     </section>

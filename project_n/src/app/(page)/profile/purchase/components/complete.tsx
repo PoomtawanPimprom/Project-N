@@ -1,71 +1,80 @@
 "use client";
 
-import { orderItemInterface } from "@/app/interface/orderItemInterface";
+import { orderDetailInterface } from "@/app/interface/orderDetailInterface";
 import {
-    GetAllOrderItemsComplete,
-  updateStatusOrderItemsToRecevie,
+  GetAllOrderItemsComplete,
 } from "@/app/service/orderItem/service";
 import { generateKey } from "@/lib/utils";
+import { NotebookPen, ReceiptText } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import OrderItemCard from "./OrderItemCard";
+import Link from "next/link";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import PrintReceipt from "@/app/(page)/test-print-pdf/receipt";
+import { useUser } from "@/app/context/userContext";
 
 export default function Complete() {
-    const router = useRouter();
-    const { data: session } = useSession();
-    const [OrderItemsComplete, setOrderItemsComplete] = useState<
-      orderItemInterface[]
-    >([]);
+  const {user} = useUser()
+  const [OrderDetailComplete, setOrderDetailComplete] = useState<
+    orderDetailInterface[]
+  >([]);
 
-    const fecthdata = async () => {
-      const data = await GetAllOrderItemsComplete(Number(session?.user.id));
-      setOrderItemsComplete(data);
-      console.log(data);
-    };
-  
-    useEffect(() => {
-      fecthdata();
-    }, [session]);
+  const fecthdata = async () => {
+    const data = await GetAllOrderItemsComplete(user!.id);
+    console.log(data);
+    setOrderDetailComplete(data);
+  };
 
-    return (
-        <div className="max-w-7xl mx-auto p-4 hover:shadow-lg rounded-lg">
-      {OrderItemsComplete.map((orderItem) => (
-        <div className="space-y-4"  key={generateKey()}>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 p-4 border-b border-gray-200">
-            {/* Image */}
-            <div className="w-24 h-24 sm:w-32 sm:h-32">
-              <img
-                src={orderItem.product?.image?.image1}
-                alt="image"
-                className="w-full h-full object-cover rounded-lg"
-              />
+  useEffect(() => {
+    fecthdata();
+  }, [user]);
+
+  return (
+    <div className="max-w-7xl mx-auto p-2 space-y-2 ">
+      {OrderDetailComplete.map((orderDetail) => (
+        <div
+          className="bg-gray-50 shadow-lg hover:shadow-none rounded-lg "
+          key={generateKey()}
+        >
+          <div className="flex h-12 p-2 bg-primary rounded-t-lg">
+            <div className="flex items-center justify-center text-white font-bold text-xl">
+              <p className="">รายการที่ทำเสร็จแล้ว</p>
             </div>
-
-            {/* Product Info */}
-            <div className="mt-3 sm:mt-0 flex-1">
-              <p className="text-lg font-semibold text-gray-800">
-                {orderItem.product?.name}
-              </p>
-              <p className="text-gray-600">
-                {orderItem.color ? orderItem.color : ""}
-              </p>
-              <p className="text-gray-600">
-                {orderItem.size ? orderItem.size : ""}
-              </p>
-              <p className="text-gray-600">{orderItem.quantity}</p>
-            </div>
-
-            {/* Price Info */}
-            <div className="mt-3 sm:mt-0 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
-              <p className="text-lg font-semibold text-gray-800">
-                ราคา: {orderItem.quantity * orderItem.product?.price!} บาท
-              </p>
-              {/* <p className="text-sm text-gray-500 sm:text-lg">ราคารวมทั้งหมด: 200000</p> */}
-            </div>
+            <div className=""></div>
           </div>
-         
+          <div className="space-y-1">
+            {orderDetail.OrderItem?.map((orderItem) => (
+              <div key={orderItem.id}>
+                <OrderItemCard orderItem={orderItem} />
+                {/* check over 3 day */}
+                {new Date(orderItem.createdAt).getTime() <
+                new Date().getTime() - 3 * 24 * 60 * 60 * 1000 ? (
+                  <></>
+                ) : (
+                  <Link
+                    href={`/review?pId=${orderItem.productId}`}
+                    className="flex justify-end gap-2 p-2"
+                  >
+                    <button className="flex rounded-lg px-4 py-2 text-white  bg-primary">
+                      <NotebookPen className="mr-1" />
+                      รีวิวสินค้า
+                    </button>
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="flex px-2 py-4  justify-end border-t">
+          <PDFDownloadLink document={<PrintReceipt user={user!} orderDatail={orderDetail} OrderItems={orderDetail.OrderItem!} payment={orderDetail.payment!} />} fileName="salary-slip.pdf">
+            <button className="flex rounded-lg px-4 py-2 text-white bg-gray-600">
+              <ReceiptText className="mr-1" />
+              ปลิ้นใบเสร็จ
+            </button>
+            </PDFDownloadLink>
+          </div>
         </div>
       ))}
     </div>
-    );
+  );
 }
