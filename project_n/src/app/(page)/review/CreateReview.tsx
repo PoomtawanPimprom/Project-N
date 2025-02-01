@@ -2,22 +2,36 @@
 import Form from "@/app/component/Form";
 import Input from "@/app/component/Input";
 import SubmitButtton from "@/app/component/SubmitButtton";
+
+import { useUser } from "@/app/context/userContext";
+import { productInterface } from "@/app/interface/productInterface";
 import { createReview } from "@/app/service/review/service";
-import { deleteUploadedImage, genarateImageName, storage, uploadImageToFirebase } from "@/lib/firebase/firebase";
+import {
+  deleteUploadedImage,
+  genarateImageName,
+  uploadImageToFirebase,
+} from "@/lib/firebase/firebase";
 import { reviewSchema, validateWithZod } from "@/lib/zod/Schema";
 import { ImagePlus, NotebookPen, X } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 
 type prop = {
-  userId: number;
-  productId: number;
+  product: productInterface;
 };
 
+export default function CreateReview({ product }: prop) {
+  const { data: session } = useSession();
+  const router = useRouter();
 
-export default function CreateReview({ userId, productId }: prop) {
-  const router = useRouter()
+  if (!session) {
+    router.push(`/login`);
+    return;
+  }
+  const userId = Number(session.user?.id);
+
   const MAX_FILES = 5;
   const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp"];
   const [formData, setFormData] = useState({
@@ -31,7 +45,6 @@ export default function CreateReview({ userId, productId }: prop) {
 
   const [imageError, setImageError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -107,8 +120,12 @@ export default function CreateReview({ userId, productId }: prop) {
       uploadedImages = await Promise.all(
         images.map(async (image, index) => {
           const reviewName = genarateImageName();
-          const result = await uploadImageToFirebase(image,reviewName,"review")
-          return { index: index + 1, url:result.downloadURL, ref: result.Ref }; // เก็บ reference สำหรับลบ
+          const result = await uploadImageToFirebase(
+            image,
+            reviewName,
+            "review"
+          );
+          return { index: index + 1, url: result.downloadURL, ref: result.Ref }; // เก็บ reference สำหรับลบ
         })
       );
       uploadedImages.forEach(({ index, url }) => {
@@ -120,7 +137,7 @@ export default function CreateReview({ userId, productId }: prop) {
         comment: formData.comment,
         images: imageUrls,
         userId: userId,
-        productId: productId,
+        productId: product.id,
       };
 
       // Send to API
@@ -129,7 +146,7 @@ export default function CreateReview({ userId, productId }: prop) {
       // Reset form after successful submission
       setFormData({ comment: "" });
       setImages([]);
-      router.refresh()
+      router.refresh();
     } catch (error: any) {
       if (uploadedImages.length > 0) {
         await Promise.all(
@@ -151,10 +168,21 @@ export default function CreateReview({ userId, productId }: prop) {
   };
 
   return (
-    <div className="mx-auto border p-2 rounded-xl w-[600px]">
+    <div className="mx-auto border p-2 rounded-xl space-y-2 w-[600px]">
       <div className="flex p-2 text-2xl font-semibold">
         <NotebookPen className="mr-2" />
         <p>รีวิวสินค้า</p>
+      </div>
+      <div className="flex p-2 gap-2 items-center rounded-lg border">
+        <img
+          alt={product.name}
+          src={product.image?.image1!}
+          className="w-[100px] h-[100px] rounded-lg"
+        />
+        <div className="flex flex-col space-y-1 overflow-hidden">
+            <p className="text-xl font-bold">ชื่อสินค้า : {product.name}</p>
+            <p className="text-sm font-medium">จากร้าน : {product.store?.name}</p>
+        </div>
       </div>
       <Form onSubmit={onSubmit} className="space-y-3">
         <Input

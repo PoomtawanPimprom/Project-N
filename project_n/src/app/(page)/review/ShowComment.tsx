@@ -1,18 +1,22 @@
 "use client";
+import { useUser } from "@/app/context/userContext";
 import { reivewInterface } from "@/app/interface/reviewInterface";
 import { deleteReviewById } from "@/app/service/review/service";
 import { deleteUploadedImage } from "@/lib/firebase/firebase";
 import { Image, MessageSquare, MoreVertical, Trash2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type prop = {
   reviewByProductId: reivewInterface[];
-  userId: number;
 };
 
-export default function ShowComment({ reviewByProductId, userId }: prop) {
-  const router = useRouter();
+export default function ShowComment({ reviewByProductId }: prop) {
+  const {data:session} = useSession()
+  const router = useRouter()
+  const userId = Number(session?.user.id);
+
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [filterType, setFilterType] = useState<
     "all" | "withImages" | "withoutImages"
@@ -30,13 +34,12 @@ export default function ShowComment({ reviewByProductId, userId }: prop) {
     try {
       //check if the review have images
       if (review.images && Object.keys(review.images).length > 0) {
-        
         const imageUrls = getImageUrls(review.images);
         for (const imgUrl of imageUrls) {
           await deleteUploadedImage("review", imgUrl);
         }
       }
-      
+
       await deleteReviewById(review.id);
       setOpenMenuId(null);
       router.refresh();
@@ -46,14 +49,22 @@ export default function ShowComment({ reviewByProductId, userId }: prop) {
   };
 
   const getImageUrls = (
-    images: { image1?: string; image2?: string; image3?: string; image4?: string; image5?: string } | undefined
+    images:
+      | {
+          image1?: string;
+          image2?: string;
+          image3?: string;
+          image4?: string;
+          image5?: string;
+        }
+      | undefined
   ): string[] => {
     if (!images) return [];
     return Object.values(images).filter(
       (url): url is string => typeof url === "string" && url.length > 0
     );
   };
-  
+
   const filteredReviews = reviewByProductId.filter((review) => {
     const imageUrls = getImageUrls(review.images);
     switch (filterType) {
@@ -65,7 +76,6 @@ export default function ShowComment({ reviewByProductId, userId }: prop) {
         return true;
     }
   });
-  
 
   return (
     <>
