@@ -7,7 +7,6 @@ type prop = {
 };
 
 export default function ReviewBox({ reviews }: prop) {
-  const defaultProfileImage = "../../../../public/pngtree.png";
   return (
     <div className="flex flex-col justify-center">
       <div className="flex flex-col w-[450px] bg-white  lg:justify-between lg:w-full border p-4 rounded-xl dark:bg-bg-dark dark:border-none">
@@ -16,7 +15,7 @@ export default function ReviewBox({ reviews }: prop) {
           {reviews.map((item, index) => (
             <>
               <div
-                key={index}
+                key={item.id}
                 className="flex flex-col justify-center p-2 border rounded-lg gap-2"
               >
                 <div className="flex gap-2">
@@ -27,7 +26,7 @@ export default function ReviewBox({ reviews }: prop) {
                         height={50}
                         alt={item.user?.name ?? ""}
                         src={item.user?.profile}
-                        className="rounded-full"
+                        className="rounded-full w-[50px] h-[50px]"
                       />
                     ) : (
                       <ImageSkeletion />

@@ -61,7 +61,7 @@ export default function ProductImage({ product }: prop) {
       <div className="flex gap-2 overflow-x-auto p-2">
         {imageArray.map((img, index) => (
           <button
-            key={index}
+            key={img}
             onClick={() => setCurrentImage(index)}
             className={`flex-shrink-0 relative w-20 h-20 rounded-md overflow-hidden 
               ${

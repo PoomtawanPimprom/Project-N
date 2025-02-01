@@ -27,8 +27,10 @@ const ProductByIdPage = async (props: { params: Promise<{ productId: number }> }
   }))as reivewInterface[]
 
   const otherProduct = (await prisma.product.findMany({
-    where:{storeID:product.id, deletedAt: null}
+    where:{storeID:product.storeID, deletedAt: null}
   })) as productInterface[]
+
+  console.log(otherProduct)
   return (
     <>
       <div className="flex flex-col items-center dark:bg-black">

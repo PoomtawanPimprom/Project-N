@@ -144,7 +144,7 @@ export default function SelectToCart({
             <div className="grid grid-cols-5 gap-2 border p-2 rounded-xl mt-2">
               {uniqueColors.map((colorItem, index) => (
                 <button
-                  key={index}
+                  key={colorItem}
                   onClick={() =>
                     setColor(
                       color === colorItem ? undefined : (colorItem as string)
