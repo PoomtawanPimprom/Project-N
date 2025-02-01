@@ -16,16 +16,13 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/app/components/ui/dialog";
 import AdminSideBar from "../../AdminSideBar";
-import { useRouter } from "next/navigation";
 
 export default function AdminPromotions() {
-    const router = useRouter()
   const { toast } = useToast();
   const [search, setSearch] = useState<string>("");
   const [promotions, setPromotions] = useState<promotionInterface[]>([]);
@@ -33,10 +30,8 @@ export default function AdminPromotions() {
   const [formData, setFormData] = useState<promotionInterface>({
     id: 0,
     name: "",
-    description: "",
-    discountPercentage: 0,
+    code: "",
     discountAmount: 0,
-    minimumPrice: 0,
     isActive: false,
   });
 
@@ -47,8 +42,7 @@ export default function AdminPromotions() {
 
   const filteredPromotions = promotions.filter(
     (promo) =>
-      promo.name.toLowerCase().includes(search.toLowerCase()) ||
-      promo.description.toLowerCase().includes(search.toLowerCase())
+      promo.name.toLowerCase().includes(search.toLowerCase())
   );
 
   // OnChange input
@@ -68,20 +62,20 @@ export default function AdminPromotions() {
     e.preventDefault();
     const submissionData = {
       ...formData,
-      discountPercentage: parseFloat(formData.discountPercentage.toString()),
       discountAmount: parseInt(formData.discountAmount.toString()),
-      minimumPrice: parseInt(formData.minimumPrice.toString()),
     };
     await createPromotion(submissionData);
     fetchPromotionData();
     setFormData({
       id: 0,
       name: "",
-      description: "",
-      discountPercentage: 0,
+      code: "",
       discountAmount: 0,
-      minimumPrice: 0,
       isActive: false,
+    });
+    toast({
+      title: "อัพเดทข้อมูลเรียบร้อย",
+      variant: "success",
     });
   };
 
@@ -93,24 +87,19 @@ export default function AdminPromotions() {
       console.log(formData);
       await updatePromotionById(formData.id, {
         name: formData.name,
-        description: formData.description,
-        discountPercentage: parseInt(formData.discountPercentage.toString()),
         discountAmount: parseInt(formData.discountAmount.toString()),
-        minimumPrice: parseInt(formData.minimumPrice.toString()),
         isActive: formData.isActive,
       });
       toast({
         title: "อัพเดทข้อมูลเรียบร้อย",
-        variant: "default",
+        variant: "success",
       });
       fetchPromotionData();
       setFormData({
         id: 0,
         name: "",
-        description: "",
-        discountPercentage: 0,
+        code: "",
         discountAmount: 0,
-        minimumPrice: 0,
         isActive: false,
       });
     } catch (error: any) {
@@ -124,7 +113,7 @@ export default function AdminPromotions() {
     await deletePromotionById(id);
     toast({
       title: "ลบข้อมูลเรียบร้อย",
-      variant: "default",
+      variant: "success",
     });
     fetchPromotionData();
   };
@@ -183,53 +172,38 @@ export default function AdminPromotions() {
     <section id="admin-promotions" className="min-h-screen  flex">
       <AdminSideBar />
       <div className="container mx-auto px-4 py-6 space-y-6">
+
         <h1 className="text-3xl font-bold text-center sm:text-left">
           จัดการโปรโมชั่น
         </h1>
 
         <div className="flex gap-5">
-          <form
-            className="space-y-4 dark:bg-zinc-800 p-4 rounded-lg shadow-md w-2/5 mx-auto sm:mx-0"
-            onSubmit={onSubmitAddPromotion}
-          >
+          <form onSubmit={onSubmitAddPromotion} className="space-y-4 dark:bg-zinc-800 p-4 rounded-lg shadow-md w-2/5 mx-auto sm:mx-0">
             <h2 className="text-xl font-semibold">เพิ่มโปรโมชั่น</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium">
                   ชื่อโปรโมชั่น
                 </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full border rounded-md p-2"
-                  required
-                />
+                <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full border rounded-md p-2" required/>
               </div>
 
               <div>
-                <label
-                  htmlFor="discountAmount"
-                  className="block text-sm font-medium"
-                >
+                <label htmlFor="code" className="block text-sm font-medium">
+                  รหัสส่วนลด
+                </label>
+                <input type="text" name="code" value={formData.code} onChange={handleInputChange} className="w-full border rounded-md p-2"required/>
+              </div>
+
+              <div>
+                <label htmlFor="discountAmount" className="block text-sm font-medium">
                   ส่วนลด
                 </label>
-                <input
-                  type="number"
-                  name="discountAmount"
-                  value={formData.discountAmount}
-                  onChange={handleInputChange}
-                  className="w-full border rounded-md p-2"
-                  min={0}
-                  required
-                />
+                <input type="number" name="discountAmount" value={formData.discountAmount} onChange={handleInputChange} className="w-full border rounded-md p-2" min={0} required/>
               </div>
+
             </div>
-            <button
-              type="submit"
-              className="w-full py-2 px-4 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition"
-            >
+            <button type="submit" className="w-full py-2 px-4 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition">
               เพิ่มโปรโมชั่น
             </button>
           </form>
@@ -267,8 +241,8 @@ export default function AdminPromotions() {
           <table className="w-full table-auto dark:bg-zinc-700 rounded-lg  text-accent-foreground">
             <thead>
               <tr className="bg-gray-100 dark:bg-zinc-600   text-sm">
-                <th className="border p-2 rounded-tl-lg">ไอดี</th>
                 <th className="border p-2">ชื่อ</th>
+                <th className="border p-2">รหัสส่วนลด</th>
                 <th className="border p-2">ส่วนลด</th>
                 <th className="border p-2">เปิดใช้งาน</th>
                 <th className="border p-2 rounded-tr-lg">จัดการ</th>
@@ -277,8 +251,8 @@ export default function AdminPromotions() {
             <tbody>
               {filteredPromotions.map((promo) => (
                 <tr key={promo.id} className="text-center text-sm">
-                  <td className="border p-2">{promo.id}</td>
                   <td className="border p-2">{promo.name}</td>
+                  <td className="border p-2">{promo.code}</td>
                   <td className="border p-2">{promo.discountAmount}</td>
                   <td className="border p-2">
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -351,6 +325,13 @@ export default function AdminPromotions() {
                             <div className="flex justify-end gap-2">
                               <DialogClose asChild>
                                 <button
+                                  onClick={() => setFormData({
+                                    id: 0,
+                                    name: "",
+                                    code: "",
+                                    discountAmount: 0,
+                                    isActive: false,
+                                  })}
                                   type="button"
                                   className="px-4 py-2 text-sm text-gray-700 bg-white border rounded-lg shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                                 >
@@ -369,10 +350,7 @@ export default function AdminPromotions() {
                           </form>
                         </DialogContent>
                       </Dialog>
-                      <button
-                        onClick={() => deleteDataPromotion(promo.id)}
-                        className="w-full sm:w-auto px-4 py-2 text-white bg-red-600 rounded-lg shadow-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                      >
+                      <button onClick={() => deleteDataPromotion(promo.id)} className="w-full sm:w-auto px-4 py-2 text-white bg-red-600 rounded-lg shadow-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                         <FaRegTrashAlt />
                       </button>
                     </div>
