@@ -3,11 +3,13 @@
 import { CirclePlus, MapPin } from "lucide-react";
 import { useState } from "react";
 
-import CreateNewAddressModal from "./CreateNewAddress-Modal";
 import SelectAddressModal from "./SelectAddress-Modal";
 
 import { userInterface } from "@/app/interface/userInterface";
 import { userAddressInterface } from "@/app/interface/userAddressInterface";
+import { getUserAddress } from "@/app/service/address/service";
+import { useSession } from "next-auth/react";
+import { CreateAddressDialog } from "../../profile/address/CreateAddressDialog";
 
 type SelectAddressProps = {
   user: userInterface;
@@ -20,9 +22,11 @@ export default function SelectAddress({
   AllUserAddress,
   default_address
 }: SelectAddressProps) {
+  const {data:session} = useSession()
   const [openModalSelectAdd, setOpenModalSelectAdd] = useState(false);
-  const [openModalCreateNewAdd, setOpenModalCreateNewAdd] = useState(false);
-
+ const fetchAddressData = async () => {
+        const userAddress = await getUserAddress(Number(session?.user.id));
+    }
   const concatAddress = (address: userAddressInterface) => {
     if (address == null) {
       return;
@@ -79,31 +83,19 @@ export default function SelectAddress({
         <div className="w-full">
           <div className="flex w-full justify-between space-x-2 text-sm sm:text-base md:text-lg">
             <div className="flex w-full">
-              <button
-                onClick={() => {
-                  setOpenModalCreateNewAdd(true);
-                }}
-                className="flex w-full p-4 border rounded-lg justify-center font-bold"
-              >
-                <CirclePlus className="mr-2" />
-                <p>สร้างที่อยู่ใหม่</p>
-              </button>
+              <CreateAddressDialog onAddressCreated={fetchAddressData} userId={Number(session?.user.id)}/>
             </div>
           </div>
         </div>
       )}
 
-      <CreateNewAddressModal
-        user={user}
-        onClose={() => setOpenModalCreateNewAdd(false)}
-        open={openModalCreateNewAdd}
-      />
+
       
       <SelectAddressModal
         closeSelectOpenCreateAddress={() => {
           setOpenModalSelectAdd(false);
-          setOpenModalCreateNewAdd(true);
         }}
+        fetchAddressData={fetchAddressData}
         allUserAddress={AllUserAddress}
         defalutAddress={default_address}
         user={user}

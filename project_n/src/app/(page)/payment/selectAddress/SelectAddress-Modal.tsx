@@ -4,6 +4,8 @@ import { userInterface } from "@/app/interface/userInterface";
 import { useEffect, useState } from "react";
 import { UpdateAddressAction } from "./action";
 import { CirclePlus } from "lucide-react";
+import { CreateAddressDialog } from "../../profile/address/CreateAddressDialog";
+import { EditAddressDialog } from "../../profile/address/EditAddressDialog";
 
 type Modalprop = {
   user: userInterface;
@@ -12,6 +14,7 @@ type Modalprop = {
   defalutAddress: userAddressInterface;
   onClose: () => void;
   closeSelectOpenCreateAddress: () => void;
+  fetchAddressData: () => void;
 };
 
 export default function SelectAddressModal({
@@ -20,7 +23,7 @@ export default function SelectAddressModal({
   allUserAddress,
   defalutAddress,
   onClose,
-  closeSelectOpenCreateAddress,
+  fetchAddressData,
 }: Modalprop) {
   const [selectAddress, setSelectAddress] = useState<userAddressInterface>();
   const UpdateAddressActionBindUserId = UpdateAddressAction.bind(null, {
@@ -38,8 +41,6 @@ export default function SelectAddressModal({
     }
   }, [defalutAddress]);
 
-
-
   return (
     <Modal open={open} onClose={onClose}>
       <div className="flex flex-col w-64 sm:w-96 ">
@@ -49,7 +50,7 @@ export default function SelectAddressModal({
           </div>
           <div className="flex flex-col">
             <div className="flex flex-col space-y-1">
-              {allUserAddress.map((item, index) => (
+              {allUserAddress.map((address, index) => (
                 <div
                   key={index}
                   className="flex  w-full border p-3 space-x-3 rounded-lg"
@@ -58,18 +59,22 @@ export default function SelectAddressModal({
                     <input
                       type="radio"
                       name="address"
-                      value={item.id}
-                      checked={selectAddress?.id === item.id}
-                      onChange={() => setSelectAddress(item)}
+                      value={address.id}
+                      checked={selectAddress?.id === address.id}
+                      onChange={() => setSelectAddress(address)}
                     />
                   </div>
                   <div className="flex flex-col space-y-1">
-                    <div className="flex font-bold">{item.fullName}</div>
-                    <div className="flex text-sm">{concatAddress(item)}</div>
-                    <div className="flex text-sm">{item.mobile}</div>
+                    <div className="flex font-bold">{address.fullName}</div>
+                    <div className="flex text-sm">{concatAddress(address)}</div>
+                    <div className="flex text-sm">{address.mobile}</div>
                   </div>
-                  <div className="flex text-green-main">
-                    <button type="button">แก้ไข</button>
+                  <div className="flex items-center">
+                    <EditAddressDialog
+                      classNameButton=" h-12 bg-primary hover:bg-green-800"
+                      address={address}
+                      onAddressUpdated={fetchAddressData}
+                    />
                   </div>
                 </div>
               ))}
@@ -77,14 +82,11 @@ export default function SelectAddressModal({
           </div>
           <div className="flex w-full justify-between space-x-2 font-semibold">
             <div>
-              <button
-                type="button"
-                onClick={closeSelectOpenCreateAddress}
-                className="flex px-2 py-4 border rounded-lg justify-center font-bold"
-              >
-                <CirclePlus className="mr-2" />
-                <p>สร้างที่อยู่ใหม่</p>
-              </button>
+              <CreateAddressDialog
+                classNameButton="bg-primary hover:bg-green-800"
+                onAddressCreated={fetchAddressData}
+                userId={user.id}
+              />
             </div>
             <div className="flex space-x-2">
               <button
