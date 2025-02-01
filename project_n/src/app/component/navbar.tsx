@@ -42,12 +42,12 @@ export default function Navbar() {
 
         {/* Menu */}
         <ul className="hidden md:flex items-center text-accent-foreground gap-x-6 text-base whitespace-nowrap flex-nowrap">
-          <li className="text-lg  hover:text-gray-500 hover:cursor-pointer">
+          <li className=" hover:text-gray-500 hover:cursor-pointer">
             <SwitchTheme />
           </li>
 
           {/* Cart Dropdown */}
-          <li className="text-lg relative hover:text-gray-500 hover:cursor-pointer"
+          <li className="relative flex items-center justify-center hover:text-gray-500 hover:cursor-pointer"
             onMouseEnter={() => setIsCartOpen(true)}
             onMouseLeave={() => setIsCartOpen(false)}
           >
@@ -94,7 +94,7 @@ export default function Navbar() {
             </DropdownMenu>
           </li>
 
-          <li className="text-lg hover:text-gray-500 hover:cursor-pointer">
+          <li className=" hover:text-gray-500 hover:cursor-pointer">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 {session ? (
