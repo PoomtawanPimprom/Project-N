@@ -8,7 +8,8 @@ export interface orderItemInterface {
     quantity: number
     storeId:number
     userAddressId?:number
-
+    createdAt:Date
+    
     orderDetailId: number
     orderDetail?: orderDetailInterface
 

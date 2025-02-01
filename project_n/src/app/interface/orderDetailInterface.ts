@@ -1,3 +1,4 @@
+import { orderItemInterface } from "./orderItemInterface"
 import { orderStatusInterface } from "./orderStatusInterface"
 import { paymentInterface } from "./payment"
 import { transportInterface } from "./transportInterface"
@@ -21,4 +22,6 @@ export interface orderDetailInterface {
     
     orderStatusId: number
     orderStatus?: orderStatusInterface
+
+    OrderItem?: orderItemInterface[]
 }
