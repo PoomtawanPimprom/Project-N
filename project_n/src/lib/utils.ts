@@ -9,3 +9,10 @@ export function cn(...inputs: ClassValue[]) {
 export function generateKey(){
   return v4()
 }
+
+export function convertToThaiTime(createdAt:Date){
+  return new Date(createdAt).toLocaleString("th-TH", {
+    timeZone: "Asia/Bangkok",
+  })
+}
+
