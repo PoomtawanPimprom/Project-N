@@ -17,6 +17,9 @@ model User {
   birthdate     DateTime?
   profile       String?
   saler         Boolean   @default(false)
+  // check has in complete order?
+  hasInComOrder Boolean   @default(false)
+
   resetToken    String?   @unique
   resetTokenExp DateTime?
 
@@ -33,15 +36,14 @@ model User {
   // userAddressId Int?
   // userAddress   UserAddress? @relation(fields: [userAddressId], references: [id])
 
-  UsedDiscount  UsedDiscount[]
-  UserAddress UserAddress[]
-  Favorite    Favorite[]
-  Report      Report[]
-  Store       Store[]
-  OrderDetail OrderDetail[]
-  Follow      Follow[]
-  CartItem    CartItem[]
-  Review      Review[]
+  UsedDiscount UsedDiscount[]
+  UserAddress  UserAddress[]
+  Favorite     Favorite[]
+  Report       Report[]
+  Store        Store[]
+  OrderDetail  OrderDetail[]
+  CartItem     CartItem[]
+  Review       Review[]
 }
 
 model Gender {
@@ -87,16 +89,16 @@ model AddressStatus {
 }
 
 model UsedDiscount {
-  id          Int     @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  userId      Int?
-  user        User? @relation(fields: [userId], references: [id])
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
 
-  discountId  Int?
-  discount    Discount? @relation(fields: [discountId], references: [id])
+  discountId Int?
+  discount   Discount? @relation(fields: [discountId], references: [id])
 
-  orderDetailId      Int?
-  orderDetail        OrderDetail? @relation(fields: [orderDetailId], references: [id])
+  orderDetailId Int?
+  orderDetail   OrderDetail? @relation(fields: [orderDetailId], references: [id])
 }
 
 //----------------------------------------------------------------------------------------------
@@ -107,17 +109,12 @@ model Store {
   name        String  @unique
   description String?
 
-  imageLogoURL       String? @db.Text
+  imageLogoURL       String?   @db.Text
   imageLogoFileName  String?
-  imageBackgroundURL String? @db.Text
+  imageBackgroundURL String?   @db.Text
   imageBgFileName    String?
-
-  scores       Float     @default(0)
-  productTotal Int       @default(0)
-  follow       Int       @default(0)
-  follower     Int       @default(0)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime? @updatedAt
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime? @updatedAt
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
@@ -126,7 +123,6 @@ model Store {
   storeStatus   StoreStatus @relation(fields: [storeStatusId], references: [id])
 
   Product Product[]
-  Follow  Follow[]
 }
 
 model StoreStatus {
@@ -176,11 +172,11 @@ model Inventory {
 }
 
 model Discount {
-  id                 Int     @id @default(autoincrement())
-  name               String  
-  code               String  @unique
-  discountAmount     Int     @default(0)
-  isActive           Boolean @default(false)
+  id             Int     @id @default(autoincrement())
+  name           String
+  code           String  @unique
+  discountAmount Int     @default(0)
+  isActive       Boolean @default(false)
 
   UsedDiscount UsedDiscount[]
 }
@@ -250,7 +246,7 @@ model OrderItem {
   quantity      Int
   storeId       Int?
   userAddressId Int?
-  createdAt      DateTime @default(now())
+  createdAt     DateTime @default(now())
 
   orderDetailId     Int
   orderDetail       OrderDetail?     @relation(fields: [orderDetailId], references: [id])
@@ -282,7 +278,7 @@ model OrderDetail {
   orderStatusId Int
   orderStatus   OrderStatus? @relation(fields: [orderStatusId], references: [id])
 
-  OrderItem OrderItem[]
+  OrderItem    OrderItem[]
   UsedDiscount UsedDiscount[]
 }
 
@@ -301,7 +297,7 @@ model Transport {
 
 model Payment {
   id              Int           @id @default(autoincrement())
-  orderDatailId         Int
+  orderDatailId   Int
   amount          Float
   moneySlip       String?
   createAt        DateTime      @default(now())
@@ -316,19 +312,6 @@ model PaymentStatus {
   id      Int       @id @default(autoincrement())
   name    String
   Payment Payment[]
-}
-
-//----------------------------------------------------------------------------------------------
-// Follow System
-
-model Follow {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-
-  storeId Int
-  store   Store @relation(fields: [storeId], references: [id])
 }
 
 //----------------------------------------------------------------------------------------------
