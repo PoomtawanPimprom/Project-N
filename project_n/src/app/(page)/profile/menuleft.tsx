@@ -63,7 +63,7 @@ export default function MenuLeft(props: MenuLeftProps) {
           <div className="relative">
             <MdPayment className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
             <li className="pl-10 text-1 hover:text-slate-600">
-              <Link href="/profile/voucher">คูปอง</Link>
+              <Link href="/profile/discount">คูปอง</Link>
             </li>
           </div>
         </ul>

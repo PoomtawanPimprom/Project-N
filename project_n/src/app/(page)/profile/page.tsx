@@ -124,6 +124,7 @@ function Profile() {
                 userStatusId: userData.userStatusId,
             };
             await updateUserById(userData.id, data);
+            fetchUserData();
             toast({
                 title: "แก้ไขโปรไฟล์เสร็จสิ้น",
                 variant: "success",
