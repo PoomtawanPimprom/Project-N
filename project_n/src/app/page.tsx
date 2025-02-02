@@ -68,7 +68,7 @@ export default async function Home(
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {products.map((product, index) => (
-                  <ProductCard product={product} key={product.id} />
+                  <ProductCard product={product} key={index} />
                 ))}
               </div>
             </div>
@@ -85,7 +85,7 @@ export default async function Home(
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {products.map((product, index) => (
-                    <ProductCard product={product}  key={index} />
+                    <ProductCard product={product}  key={product.id} />
                   ))}
                 </div>
               </>)
@@ -111,7 +111,7 @@ export default async function Home(
                   <p>ร้านค้าที่ค้นพบ</p>
                 </div>
                 <div className="grid grid-cols-1">
-                  {stores.map((store, index) => (
+                  {stores.map((store) => (
                     <>
                       <StoreBox store={store} key={generateKey()} />
                     </>
