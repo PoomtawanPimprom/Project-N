@@ -7,8 +7,11 @@ export async function CreateStore(data: any) {
         },
         body: JSON.stringify(data),
     });
+    // ดึงข้อมูลจากเซิร์ฟเวอร์
+    const result = await res.json();
+
     if (!res.ok) {
-        throw new Error("Failed to create");
+        throw new Error(result.message || "เกิดข้อผิดพลาดในการสร้างร้านค้า");
     }
 }
 
@@ -32,6 +35,12 @@ export async function updateStoreById(storeID: number, data: any) {
         },
         body: JSON.stringify(data),
     });
+    // ดึงข้อมูลจากเซิร์ฟเวอร์
+    const result = await res.json();
+
+    if (!res.ok) {
+        throw new Error(result.message || "เกิดข้อผิดพลาดในการสร้างร้านค้า");
+    }
 }
 
 //DELETE /api/store/${storeID}

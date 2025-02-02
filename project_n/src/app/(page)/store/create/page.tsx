@@ -20,7 +20,7 @@ import { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 
 export default function CreateStorePage() {
-  const router = useRouter()
+  const router = useRouter();
   const { data: session } = useSession();
   const { toast } = useToast();
 
@@ -140,13 +140,18 @@ export default function CreateStorePage() {
       //validate
       validateWithZod(StoreSchema, data);
 
-      await CreateStore(data);
+      const res:any = await CreateStore(data);
+      
+      if (!res.success) {
+        throw new Error(res.message); // ดึง message จาก API แล้วโยน error ออกไป
+    }
       toast({
-        variant:"success",
+        variant: "success",
         description: "สร้างร้านค้าสำเร็จ",
       });
-      router.push(`/`)
+      router.push(`/`);
     } catch (error: any) {
+      console.log(error)
       const deleteLogoRef = ref(storage, `store/logo/${logoFileName}`);
       const deleteBgRef = ref(storage, `store/background/${BgFileName}`);
 
@@ -164,8 +169,11 @@ export default function CreateStorePage() {
         .catch((error: any) => {
           console.log(error.message);
         });
-      if(error.message) {
-        setError(error.message)
+      if (error.message) {
+        toast({
+          description: error.message,
+          variant: "destructive",
+        });
       }
 
       //handle error from Zod

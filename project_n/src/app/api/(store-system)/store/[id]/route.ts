@@ -23,6 +23,15 @@ export async function PUT(request: NextRequest, props: { params: Promise<{ id: s
     try {
         const id = Number(params.id);
         const { name, description, imageLogoURL, imageLogoFileName, imageBackgroundURL, imageBgFileName } = await request.json();
+
+        const checkStoreName = await prisma.store.findUnique({
+            where: { name: name }
+        })
+
+        if (checkStoreName !== null) {
+            return NextResponse.json({ succes: false, message: "ชื่อร้านนี้ถูกใช้แล้ว" }, { status: 400 })
+        }
+
         if (!imageLogoURL || !imageLogoFileName || !imageBackgroundURL || !imageBgFileName) {
             const data = await prisma.store.update({
                 where: { id: id },

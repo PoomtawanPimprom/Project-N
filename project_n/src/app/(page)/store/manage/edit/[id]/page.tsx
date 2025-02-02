@@ -147,10 +147,12 @@ const UpdateStorePage = (props: { params: Promise<{ id: number }> }) => {
         description: "บันทึกข้อมูลสำเร็จ",
       });
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        description: "บันทึกไม่สำเร็จ",
-      });
+      if (error.message) {
+        toast({
+          description: error.message,
+          variant: "destructive",
+        });
+      }
       //delete images on firebase
       const deleteLogoRef = ref(storage, `store/logo/${newImagelogoFileName}`);
       const deleteBgRef = ref(

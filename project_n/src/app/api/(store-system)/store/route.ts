@@ -11,7 +11,10 @@ export async function POST(request: NextRequest) {
             where: { name: name }
         })
         if (checkStoreExit) {
-            return NextResponse.json({ message: 'ชื่อร้านค้าถูกใช้งานแล้ว' }, { status: 400 })
+            return NextResponse.json({
+                success: false,
+                message: 'ชื่อร้านค้าถูกใช้งานแล้ว'
+            }, { status: 400 })
         }
 
         await prisma.store.create({
@@ -27,13 +30,13 @@ export async function POST(request: NextRequest) {
             }
         });
         await prisma.user.update({
-            where:{id:userId},
-            data:{ saler:true}
+            where: { id: userId },
+            data: { saler: true }
         })
 
-        return NextResponse.json({message:"create successfuly"},{status: 200})
+        return NextResponse.json({ message: "สร้างร้านค้าเสร็จสิ้น" }, { status: 200 })
     } catch (error: any) {
-        console.error(error.message || error);
+        console.error(error);
 
         console.error("Unexpected error:", error);
         return NextResponse.json({
