@@ -5,14 +5,14 @@ import { userInterface } from "@/app/interface/userInterface";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
 import { getUserById } from "@/app/service/profile/service";
-import CouponCard from "../voucher/components/CouponCard"; // Import คูปองที่เราสร้าง
-import { getUsedCoupon } from "@/app/service/usedCoupon/service";
-import { promotionInterface } from "@/app/interface/promotionInterface";
+import CouponCard from "./components/CouponCard"; // Import คูปองที่เราสร้าง
+import { discountInterface } from "@/app/interface/discountInterface";
+import { getUsedDiscount } from "@/app/service/usedDiscount/service";
 
 export default function Voucher() {
   const { data: session } = useSession();
   const { toast } = useToast();
-  const [ coupon , setCoupon ] = useState<promotionInterface[]>([]);
+  const [ coupon , setCoupon ] = useState<discountInterface[]>([]);
   const [userData, setUserData] = useState<userInterface>({
     id: 0,
     name: "",
@@ -31,7 +31,7 @@ export default function Voucher() {
   });
 
   const fetchUsedCoupon = async () => {
-    const res = await getUsedCoupon();
+    const res = await getUsedDiscount();
     setCoupon(res);
     console.log(res)
   }

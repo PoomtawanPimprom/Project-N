@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import ChangeShipperModal from "./ChangeShipper-Modal";
 import { orderDetailInterface } from "@/app/interface/orderDetailInterface";
 import { orderItemInterface } from "@/app/interface/orderItemInterface";
-import { promotionInterface } from "@/app/interface/promotionInterface";
+import { promotionInterface } from "@/app/interface/discountInterface";
 import { AddDiscouteAction } from "./action-promotion";
 import { cancelDiscouteAction } from "./action-cancelPromotion";
 

@@ -1,5 +1,5 @@
-export async function getUsedCoupon(){
-    const res = await fetch(`/api/usedcoupon`, {
+export async function getUsedDiscount(){
+    const res = await fetch(`/api/useddiscount`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json"

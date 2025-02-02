@@ -1,6 +1,6 @@
 
 export async function getPromotionEnadleAll(){
-    const res = await fetch(`/api/promotion/checkEnable`, {
+    const res = await fetch(`/api/discount/checkEnable`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json"
@@ -11,7 +11,7 @@ export async function getPromotionEnadleAll(){
 
 // Get all
 export async function getPromotionAll(){
-    const res = await fetch(`/api/promotion`, {
+    const res = await fetch(`/api/discount`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json"
@@ -22,7 +22,7 @@ export async function getPromotionAll(){
 
 // Get by id
 export async function getPromotionById(id: Number){
-    const res = await fetch(`/api/promotion/${id}`, {
+    const res = await fetch(`/api/discount/${id}`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json"
@@ -33,7 +33,7 @@ export async function getPromotionById(id: Number){
 
 export const createPromotion = async (data: any) => {
     try {
-        const res = await fetch(`/api/promotion`, {
+        const res = await fetch(`/api/discount`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -42,11 +42,11 @@ export const createPromotion = async (data: any) => {
         });
 
         if (!res.ok) {
-            throw new Error('Failed to create promotion');
+            throw new Error('Failed to create discount');
         }
 
     } catch (error) {
-        console.error("Error creating promotion:", error);
+        console.error("Error creating discount:", error);
         throw error;
     }
 };
@@ -55,7 +55,7 @@ export const createPromotion = async (data: any) => {
 
 // Update by id
 export async function updatePromotionById(id: number, updatedData: any) {
-    const response = await fetch(`/api/promotion/${id}`, {
+    const response = await fetch(`/api/discount/${id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -64,13 +64,13 @@ export async function updatePromotionById(id: number, updatedData: any) {
     });
 
     if (!response.ok) {
-        throw new Error("Failed to update user");
+        throw new Error("Failed to update discount");
     }
     return await response.json();
 };
 
 export async function deletePromotionById(id: Number){
-    const res = await fetch(`/api/promotion/${id}`, {
+    const res = await fetch(`/api/discount/${id}`, {
         method: 'DELETE',
         headers: {
             "Content-Type": "application/json"

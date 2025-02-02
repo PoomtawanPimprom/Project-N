@@ -10,7 +10,7 @@ const menuItems = [
     label: "รายงาน",
   },
   {
-    href: "/admin/manage/promotion",
+    href: "/admin/manage/discount",
     icon: <Tag className="w-6 h-6" />,
     label: "โปรโมชั่น",
   },

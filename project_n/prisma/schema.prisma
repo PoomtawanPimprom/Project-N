@@ -33,7 +33,7 @@ model User {
   // userAddressId Int?
   // userAddress   UserAddress? @relation(fields: [userAddressId], references: [id])
 
-  UsedCoupon  UsedCoupon[]
+  UsedDiscount  UsedDiscount[]
   UserAddress UserAddress[]
   Favorite    Favorite[]
   Report      Report[]
@@ -86,7 +86,7 @@ model AddressStatus {
   UserAddress UserAddress[]
 }
 
-model UsedCoupon {
+model UsedDiscount {
   id          Int     @id @default(autoincrement())
 
   userId      Int?
@@ -182,7 +182,7 @@ model Discount {
   discountAmount     Int     @default(0)
   isActive           Boolean @default(false)
 
-  UsedCoupon UsedCoupon[]
+  UsedDiscount UsedDiscount[]
 }
 
 model ProductStatus {
@@ -283,7 +283,7 @@ model OrderDetail {
   orderStatus   OrderStatus? @relation(fields: [orderStatusId], references: [id])
 
   OrderItem OrderItem[]
-  UsedCoupon UsedCoupon[]
+  UsedDiscount UsedDiscount[]
 }
 
 model OrderStatus {

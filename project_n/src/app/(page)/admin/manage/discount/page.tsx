@@ -3,14 +3,14 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useState, ChangeEvent, useEffect } from "react";
-import { promotionInterface } from "@/app/interface/promotionInterface";
+import { discountInterface } from "@/app/interface/discountInterface";
 import {
   createPromotion,
   deletePromotionById,
   getPromotionAll,
   getPromotionEnadleAll,
   updatePromotionById,
-} from "@/app/service/promotion/service";
+} from "@/app/service/discount/service";
 import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
@@ -25,9 +25,9 @@ import AdminSideBar from "../../AdminSideBar";
 export default function AdminPromotions() {
   const { toast } = useToast();
   const [search, setSearch] = useState<string>("");
-  const [promotions, setPromotions] = useState<promotionInterface[]>([]);
-  const [enablePromotions, setEnablePromotions] = useState<promotionInterface[]>([]);
-  const [formData, setFormData] = useState<promotionInterface>({
+  const [promotions, setPromotions] = useState<discountInterface[]>([]);
+  const [enablePromotions, setEnablePromotions] = useState<discountInterface[]>([]);
+  const [formData, setFormData] = useState<discountInterface>({
     id: 0,
     name: "",
     code: "",

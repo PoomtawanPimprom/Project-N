@@ -11,7 +11,7 @@ import Payment from "./payment/Payment";
 
 import { orderDetailInterface } from "@/app/interface/orderDetailInterface";
 import { orderItemInterface } from "@/app/interface/orderItemInterface";
-import { promotionInterface } from "@/app/interface/promotionInterface";
+import { promotionInterface } from "@/app/interface/discountInterface";
 
 export default async function PaymentPage() {
   const session = await getServerSession(authOptions);

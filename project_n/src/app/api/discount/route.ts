@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
                 isActive,
             }
         })
-        return new NextResponse("Promotion created successfully", { status: 201 });
+        return new NextResponse("Discount created successfully", { status: 201 });
     } catch (e: any) {
         console.log(e.message)
         return new NextResponse(e instanceof Error ? e.message : String(e), { status: 500 })

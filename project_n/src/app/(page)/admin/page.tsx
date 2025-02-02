@@ -2,7 +2,7 @@ import React from "react";
 import { FileText, Tag } from "lucide-react";
 import prisma from "@/lib/prisma/db";
 import { reportInterface } from "@/app/interface/reportInterface";
-import { promotionInterface } from "@/app/interface/promotionInterface";
+import { discountInterface } from "@/app/interface/discountInterface";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
@@ -15,7 +15,7 @@ const AdminDashboard = async () => {
 
   const activeDiscount = (await prisma.discount.findMany({
     where:{ isActive:true}
-  })) as promotionInterface[]
+  })) as discountInterface[]
 
 
   const statsBoxes = [
