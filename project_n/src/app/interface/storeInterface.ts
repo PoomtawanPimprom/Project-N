@@ -11,10 +11,8 @@ export interface storeInterface {
     imageBgFileName?: string | null;
     imageBackgroundURL?: string | null
 
-    scores:number;
     productTotal: number;
-    follow: number;
-    follower: number;
+
     createdDate?: Date;
     updatedAt?: Date;
     //fk
