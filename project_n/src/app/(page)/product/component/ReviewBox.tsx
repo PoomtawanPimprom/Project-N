@@ -1,6 +1,7 @@
 import { reivewInterface } from "@/app/interface/reviewInterface";
 import ImageSkeletion from "./ImageSkeletion";
 import Image from "next/image";
+import { generateKey } from "@/lib/utils";
 
 type prop = {
   reviews: reivewInterface[];
@@ -12,10 +13,10 @@ export default function ReviewBox({ reviews }: prop) {
       <div className="flex flex-col w-[450px] bg-white  lg:justify-between lg:w-full border p-4 rounded-xl dark:bg-bg-dark dark:border-none">
         <div className="flex text-2xl font-semibold">รีวิวสินค้า</div>
         <div className="flex flex-col gap-2">
-          {reviews.map((item, index) => (
+          {reviews.map((item) => (
             <>
               <div
-                key={item.id}
+                key={generateKey()}
                 className="flex flex-col justify-center p-2 border rounded-lg gap-2"
               >
                 <div className="flex gap-2">
@@ -42,7 +43,7 @@ export default function ReviewBox({ reviews }: prop) {
                     {item.images &&
                       Object.values(item.images).map((image, index) => (
                         <Image
-                          key={index}
+                          key={image}
                           src={image}
                           alt={`Image ${index + 1}`}
                           className="w-[100px] h-[100px] rounded-lg object-cover"
