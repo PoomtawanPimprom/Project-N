@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 import nodemailer from 'nodemailer'
 import { generateResetToken } from '@/lib/auth'
