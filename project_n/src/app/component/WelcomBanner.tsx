@@ -8,7 +8,7 @@ import { useUser } from "../context/userContext";
 const WelcomeBanner = () => {
   const { data: session } = useSession();
   const [text, setText] = useState("");
-  const { user } = useUser()
+  const { user } = useUser();
   const [isComplete, setIsComplete] = useState(false);
   const [blinkCount, setBlinkCount] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
@@ -39,39 +39,40 @@ const WelcomeBanner = () => {
     }
   }, [isComplete, blinkCount, isVisible]);
 
+  // ✅ add Key
   const formatText = (text: string) => {
     return text.split(" ").map((word, index, array) => {
+      const uniqueKey = `${word}-${index}`;
+
       if (word === "SHOPKUB") {
         return (
-          <>
-            <span key={index}>
+          <React.Fragment key={uniqueKey}>
+            <span>
               <span className="dark:text-white text-black">SHOP</span>
               <span className="text-primary">KUB</span>{" "}
             </span>
             <br />
-          </>
-
+          </React.Fragment>
         );
       }
 
-      // ตรวจสอบว่า "คุณ" และชื่อผู้ใช้ อยู่ติดกัน
       if (word === "คุณ" && array[index + 1] === session?.user?.name) {
         return (
-          <p key={index} className="text-primary">
+          <p key={uniqueKey} className="text-primary">
             {word} {array[index + 1]}
           </p>
         );
       }
 
-      // ข้ามชื่อผู้ใช้ เพราะรวมกับ "คุณ" ไปแล้ว
       if (word === session?.user?.name) {
         return null;
       }
 
-      return word + " ";
+      return (
+        <span key={uniqueKey}>{word} </span>
+      );
     }).filter(Boolean);
   };
-
 
   return (
     <div className="flex flex-col justify-center items-center overflow-hidden">
@@ -86,7 +87,7 @@ const WelcomeBanner = () => {
       >
         {text.split("\n").map((line, index) => (
           <div
-            key={index}
+            key={`line-${index}`} // Fix duplicate keys
             className={cn(
               index === 0 ? "text-2xl md:text-6xl font-extrabold" : "text-xl md:text-3xl font-bold",
               "transition-transform duration-500 ease-in-out"
