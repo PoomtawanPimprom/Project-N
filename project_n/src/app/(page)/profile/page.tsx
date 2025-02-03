@@ -137,34 +137,34 @@ function Profile() {
 
     return (
         <section id="profile">
-            <div className="container   mx-auto flex flex-col lg:flex-row py-6 gap-4 px-4 sm:px-6 lg:px-8">
+            <div className="container   mx-auto flex flex-col lg:flex-row py-6 gap-4 px-4 sm:px-6 lg:px-8 dark:bg-background">
 
                 <MenuLeft userdata={user} checkCreatedStore={session?.user.storeId} profile={userData} />
 
                 {/* Content right */}
-                <div className="flex flex-col gap-6 lg:w-3/4 ">
+                <div className="dark:bg-zinc-800 flex flex-col gap-6 lg:w-3/4 ">
                     {/* Form Section */}
-                    <form onSubmit={onSubmitUpdate} action="" className="bg-white border-0 shadow-md border-black p-6 rounded-lg space-y-4 sm:border sm:shadow-none">
+                    <form onSubmit={onSubmitUpdate} action="" className="  shadow-md border-black p-6 rounded-lg space-y-4 sm:border sm:shadow-none">
                         <div className="space-y-1">
-                            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                            <label htmlFor="name" className="dark:text-white block text-sm font-medium text-gray-700">
                                 ชื่อ
                             </label>
                             <input name="name" type="name" id="name" value={userData.name ? userData.name : ""}
                                 onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/2"
+                                className="w-full px-3 py-2 border dark:text-white border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/2"
                             />
                         </div>
                         <div className="space-y-1">
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                            <label htmlFor="email" className="dark:text-white block text-sm font-medium text-gray-700">
                                 อีเมล
                             </label>
                             <input name="email" type="email" id="email" value={userData.email ? userData.email :""}
                                 onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/2"
+                                className="w-full px-3 py-2 border dark:text-white border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/2"
                             />
                         </div>
                         <div className="space-y-1">
-                            <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">
+                            <label htmlFor="mobile" className="dark:text-white block text-sm font-medium text-gray-700">
                                 เบอร์โทรศัพท์
                             </label>
                             <input name="mobile"
@@ -172,11 +172,11 @@ function Profile() {
                                 id="mobile"
                                 value={userData.mobile ? userData.mobile : ""}
                                 onChange={handleInputChange}
-                                className="w-1/2 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/3"
+                                className="w-1/2 px-3 py-2 border dark:text-white border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/3"
                             />
                         </div>
                         <div className="space-y-1">
-                            <label htmlFor="birthdate" className="block text-sm font-medium text-gray-700">
+                            <label htmlFor="birthdate" className="dark:text-white block text-sm font-medium text-gray-700">
                                 Date of Birth
                             </label>
                             <input
@@ -188,10 +188,10 @@ function Profile() {
                                 onChange={(e) => {
                                     setUserData((prevData) => ({
                                         ...prevData,
-                                        birthdate: new Date(e.target.value), // แปลงค่าใน input กลับเป็น Date
+                                        birthdate: new Date(e.target.value), 
                                     }));
                                 }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/3"
+                                className="w-full px-3 py-2 border dark:text-white border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/3"
                             />
                         </div>
                         <div className="text-right">
@@ -205,7 +205,7 @@ function Profile() {
                     </form>
 
                     {/* File Upload Section */}
-                    <div className="bg-white border-0 shadow-md border-black p-6 rounded-lg  space-y-4 sm:border sm:shadow-none">
+                    <div className="dark:bg-zinc-800  border-0 shadow-md border-black p-6 rounded-lg  space-y-4 sm:border sm:shadow-none">
                         {/* <Image src={profileImage || tree} alt="Profile" className="w-24 mx-auto" /> */}
                         {profileImage && imageDimensions && (
                             <Image

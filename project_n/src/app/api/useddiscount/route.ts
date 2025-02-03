@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
         const activeCoupons = await prisma.discount.findMany({ where: { isActive: true } });
 
         // Check to used coupon
-        const usedCoupons = await prisma.usedDiscount.findMany({
+        const usedCoupons = await prisma.orderDetail.findMany({
             where: {
                 userId: Number(userId),
                 discountId: 

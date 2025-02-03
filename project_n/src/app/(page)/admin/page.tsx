@@ -40,25 +40,21 @@ const AdminDashboard = async () => {
       <AdminSideBar />
       <main className="flex-grow p-6 bg-gray-100 dark:bg-background">
         <div className=" bg-white dark:bg-black h-full shadow-md rounded-lg p-6 mb-6">
-          <div className="text-black bg-white shadow-md rounded-lg p-6 mb-6 ">
+          <div className=" bg-white shadow-md rounded-lg p-6 mb-6 dark:bg-zinc-800">
             <h1 className="text-4xl  font-semibold mb-4">
               ยินดีต้อนรับสู่ Admin Dashboard
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-6 ">
             {statsBoxes.map((box, index) => (
-              <Link
-                href={box.href}
-                key={index}
-                className={`${box.bgColor} p-6 rounded-lg shadow-md flex items-center`}
-              >
+              <Link href={box.href} key={index} className={`${box.bgColor} p-6 rounded-lg shadow-md flex items-center dark:bg-zinc-800`}>
                 <div className="mr-4">{box.icon}</div>
                 <div>
-                  <h3 className="text-lg font-medium text-gray-700">
+                  <h3 className="text-lg font-medium  ">
                     {box.title}
                   </h3>
-                  <p className="text-3xl font-bold text-gray-900">
+                  <p className="text-3xl font-bold">
                     {box.count}
                   </p>
                 </div>

@@ -18,25 +18,25 @@ export default function MenuLeft(props: MenuLeftProps) {
   const userImage = "https://firebasestorage.googleapis.com/v0/b/project-n-eff9b.firebasestorage.app/o/user-profile.png?alt=media&token=30d9c36c-1638-42d5-82e7-fbd9e6f3e438"
   return (
     <div className="flex flex-col gap-5 lg:w-1/4  ">
-      <div className="max-w-sm mx-auto w-60 text-center border-0  border-black rounded-xl px-4 py-3 gap-4 lg:flex lg:mx-0 lg:border lg:w-full lg:shadow-none lg:text-start lg:space-x-6">
+      <div className="dark:bg-zinc-800 max-w-sm mx-auto w-60 text-center border-0 border-black rounded-xl px-4 py-3 gap-4 lg:flex lg:mx-0 lg:border lg:w-full lg:shadow-none lg:text-start lg:space-x-6">
         <div className="flex justify-center lg:justify-start lg:mr-4">
           <Image
             src={props.profile.profile ? String(props.profile.profile) : userImage}
             alt="Profile Image"
-            className="block w-24 h-24 rounded-full border border-black object-cover lg:w-14 lg:h-14"
+            className="dark:border-white block w-24 h-24 rounded-full border border-black object-cover lg:w-14 lg:h-14"
             width={200}
             height={200}
           />
         </div>
 
         <div className="mt-2 lg:mt-0">
-          <p className="text-lg text-black font-semibold">{props.profile.username}</p>
-          <p className="text-slate-500 font-medium">{props.userdata?.name ? props.userdata?.name : props.profile.name}</p>
+          <p className="text-lg font-semibold">{props.profile.username}</p>
+          <p className="dark:text-gray-500 text-slate-500 font-medium">{props.userdata?.name ? props.userdata?.name : props.profile.name}</p>
         </div>
       </div>
 
 
-      <div className="flex flex-col border-0 shadow-md border-black rounded-xl pl-2 pr-4 py-4 gap-3 sm:border sm:shadow-none">
+      <div className="dark:bg-zinc-800 flex flex-col border-0 shadow-md border-black rounded-xl pl-2 pr-4 py-4 gap-3 sm:border sm:shadow-none">
         <ul className="gap-2 ">
           <div className="relative">
             <BsPersonVcard className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />

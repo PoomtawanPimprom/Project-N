@@ -99,7 +99,7 @@ export default function Navbar() {
               <DropdownMenuTrigger asChild>
                 {user !== null ? (
                   <div className="flex items-center cursor-pointer">
-                    <img className="w-10 h-10 rounded-full border border-black object-cover" src={user?.profile} alt={user?.name} />
+                    <img className="dark:border-white w-10 h-10 rounded-full border border-black object-cover" src={user?.profile} alt={user?.name} />
                   </div>
                 ) : (
                   <span className="flex cursor-pointer">
@@ -150,7 +150,7 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         <div
-          className={`z-50 absolute md:hidden top-14 left-0 w-full bg-white flex flex-col items-center gap-6 
+          className={`z-50 absolute md:hidden top-14 left-0 w-full flex flex-col items-center gap-6 
         font-semibold text-lg transform transition-transform ${isMenuMore ? "block" : "hidden"
             }`}
           style={{ transition: "transform 0.3s ease, opacity 0.3s ease" }}

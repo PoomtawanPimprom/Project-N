@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import router, { useRouter } from 'next/router';
 import { useSession } from "next-auth/react";
 import { updatePassword } from "@/app/service/password/service";
+import { Separator } from "@/app/components/ui/separator";
 // import bcrypt from "bcrypt";
 
 export default function Password() {
@@ -81,13 +82,11 @@ export default function Password() {
         }
     };
 
-
     const fetchUserData = async () => {
         const res = await getUserById(Number(session?.user.id));
         setUserData(res);
         console.log(res);
     }
-
 
     useEffect(() => {
         fetchUserData();
@@ -95,16 +94,17 @@ export default function Password() {
 
     return (
         <section id="profile">
-            <div className="container mx-auto flex flex-col lg:flex-row py-6 gap-4 px-4 sm:px-6 lg:px-8">
+            <div className="dark:bg-background  container mx-auto flex flex-col lg:flex-row py-6 gap-4 px-4 sm:px-6 lg:px-8">
                 <MenuLeft checkCreatedStore={session?.user.storeId} profile={userData} />
                 {/* Content right */}
-                <div className="flex flex-col lg:w-3/4 gap-4 bg-white border rounded-lg shadow-md p-4 sm:p-6 sm:shadow-none sm:border-black">
-                    <h2 className="text-lg font-semibold">เปลี่ยนรหัสผ่าน</h2>
+                <div className="dark:bg-zinc-800 flex flex-col lg:w-3/4 gap-4 border rounded-lg shadow-md p-4 sm:p-6 sm:shadow-none sm:border-black">
+                    <h2 className="text-2xl font-bold ">เปลี่ยนรหัสผ่าน</h2>
+                    <Separator className='dark:bg-white' />
                     <form className="space-y-4" onSubmit={handleSubmit}>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">รหัสผ่านปัจจุบัน</label>
-                            <div className="relative">
+                            <label className="dark:text-white block text-sm font-medium text-gray-700">รหัสผ่านปัจจุบัน</label>
+                            <div className="relative w-1/2">
                                 <input
                                     type={showCurPass ? "text" : "password"}
                                     className="w-full border rounded-md p-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-gray-500"
@@ -120,8 +120,8 @@ export default function Password() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">รหัสผ่านใหม่</label>
-                            <div className="relative">
+                            <label className="dark:text-white block text-sm font-medium text-gray-700">รหัสผ่านใหม่</label>
+                            <div className="relative w-1/2">
                                 <input
                                     type={showNewPass ? "text" : "password"}
                                     className="w-full border rounded-md p-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-gray-500"
@@ -140,8 +140,8 @@ export default function Password() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">ยืนยันรหัสผ่าน</label>
-                            <div className="relative">
+                            <label className="dark:text-white block text-sm font-medium text-gray-700">ยืนยันรหัสผ่าน</label>
+                            <div className="relative w-1/2">
                                 <input
                                     type={showConfirmPass ? "text" : "password"}
                                     className="w-full border rounded-md p-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-gray-500"
@@ -161,7 +161,7 @@ export default function Password() {
 
                         <button
                             type="submit"
-                            className="w-full bg-gray-500 text-white font-medium py-2 rounded-md hover:bg-gray-600 transition"
+                            className="w-1/2 bg-gray-500 text-white font-medium py-2 rounded-md hover:bg-gray-600 transition"
                         >
                             Save Changes
                         </button>
