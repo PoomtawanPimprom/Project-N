@@ -1,19 +1,18 @@
 import ProductCard from "@/app/component/productCard";
 import { productInterface } from "@/app/interface/productInterface";
 import { Box } from "lucide-react";
+import React from "react";
 
 type prop = {
   otherProducts: productInterface[];
   currentProductId: number;
 };
 
-export default function OtherProductFromSameStore({
-  otherProducts,
-  currentProductId,
-}: prop) {
+export default function OtherProductFromSameStore({ otherProducts, currentProductId }: prop) {
+
     const filteredProducts = otherProducts.filter((item)=> item.id !== currentProductId) 
     if (filteredProducts.length === 0) {
-        return <></>;
+        return null;
       }
   return (
     <div className="flex flex-col max-w-5xl  space-y-2  border rounded-xl p-4">
@@ -22,7 +21,7 @@ export default function OtherProductFromSameStore({
         <p>สินค้าจากร้านเดียวกัน</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-6">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-6">
         {filteredProducts.map((product, index) => (
           <>
             {product.id !== currentProductId ? (
@@ -31,6 +30,15 @@ export default function OtherProductFromSameStore({
               <></>
             )}
           </>
+        ))}
+      </div> */}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {filteredProducts.map((product) => (
+          // ✅ เพิ่ม key ให้ Fragment เพื่อป้องกัน Warning
+          <React.Fragment key={product.id}>
+            {product.id !== currentProductId ? <ProductCard product={product} /> : <></>}
+          </React.Fragment>
         ))}
       </div>
     </div>
