@@ -3,17 +3,18 @@ import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useUser } from "../context/userContext";
 
 const WelcomeBanner = () => {
   const { data: session } = useSession();
   const [text, setText] = useState("");
+  const { user } = useUser()
   const [isComplete, setIsComplete] = useState(false);
   const [blinkCount, setBlinkCount] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [isOpen, setIsOpen] = useState(true);
 
-  const username = session?.user?.name ? `คุณ ${session.user.name}` : "";
-  const fullText = `ยินดีต้อนรับสู่ SHOPKUB ${username}\nค้นหาสิ่งที่คุณต้องการได้เลย`;
+  const fullText = `ยินดีต้อนรับสู่ SHOPKUB คุณ ${user?.name}\nค้นหาสิ่งที่คุณต้องการได้เลย`;
 
   useEffect(() => {
     if (text.length < fullText.length) {
@@ -42,13 +43,17 @@ const WelcomeBanner = () => {
     return text.split(" ").map((word, index, array) => {
       if (word === "SHOPKUB") {
         return (
-          <span key={index}>
-            <span className="dark:text-white text-black">SHOP</span>
-            <span className="text-primary">KUB</span>{" "}
-          </span>
+          <>
+            <span key={index}>
+              <span className="dark:text-white text-black">SHOP</span>
+              <span className="text-primary">KUB</span>{" "}
+            </span>
+            <br />
+          </>
+
         );
       }
-  
+
       // ตรวจสอบว่า "คุณ" และชื่อผู้ใช้ อยู่ติดกัน
       if (word === "คุณ" && array[index + 1] === session?.user?.name) {
         return (
@@ -57,16 +62,16 @@ const WelcomeBanner = () => {
           </p>
         );
       }
-  
+
       // ข้ามชื่อผู้ใช้ เพราะรวมกับ "คุณ" ไปแล้ว
       if (word === session?.user?.name) {
         return null;
       }
-  
+
       return word + " ";
     }).filter(Boolean);
   };
-  
+
 
   return (
     <div className="flex flex-col justify-center items-center overflow-hidden">
@@ -74,8 +79,8 @@ const WelcomeBanner = () => {
         className={cn(
           "w-full max-w-2xl mx-auto text-center px-8 pt-6 space-y-2",
           "transition-all duration-500 ease-in-out transform",
-          isOpen 
-            ? "translate-y-0 opacity-100" 
+          isOpen
+            ? "translate-y-0 opacity-100"
             : "-translate-y-full opacity-0 absolute -top-full"
         )}
       >
@@ -101,7 +106,7 @@ const WelcomeBanner = () => {
           </div>
         ))}
       </div>
-      
+
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
@@ -122,4 +127,3 @@ const WelcomeBanner = () => {
 };
 
 export default WelcomeBanner;
- 
