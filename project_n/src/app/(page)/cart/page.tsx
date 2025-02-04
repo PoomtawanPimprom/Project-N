@@ -89,7 +89,7 @@ function cart() {
       //
       const data = {
         userId: Number(session?.user.id),
-        items: orderItems,
+        items: orderItems
       };
 
       //create order

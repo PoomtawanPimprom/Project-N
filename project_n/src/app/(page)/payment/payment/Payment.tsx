@@ -23,13 +23,12 @@ type prop = {
 export default function Payment({ orderDetailId,amount,userId }: prop) {
   const {toast} = useToast()
   const router = useRouter()
+  const amountInt = Math.floor(amount);  
   const [image, setImage] = useState<File | null>(null);
   const [showInput, setShowInput] = useState<boolean>(true);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,6 +75,7 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
         paymentId:createPayment.payment.id,
         orderDetailId:orderDetailId,
         userId:userId
+
       }
       console.log(dataupdate)
       await UpdatePaymentStatusWhenChecked(dataupdate)
@@ -86,10 +86,10 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
       setTimeout(()=>{
         router.push(`/profile/purchase`)
       },4000)
-    } catch (error) {
-      console.log(error)
+    } catch (error:any) {
+      console.log(error.message)
       toast({
-        description: "เกิดข้อผิดพลาด โปรดกรอกสลิปอีกรอบ",
+        description: error.message,
       });
       await deleteUploadedImage("slip", url);
       console.log(error);
@@ -108,6 +108,7 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
     if (file) {
       setImage(file);
       setShowInput(false); // Hide input after upload
+      setError(null)
     }
   };
 
@@ -115,7 +116,8 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
     setImage(null);
     setShowInput(true); // Show input after removal
   };
-
+  const test = 500
+console.log("amount",amount)
   return (
     <div className="flex flex-col w-full space-y-2 p-4 border border-gray-300 rounded-xl">
       <div className="flex font-bold text-xl">
@@ -123,9 +125,7 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
         <p>ชำระเงิน</p>
       </div>
       {/* side bar */}
-      <Suspense fallback={<SkeletonLoading />}>
         <img src={`https://promptpay.io/0991523224/${amount}.png`} />
-      </Suspense>
       {/*  */}
       <div className="">
         <Form onSubmit={onSubmit} className="space-y-2">

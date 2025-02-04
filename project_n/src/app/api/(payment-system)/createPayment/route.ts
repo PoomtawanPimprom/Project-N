@@ -9,10 +9,13 @@ export async function POST(request: NextRequest) {
 
     const { orderId, amount, moneySlip } = await request.json();
 
+    await prisma.orderDetail.update({
+      where:{ id: orderId},
+      data:{ total: amount}
+    })
+
     const payment = await prisma.payment.create({
       data: {
-        orderId: orderId,
-        amount: amount,
         paymentStatusId: 1, // 1 = Pending, can be updated later
         moneySlip: moneySlip,
       },
