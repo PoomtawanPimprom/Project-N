@@ -20,7 +20,7 @@ export async function AddDiscouteAction({ orderDetailId, userId }: updatype, for
 
     // Check if the discount code has been used
     const checkUsed = await prisma.orderDetail.findFirst({
-        where: { id: orderDetailId, discountId: discount.id, userId: userId },
+        where: {  discountId: discount.id, userId: userId },
     });
 
     if (checkUsed) return { message: "คุณได้ใช้โค้ดนี้ไปแล้ว" };
