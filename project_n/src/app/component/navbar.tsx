@@ -144,15 +144,12 @@ export default function Navbar() {
         </ul>
 
         <IoMdMore
-          className="w-7 h-7 md:hidden block cursor-pointer"
+          className="dark:text-white w-7 h-7 md:hidden block cursor-pointer"
           onClick={() => setIsMenuMore(!isMenuMore)}
         />
 
         {/* Mobile Menu */}
-        <div
-          className={`z-50 absolute md:hidden top-14 left-0 w-full flex flex-col items-center gap-6 
-        font-semibold text-lg transform transition-transform ${isMenuMore ? "block" : "hidden"
-            }`}
+        <div className={`dark:bg-inherit dark:text-white bg-white z-50 absolute md:hidden top-14 left-0 w-full flex flex-col items-center gap-6 font-semibold text-lg transform transition-transform ${isMenuMore ? "block" : "hidden"}`}
           style={{ transition: "transform 0.3s ease, opacity 0.3s ease" }}
         >
           <li className="list-none w-full text-center p-4 transition-all cursor-pointer">
