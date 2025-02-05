@@ -172,13 +172,6 @@ model Discount {
   OrderDetail    OrderDetail[]
 }
 
-model ProductStatus {
-  id      Int       @id @default(autoincrement())
-  name    String
-  product Product[]
-  OrderDetail OrderDetail[]
-}
-
 //----------------------------------------------------------------------------------------------
 
 //Favorite system
