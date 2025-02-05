@@ -4,12 +4,12 @@ import React, { useState } from "react";
 import ChangeShipperModal from "./ChangeShipper-Modal";
 import { orderDetailInterface } from "@/app/interface/orderDetailInterface";
 import { orderItemInterface } from "@/app/interface/orderItemInterface";
-import { promotionInterface } from "@/app/interface/discountInterface";
 import { AddDiscouteAction } from "./action-promotion";
 import { cancelDiscouteAction } from "./action-cancelPromotion";
+import { discountInterface } from "@/app/interface/discountInterface";
 
 type prop = {
-  discount?: promotionInterface;
+  discount?: discountInterface|null;
   orderDetail: orderDetailInterface;
   orderItems: orderItemInterface[];
 };
@@ -23,9 +23,6 @@ export default function ProductCart({
   const [openModal, setOpenModal] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  const cancelDiscouteActionBindOrderDetail = cancelDiscouteAction.bind(null, {
-    orderDetailId: orderDetail.id,
-  })
 
   const AddDiscouteActionBindOrderDetail = AddDiscouteAction.bind(null, {
     orderDetailId: orderDetail.id,
@@ -34,14 +31,17 @@ export default function ProductCart({
 
   const handleCancel = async(event: React.FormEvent<HTMLFormElement>)=>{
     event.preventDefault();
+    setMessage(null)
     const formdata = new FormData(event.currentTarget);
+    console.log(formdata)
     const result = await cancelDiscouteAction({
       orderDetailId: orderDetail.id, // ส่ง orderDetailId โดยตรง
-    }, formdata); 
+    }); 
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const formdata = new FormData(event.currentTarget);
     const result = await AddDiscouteActionBindOrderDetail(formdata);
     setMessage(result?.message || "เกิดข้อผิดพลาด");
@@ -117,7 +117,7 @@ export default function ProductCart({
           <p>ส่วนลด</p>
         </div>
         <div className="p-2 border rounded-lg cursor-pointer transition-all ">
-          {orderDetail.discountId != 0 ? (
+          {orderDetail.discountId !== null ? (
             <form onSubmit={handleCancel}>
               <div className="flex gap-2">
                 <div className="flex flex-col w-full gap-1">
@@ -128,7 +128,6 @@ export default function ProductCart({
                 </div>
                 <div className="flex items-center">
                   <button 
-                  type="button"
                   className="py-2 px-4 border h-fit bg-primary text-white font-semibold rounded-lg">
                     ยกเลิก
                   </button>
@@ -139,7 +138,8 @@ export default function ProductCart({
             <>
               <form className="flex gap-2" onSubmit={handleSubmit}>
                 {/* <img src={product.image!.image1} alt={product.name} className="w-20 h-20 object-cover rounded" /> */}
-                <div className="flex w-full">
+                <div className="flex w-full"
+                onClick={()=> setMessage(null)}>
                   <input
                     name="discountCode"
                     placeholder="ใส่โค้ด..."
@@ -152,7 +152,7 @@ export default function ProductCart({
                 </button>
               </form>
               {message && (
-                <div className="p-2 mb-4 text-center text-white bg-red-500 rounded-lg">
+                <div className="p-2 mt-2 mb-4 text-center text-white bg-red-500 rounded-lg">
                   {message}
                 </div>
               )}

@@ -8,17 +8,15 @@ datasource db {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  name          String?
-  username      String    @unique
-  password      String?
-  email         String    @unique
-  mobile        String?   @unique
-  birthdate     DateTime?
-  profile       String?
-  saler         Boolean   @default(false)
-  // check has in complete order?
-  hasInComOrder Boolean   @default(false)
+  id        Int       @id @default(autoincrement())
+  name      String?
+  username  String    @unique
+  password  String?
+  email     String    @unique
+  mobile    String?   @unique
+  birthdate DateTime?
+  profile   String?
+  saler     Boolean   @default(false)
 
   resetToken    String?   @unique
   resetTokenExp DateTime?
@@ -36,13 +34,13 @@ model User {
   // userAddressId Int?
   // userAddress   UserAddress? @relation(fields: [userAddressId], references: [id])
 
-  UserAddress  UserAddress[]
-  Favorite     Favorite[]
-  Report       Report[]
-  Store        Store[]
-  OrderDetail  OrderDetail[]
-  CartItem     CartItem[]
-  Review       Review[]
+  UserAddress UserAddress[]
+  Favorite    Favorite[]
+  Report      Report[]
+  Store       Store[]
+  OrderDetail OrderDetail[]
+  CartItem    CartItem[]
+  Review      Review[]
 }
 
 model Gender {
@@ -145,7 +143,6 @@ model Product {
 
 model Inventory {
   id        Int      @id @default(autoincrement())
-  price     Int      @default(0)
   quantity  Int
   size      String?
   color     String?
@@ -157,6 +154,14 @@ model Inventory {
   @@unique([productID, size, color])
 }
 
+model ProductStatus {
+  id      Int       @id @default(autoincrement())
+  name    String
+  product Product[]
+}
+
+//------------------------------------------------
+//Discount system
 model Discount {
   id             Int     @id @default(autoincrement())
   name           String
@@ -171,6 +176,7 @@ model ProductStatus {
   id      Int       @id @default(autoincrement())
   name    String
   product Product[]
+  OrderDetail OrderDetail[]
 }
 
 //----------------------------------------------------------------------------------------------
@@ -250,9 +256,13 @@ model OrderItemStatus {
 }
 
 model OrderDetail {
-  id         Int      @id @default(autoincrement())
-  total      Float
-  createdAt  DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  total     Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  discountId Int?     
+  discount   Discount? @relation(fields: [discountId], references: [id])
 
   userId        Int
   user          User?        @relation(fields: [userId], references: [id])
@@ -263,10 +273,19 @@ model OrderDetail {
   orderStatusId Int
   orderStatus   OrderStatus? @relation(fields: [orderStatusId], references: [id])
 
-  discountId    Int?
-  discount      Discount?    @relation(fields: [discountId], references: [id])
+  OrderItem OrderItem[]
+}
 
-  OrderItem    OrderItem[]
+model Payment {
+  id              Int           @id @default(autoincrement())
+  moneySlip       String?
+  createAt        DateTime      @default(now())
+  updatedAt       DateTime?     @updatedAt
+
+  paymentStatusId Int
+  paymentStatus   PaymentStatus @relation(fields: [paymentStatusId], references: [id])
+
+  OrderDetail OrderDetail?
 }
 
 model OrderStatus {
@@ -282,18 +301,6 @@ model Transport {
   OrderDetail    OrderDetail[]
 }
 
-model Payment {
-  id              Int           @id @default(autoincrement())
-  orderDatailId   Int
-  amount          Float
-  moneySlip       String?
-  createAt        DateTime      @default(now())
-  updatedAt       DateTime?     @updatedAt
-  paymentStatusId Int
-  paymentStatus   PaymentStatus @relation(fields: [paymentStatusId], references: [id])
-
-  OrderDetail OrderDetail?
-}
 
 model PaymentStatus {
   id      Int       @id @default(autoincrement())

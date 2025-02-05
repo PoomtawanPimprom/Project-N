@@ -11,7 +11,6 @@ import Payment from "./payment/Payment";
 
 import { orderDetailInterface } from "@/app/interface/orderDetailInterface";
 import { orderItemInterface } from "@/app/interface/orderItemInterface";
-import { promotionInterface } from "@/app/interface/discountInterface";
 
 export default async function PaymentPage() {
   const session = await getServerSession(authOptions);
@@ -37,7 +36,7 @@ export default async function PaymentPage() {
 
   const orderDetailData = (await prisma.orderDetail.findFirst({
     where: { userId: user.id, orderStatusId: 1 },
-    include: { transport: true },
+    include: { transport: true, discount: true },
   })) as orderDetailInterface;
 
   const orderItemsData = (await prisma.orderItem.findMany({
@@ -45,9 +44,13 @@ export default async function PaymentPage() {
     include: { product: true },
   })) as orderItemInterface[];
 
-  const discount = (await prisma.discount.findUnique({
-    where: { id: orderDetailData.discountId },
-  })) as promotionInterface;
+  const amount =
+    orderItemsData.reduce(
+      (sum, item) => sum + item.quantity * item.product!.price,
+      0
+    ) +
+    orderDetailData.transport?.transportPrice! -
+    (orderDetailData.discount?.discountAmount || 0);
 
   return (
     <>
@@ -60,7 +63,7 @@ export default async function PaymentPage() {
               default_address={userAddressDefault}
             />
             <ProductCart
-              discount={discount}
+              discount={orderDetailData.discount}
               orderItems={orderItemsData}
               orderDetail={orderDetailData}
             />
@@ -70,12 +73,15 @@ export default async function PaymentPage() {
           <div className="flex flex-col gap-2">
             <div>
               <Payment
-              userId={userId}
-              orderDetailId={orderDetailData.id}
+                userId={userId}
+                orderDetailId={orderDetailData.id}
                 amount={
-                  orderDetailData.total +
+                  orderItemsData.reduce(
+                    (sum, item) => sum + item.quantity * item.product!.price,
+                    0
+                  ) +
                   orderDetailData.transport?.transportPrice! -
-                  (discount?.discountAmount || 0)
+                  (orderDetailData.discount?.discountAmount || 0)
                 }
               />
             </div>

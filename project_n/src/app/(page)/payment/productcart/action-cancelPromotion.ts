@@ -7,11 +7,11 @@ type updatype = {
     orderDetailId: number;
 };
 
-export async function cancelDiscouteAction({ orderDetailId }: updatype, formdata: FormData) {
+export async function cancelDiscouteAction({ orderDetailId }: updatype) {
     // Apply discount code if not used
     await prisma.orderDetail.update({
         where: { id: orderDetailId },
-        data: { discountId: 0},
+        data: { discountId: null},
     });
 
     revalidatePath(`/payment`);

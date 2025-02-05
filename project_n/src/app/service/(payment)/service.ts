@@ -7,8 +7,10 @@ export async function CreateOrder(data:any) {
         },
         body: JSON.stringify(data),
     });
+
+    const result = await res.json()
     if (!res.ok) {
-        throw new Error("Failed to create");
+        throw new Error(result.message);
     }
 } 
 //createPayment
@@ -24,17 +26,18 @@ export async function CreatePayment(data:any) {
 }
 
 //check payment
-export async function CheckStatusPayment(orderId:string|number) {
-    const res = await fetch(`/api/checkPayment/${orderId}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
-    if (!res.ok) {
-        throw new Error("Failed to create");
-    }
-}
+// export async function CheckStatusPayment(orderId:string|number) {
+//     const res = await fetch(`/api/checkPayment/${orderId}`, {
+//         method: "GET",
+//         headers: {
+//             "Content-Type": "application/json",
+//         },
+//     });
+//     if (!res.ok) {
+//         throw new Error("Failed to create");
+//     }
+//     return res.json();
+// }
 
 export async function UpdatePaymentStatusWhenChecked(data:any) {
     const res = await fetch("/api/checkPayment", {
@@ -47,6 +50,7 @@ export async function UpdatePaymentStatusWhenChecked(data:any) {
     if (!res.ok) {
         throw new Error("Failed to create");
     }
+    return res.json();
 }
 
 //update-transport
@@ -61,6 +65,7 @@ export async function UpdateOrderStatus(data:any) {
     if (!res.ok) {
         throw new Error("Failed to create");
     }
+    return res.json();
 }
 
 //cancel-order
@@ -74,6 +79,7 @@ export async function CancelOrder(orderDetailId:number){
     if (!res.ok) {
         throw new Error("Failed to create");
     }
+    return res.json();
 }
 
 //verifySlip

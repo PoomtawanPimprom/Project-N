@@ -1,3 +1,4 @@
+import { discountInterface } from "./discountInterface"
 import { orderItemInterface } from "./orderItemInterface"
 import { orderStatusInterface } from "./orderStatusInterface"
 import { paymentInterface } from "./payment"
@@ -9,7 +10,9 @@ export interface orderDetailInterface {
     id: number
     total: number
     createdAt: Date
-    discountId: number
+
+    discountId?: number
+    discount?:discountInterface
 
     userId: number
     user?: userInterface

@@ -89,8 +89,10 @@ function cart() {
       //
       const data = {
         userId: Number(session?.user.id),
-        items: orderItems,
+        items: orderItems
       };
+
+      //create order
       await CreateOrder(data);
 
       // Delete select order from cart items
@@ -102,7 +104,13 @@ function cart() {
 
       router.push(`/payment`);
     } catch (error: any) {
-      toast({ title: "Error", description: "สร้างไม่สำเร็จ โปรดตรวจสอบว่ามีรายการค้างชำระหรือไม่?." });
+      if (error.message) {
+        toast({
+          variant:"destructive",
+          description: error.message,
+        });
+        router.push(`/profile/purchase`)
+      }
     }
   };
 
@@ -174,7 +182,8 @@ function cart() {
 
                         <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
                           <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">
-                            ราคารวม ฿{(cart.product?.price || 0) * (cart.quantity || 1)}
+                            ราคารวม ฿
+                            {(cart.product?.price || 0) * (cart.quantity || 1)}
                           </p>
                           <div className="sm:order-1">
                             <div className="mx-auto flex h-8 items-stretch text-gray-600">
@@ -226,7 +235,8 @@ function cart() {
                 {item
                   .filter((cart) => selectedItems.includes(cart.id)) // กรองเฉพาะที่ถูกเลือก
                   .reduce(
-                    (total, cart) => total + (cart.product?.price || 0) * (cart.quantity || 1), // คำนวณราคา * จำนวน
+                    (total, cart) =>
+                      total + (cart.product?.price || 0) * (cart.quantity || 1), // คำนวณราคา * จำนวน
                     0
                   )
                   .toFixed(2)}

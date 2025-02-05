@@ -31,7 +31,7 @@ const AdminDashboard = async () => {
       title: "โค้ดส่วนลดที่ใช้งาน",
       count: activeDiscount.length,
       bgColor: "bg-green-50",
-      href:'/admin/manage/promotion'
+      href:'/admin/manage/discount'
     },
   ];
 

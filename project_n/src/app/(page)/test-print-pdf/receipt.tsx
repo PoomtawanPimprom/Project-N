@@ -11,7 +11,6 @@ import {
   View,
   StyleSheet,
   Font,
-  Image,
 } from "@react-pdf/renderer";
 
 type prop = {
@@ -108,7 +107,7 @@ const PrintReceipt = ({ user, orderDatail, OrderItems, payment }: prop) => (
 
         <View style={styles.table}>
           <Text style={styles.tableCol}>
-            {orderDatail.transport?.providerName}
+            ขนส่งโดย : {orderDatail.transport?.providerName}
           </Text>
           <Text style={styles.tableColRight}>
             {orderDatail.transport?.transportPrice} บาท
