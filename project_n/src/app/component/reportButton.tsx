@@ -9,7 +9,7 @@ const ReportButton = (prop:prop) => {
     <>
         <button
         onClick={prop.onClick}
-        className="text-white rounded-lg px-4 py-2 bg-red-500 hover:bg-red-600"
+        className="text-white font-semibold rounded-lg px-4 py-2 bg-red-500 hover:bg-red-600"
         >Report
         </button>
     </>
