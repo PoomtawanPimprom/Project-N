@@ -11,7 +11,6 @@ export interface storeInterface {
     imageBgFileName?: string | null;
     imageBackgroundURL?: string | null
 
-    productTotal: number;
 
     createdDate?: Date;
     updatedAt?: Date;
