@@ -127,8 +127,8 @@ const ProductCard = ({ product }: prop) => {
                         return null; // ป้องกันการ render อื่น ๆ
                       }
                       fetchInventoryData()
-                    }} className="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors" >
-                      <ShoppingCart className="w-5 h-5" />
+                    }} className="p-2 rounded-full bg-primary text-white hover:bg-primary/10 transition-colors" >
+                      <ShoppingCart className="w-5 h-5 font-bold" />
                     </button>
                   </DrawerTrigger>
 
