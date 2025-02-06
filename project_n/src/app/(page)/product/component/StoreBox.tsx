@@ -1,10 +1,6 @@
 import { storeInterface } from "@/app/interface/storeInterface";
 import Link from "next/link";
 
-import { FaBoxes } from "react-icons/fa";
-import { FaStar } from "react-icons/fa6";
-import { MdPeopleAlt } from "react-icons/md";
-
 interface prop {
   store: storeInterface;
 }
@@ -12,10 +8,10 @@ interface prop {
 const StoreBox =  ({ store }: prop) => {
   return (
     <div className="flex justify-center">
-      <div className="flex flex-col w-[450px] bg-white lg:flex-row lg:justify-between lg:w-full border p-4 rounded-xl dark:bg-bg-dark dark:border-none">
+      <div className="flex flex-col w-full bg-white  lg:flex-row lg:justify-between lg:w-full border p-4 rounded-xl dark:bg-black ">
         <div className="flex items-center">
-          <div className="logo flex w-[120px] h-[120px] mr-4 rounded-xl bg-gray-400">
-            <img src={store.imageLogoURL?.toString()} alt="" className="w-[120px] h-[120px] rounded-xl" />
+          <div className="logo flex w-[120px] h-[120px] mr-4 rounded-xl ">
+            <img src={store.imageLogoURL?.toString()} alt="" className="w-[120px] h-[120px] rounded-xl dark:border dark:border-zinc-800" />
           </div>
           <div className="flex flex-col justify-between">
             <div className="flex flex-col w-full">
@@ -32,7 +28,7 @@ const StoreBox =  ({ store }: prop) => {
         <div className="flex  flex-row mt-2 justify-end  lg:mt-0 ">
           <Link
             href={`/store/${store?.id}`}
-            className="flex py-2 px-4 h-fit  bg-primary   dark:bg-black font-bold text-white rounded-xl dark:hover:bg-white dark:hover:text-black duration-150"
+            className="flex py-2 px-4 h-fit  bg-primary    font-bold text-white rounded-xl dark:hover:bg-white dark:hover:text-primary duration-150"
           >
             <p>เข้าชมร้าน</p>
           </Link>

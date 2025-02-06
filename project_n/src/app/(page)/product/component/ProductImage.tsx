@@ -30,55 +30,66 @@ export default function ProductImage({ product }: prop) {
   };
 
   return (
-    <div className="flex flex-col w-full justify-start">
-      <div className="flex  relative h-[450px] sm:w-[450px]  sm:h-[450px] xl:w-[500px] xl:h-[500px]">
-        <div className="absolute inset-0 flex items-center justify-between px-4 z-10">
-          <button
-            onClick={prevImage}
-            className="p-2 rounded-full bg-white/80 hover:bg-white/90 shadow-lg"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <button
-            onClick={nextImage}
-            className="p-2 rounded-full bg-white/80 hover:bg-white/90 shadow-lg"
-          >
-            <ChevronRight className="w-6 h-6" />
-          </button>
-        </div>
+    <div className="flex flex-col w-full gap-4">
+    {/* Main Image Container */}
+    <div className="relative w-full aspect-square max-w-xl mx-auto">
+      {/* Navigation Buttons */}
+      <div className="absolute inset-0 flex items-center justify-between px-2 sm:px-4 z-10">
+        <button
+          onClick={prevImage}
+          className="p-1 sm:p-2 rounded-full bg-white/80 hover:bg-white/90 shadow-lg transition-colors"
+          aria-label="Previous image"
+        >
+          <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6 dark:text-black" />
+        </button>
+        <button
+          onClick={nextImage}
+          className="p-1 sm:p-2 rounded-full bg-white/80 hover:bg-white/90 shadow-lg transition-colors"
+          aria-label="Next image"
+        >
+          <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6 dark:text-black" />
+        </button>
+      </div>
+
+      {/* Main Image */}
+      <div className="relative w-full h-full">
         <Image
           src={imageArray[currentImage]}
           alt={`${product.name} - Image ${currentImage + 1}`}
-          width={500}
-          height={500}
-          layout="fixed"
-          className="rounded-lg"
+          fill
+          className="rounded-lg object-cover"
+          sizes="(max-width: 640px) 100vw, (max-width: 1280px) 450px, 500px"
           priority
         />
       </div>
+    </div>
 
-      {/* Thumbnail Navigation */}
-      <div className="flex gap-2 overflow-x-auto p-2">
+    {/* Thumbnail Navigation */}
+    <div className="flex gap-2 overflow-x-auto px-2 pb-2 scrollbar-hide">
+      <div className="flex gap-2 mx-auto item-start">
         {imageArray.map((img, index) => (
           <button
             key={img}
             onClick={() => setCurrentImage(index)}
-            className={`flex-shrink-0 relative w-20 h-20 rounded-md overflow-hidden 
+            className={`relative flex w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden transition-all
               ${
                 currentImage === index
                   ? "ring-2 ring-blue-500"
-                  : "ring-1 ring-gray-200"
+                  : "ring-1 ring-gray-200 hover:ring-blue-200"
               }`}
+            aria-label={`View image ${index + 1}`}
           >
             <Image
               src={img}
               alt={`${product.name} thumbnail ${index + 1}`}
               fill
               className="object-cover"
+              sizes="(max-width: 640px) 64px, 80px"
             />
           </button>
         ))}
       </div>
     </div>
+  </div>
   );
 }

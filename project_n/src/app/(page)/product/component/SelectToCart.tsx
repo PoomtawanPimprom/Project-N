@@ -11,6 +11,7 @@ import { createCart } from "@/app/service/cart/service";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/app/context/cartContext";
+import { useUser } from "@/app/context/userContext";
 
 type SelectProp = {
   productId: number;
@@ -88,13 +89,13 @@ export default function SelectToCart({
       <div>
         <div className="flex w-full  ">
           <div className="flex w-full justify-between ">
-            <div className="flex text-5xl font-bold mb-3 w-full dark:text-white">
+            <div className="flex text-4xl md:text-5xl font-bold w-full dark:text-white">
               {product?.name}
             </div>
             <div className="flex   items-start">
               <div>
                 <ReportButton
-                  userId={1}
+                  userId={Number(session?.user.id)}
                   productId={productId}
                   onClick={() => setOpenReportModal(true)}
                 />
@@ -107,8 +108,10 @@ export default function SelectToCart({
             </div>
           </div>
         </div>
-        <div className="flex text-lg font-semibold text-gray-600">
-          <p>฿{product.price}</p>
+        <div className="flex flex-col  text-accent-foreground">
+          <p className="md:text-lg font-semibold">ราคา : {product.price} บาท</p>
+          <p className="  text-sm font-medium text-zinc-500">ขายไปแล้ว : {product.sales} ชิ้น</p>
+
         </div>
       </div>
       {/* body */}
@@ -197,7 +200,7 @@ export default function SelectToCart({
             </button>
           </div>
           <div>
-            <LikeButtonProductPage userId={1} productId={productId} />
+            <LikeButtonProductPage userId={Number(session?.user.id)} productId={productId} />
           </div>
         </div>
       </div>

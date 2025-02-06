@@ -10,7 +10,7 @@ type prop = {
 export default function ReviewBox({ reviews }: prop) {
   return (
     <div className="flex flex-col justify-center">
-      <div className="flex flex-col w-[450px] bg-white  lg:justify-between lg:w-full border p-4 rounded-xl dark:bg-bg-dark dark:border-none">
+      <div className="flex flex-col w-full bg-white  lg:justify-between lg:w-full border p-4 rounded-xl dark:bg-black ">
         <div className="flex text-2xl font-semibold">รีวิวสินค้า</div>
         <div className="flex flex-col gap-2">
           {reviews.map((item) => (
