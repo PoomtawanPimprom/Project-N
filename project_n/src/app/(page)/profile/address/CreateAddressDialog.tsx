@@ -83,23 +83,15 @@ const Dropdown = <T,>({
   );
 };
 
-export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({
-  onAddressCreated,
-  userId,
-  classNameButton,
-}) => {
+export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddressCreated, userId, classNameButton }) => {
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
   const [subDistricts, setSubDistricts] = useState<SubDistrict[]>([]);
   const [selectedProvince, setSelectedProvince] = useState<string | number>();
   const [selectedDistrict, setSelectedDistrict] = useState<string | number>();
-  const [selectedSubDistrict, setSelectedSubDistrict] = useState<
-    string | number
-  >();
+  const [selectedSubDistrict, setSelectedSubDistrict] = useState<string | number>();
 
-  const [error, setError] = useState<{
-    [key: string]: { message: string };
-  } | null>(null);
+  const [error, setError] = useState<{[key: string]: { message: string };} | null>(null);
   const [loading, setLoading] = useState(false);
 
   const [addressData, setAddressData] = useState<userAddressInterface>({
@@ -157,9 +149,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({
   };
 
   // Handle province change
-  const onChangeProvince = async (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const onChangeProvince = async ( event: React.ChangeEvent<HTMLSelectElement>) => {
     const index = event.target.selectedIndex;
     const label = event.target.options[index].text;
     const provinceId = event.target.value;
@@ -189,9 +179,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({
   };
 
   // Handle district change
-  const onChangeAmphure = async (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const onChangeAmphure = async ( event: React.ChangeEvent<HTMLSelectElement>) => {
     const index = event.target.selectedIndex;
     const label = event.target.options[index].text;
     const amphureId = event.target.value;
@@ -274,10 +262,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button
-          onClick={resetForm}
-          className={cn(`w-full sm:w-auto px-4 py-2 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,classNameButton)}
-        >
+        <button onClick={resetForm} className={cn(`w-full sm:w-auto px-4 py-2 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,classNameButton)}>
           + เพิ่มที่อยู่
         </button>
       </DialogTrigger>
@@ -290,10 +275,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({
         </DialogHeader>
         <form className="space-y-4" onSubmit={addDataAddress}>
           <div>
-            <Input
-              label="ชื่อ-นามสกุล"
-              labelClassName="block text-sm font-medium text-gray-700"
-              required={true}
+            <Input label="ชื่อ-นามสกุล" labelClassName="block text-sm font-medium text-gray-700" required={true}
               name="fullName"
               value={addressData.fullName}
               onChange={handleInput}
