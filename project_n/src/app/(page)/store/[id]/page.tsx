@@ -1,16 +1,20 @@
 // components
 import dynamic from "next/dynamic";
-const Discout = dynamic(()=> import("../component/Discout"))
 const ImageStore = dynamic(()=> import("../component/ImageStore"))
 const InfoStore = dynamic(()=> import("../component/InfoStore"))
 const ShowProduct = dynamic(()=> import( "../component/ShowProduct"))
 
 import prisma from "@/lib/prisma/db";
+import NotFound from "@/app/not-found";
 
 export default async function StorePage(props: {params: Promise<{ id: number }>;}) {
   const params = await props.params;
 
+
   const storeId = Number(params.id);
+  if(  storeId === undefined){
+    return <NotFound/> 
+  }
   const store = await prisma.store.findUnique({
     where: { id: storeId },
     include: { user: true, Product: true },
@@ -24,7 +28,6 @@ export default async function StorePage(props: {params: Promise<{ id: number }>;
           storeId={storeId}
         />
         <InfoStore store={store} />
-        <Discout />
         <ShowProduct storeId={storeId} />
       </div>
     </>
