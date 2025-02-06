@@ -95,13 +95,6 @@ function cart() {
       //create order
       await CreateOrder(data);
 
-      // Delete select order from cart items
-      // await Promise.all(
-      //   selectedItems.map(async (productId) => {
-      //     await deleteCartById(productId);
-      //   })
-      // );
-
       router.push(`/payment`);
     } catch (error: any) {
       if (error.message) {
@@ -135,90 +128,70 @@ function cart() {
   }, [status, session]);
 
   return (
-    <section className="h-screen bg-gray-100 sm:py-16 lg:py-20">
+    <section className="h-screen sm:py-16 lg:py-20">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center">
-          <h1 className="text-2xl font-semibold text-gray-900">รถเข็น</h1>
+          <h1 className="dark:text-white text-2xl font-semibold text-gray-900">รถเข็น</h1>
         </div>
       </div>
 
       <div className="mx-auto mt-8 max-w-2xl md:mt-12">
-        <div className="bg-white border-4 border-black">
+        <div className="dark:bg-zinc-800 dark:border-zinc-600 bg-white border-4 border-black">
           <div className="px-4 py-6 sm:px-8 sm:py-10">
             <div className="flow-root">
-              <ul className="-my-8">
+
+              <ul className="-my-8 ">
                 {item.map((cart, index) => (
-                  <li
-                    key={cart.id}
-                    className="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0"
-                  >
-                    <input
-                      type="checkbox"
+                  <li key={cart.id} className="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0">
+                    <input type="checkbox" className="h-5 w-5 dark:bg-zinc-700 dark:border-zinc-600" 
                       checked={selectedItems.includes(cart.id)}
                       onChange={() => handleCheckboxChange(cart.id)}
-                      className="h-5 w-5 text-blue-600"
                     />
                     <div className="shrink-0">
-                      <img
-                        className="h-24 w-24 max-w-full rounded-lg object-cover"
-                        src={cart.product?.image!.image1}
-                        alt=""
-                      />
+                      <img className="h-24 w-24 max-w-full rounded-lg object-cover" src={cart.product?.image!.image1}alt=""/>
                     </div>
 
                     <div className="relative flex flex-1 flex-col justify-between">
                       <div className="sm:col-gap-5 sm:grid sm:grid-cols-2">
+
                         <div className="pr-8 sm:pr-5">
-                          <p className="text-base font-semibold text-gray-900">
-                            {cart.product?.name}
-                          </p>
-                          <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">
-                            {cart.size}
-                          </p>
-                          <p className="mx-0 mt-1 mb-0 text-sm text-gray-400">
-                            {cart.color}
-                          </p>
+                          <p className="text-base font-semibold text-gray-900 dark:text-white">{cart.product?.name}</p>
+                          <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">{cart.size}</p>
+                          <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">{cart.color}</p>
                         </div>
 
                         <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-                          <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">
-                            ราคารวม ฿
-                            {(cart.product?.price || 0) * (cart.quantity || 1)}
+                          <p className="dark:text-white shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">
+                            ราคารวม ฿ {(cart.product?.price || 0) * (cart.quantity || 1)}
                           </p>
+
                           <div className="sm:order-1">
-                            <div className="mx-auto flex h-8 items-stretch text-gray-600">
+                            <div className="dark:text-gray-300 mx-auto flex h-8 items-stretch text-gray-600">
+
                               {/* Decrease button */}
-                              <button
-                                onClick={() => handleQuantityChange(index, -1)}
-                                className="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white"
-                              >
+                              <button onClick={() => handleQuantityChange(index, -1)}
+                                className="dark:bg-zinc-700 flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white">
                                 -
                               </button>
                               {/* Quantity display */}
-                              <div className="flex w-full items-center justify-center bg-gray-100 px-4 text-xs uppercase transition">
+                              <div className="dark:bg-zinc-600 flex w-full items-center justify-center bg-gray-100 px-4 text-xs uppercase transition">
                                 {cart.quantity || 1}
                               </div>
                               {/* Increase button */}
                               <button
                                 onClick={() => handleQuantityChange(index, 1)}
-                                className="flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black hover:text-white"
+                                className="dark:bg-zinc-700 flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black hover:text-white"
                               >
                                 +
                               </button>
                             </div>
                           </div>
+
                         </div>
                       </div>
 
                       <div className="absolute top-0 right-0 flex sm:bottom-0 sm:top-auto">
-                        <button
-                          onClick={(e) => deleteDataAddress(cart.id)}
-                          type="button"
-                          className="flex rounded p-2 text-center text-gray-500 transition-all duration-200 ease-in-out  hover:text-gray-900"
-                        >
-                          {/* <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" className=""></path>
-                                                    </svg> */}
+                        <button onClick={(e) => deleteDataAddress(cart.id)} type="button" className="flex rounded p-2 text-center bg-red-600 hover:bg-red-500 text-white transition-all duration-200 ease-in-out  hover:text-gray-900">
                           <X />
                         </button>
                       </div>
@@ -229,9 +202,9 @@ function cart() {
             </div>
 
             <div className="mt-6 flex items-center justify-between">
-              <p className="text-sm font-medium text-gray-900">รวม</p>
-              <p className="text-2xl font-semibold text-gray-900">
-                <span className="text-xs font-normal text-gray-400">฿</span>
+              <p className="dark:text-white text-sm font-medium text-gray-900">รวม</p>
+              <p className="dark:text-white text-2xl font-semibold text-gray-900">
+                <span className="dark:text-gray-300 text-xs font-normal text-gray-400">฿</span>
                 {item
                   .filter((cart) => selectedItems.includes(cart.id)) // กรองเฉพาะที่ถูกเลือก
                   .reduce(
@@ -244,10 +217,8 @@ function cart() {
             </div>
 
             <div className="mt-6 text-center">
-              <button
-                onClick={handleCheckout}
-                type="button"
-                className="group inline-flex w-full items-center justify-center rounded-md bg-gray-900 px-6 py-4 text-lg font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
+              <button onClick={handleCheckout} type="button"
+                className="group inline-flex w-full items-center justify-center rounded-md bg-gray-900 dark:bg-zinc-700 px-6 py-4 text-lg font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 dark:hover:bg-zinc-600"
               >
                 ชำระเงิน
                 <FaLongArrowAltRight className="group-hover:ml-8 ml-4 h-6 w-6 transition-all" />
