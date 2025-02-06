@@ -6,6 +6,7 @@ export interface productInterface {
     name: string
     description: string
     price: number
+    sales:number
     image?: {
         image1?: string,
         image2?: string,

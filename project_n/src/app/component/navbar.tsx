@@ -125,6 +125,11 @@ export default function Navbar() {
                         <Link href={`/store/${session.user.storeId}`} className="w-full">ร้านค้าของฉัน</Link>
                       </DropdownMenuItem>
                     )}
+                    {Boolean(session?.user?.storeId) && (
+                      <DropdownMenuItem>
+                        <Link href={`/store/manage/${session.user.storeId}`} className="w-full">จัดการร้านค้าของฉัน</Link>
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem>
                       <Link href="/profile" className="w-full">โปรไฟล์</Link>
                     </DropdownMenuItem>

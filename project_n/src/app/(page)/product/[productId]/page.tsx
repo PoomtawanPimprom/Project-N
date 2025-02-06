@@ -30,13 +30,12 @@ const ProductByIdPage = async (props: { params: Promise<{ productId: number }> }
     where:{storeID:product.storeID, deletedAt: null}
   })) as productInterface[]
 
-  console.log(otherProduct)
   return (
     <>
       <div className="flex flex-col items-center dark:bg-black">
-        <div className="flex flex-col border-x  p-4  dark:bg-black dark:border-gray-400  ">
+        <div className="flex flex-col lg:border-x  p-4  dark:bg-black dark:border-zinc-800  ">
           <div className="grid grid-cols-1 grid-flow-row auto-rows-auto  gap-2 w-full">
-            <div className="grid grid-cols-1 lg:grid-cols-2 grid-rows-1 gap-2 mx-auto ">
+            <div className="grid grid-cols-1 lg:grid-cols-2 grid-rows-1 gap-2 mx-auto w-full ">
               <ProductImage product={product}/>
               <SelectToCart product={product} inventory={inventories} productId={productId}/>
             </div>
