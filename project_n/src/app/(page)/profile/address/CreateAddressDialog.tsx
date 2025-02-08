@@ -60,18 +60,8 @@ const Dropdown = <T,>({
 }: DropdownProps<T>) => {
   return (
     <div>
-      <label
-        htmlFor={label}
-        className="block text-sm font-medium text-gray-700"
-      >
-        {label}
-      </label>
-      <select
-        id={label}
-        value={value ?? ""}
-        onChange={onChange}
-        className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
-      >
+      <label htmlFor={label} className="block text-sm font-medium text-gray-700">{label}</label>
+      <select id={label} value={value ?? ""} onChange={onChange} className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm">
         <option value="">เลือก...</option>
         {options.map((item, index) => (
           <option key={index} value={optionValue(item)}>
@@ -150,13 +140,13 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
 
   // Handle province change
   const onChangeProvince = async ( event: React.ChangeEvent<HTMLSelectElement>) => {
-    const index = event.target.selectedIndex;
-    const label = event.target.options[index].text;
-    const provinceId = event.target.value;
+    const index = event.target.selectedIndex;   // Get index of selected province
+    const label = event.target.options[index].text; // Get label for selected province
+    const provinceId = event.target.value; // Get selected province
     try {
       setSelectedProvince(provinceId);
-      setSelectedDistrict(undefined);
-      setSelectedSubDistrict(undefined);
+      setSelectedDistrict(undefined); // Set default selected
+      setSelectedSubDistrict(undefined); // Set default selected
       setDistricts([]);
       setSubDistricts([]);
       setAddressData((prevState) => ({
@@ -274,135 +264,138 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
           </DialogDescription>
         </DialogHeader>
         <form className="space-y-4" onSubmit={addDataAddress}>
-          <div>
-            <Input label="ชื่อ-นามสกุล" labelClassName="block text-sm font-medium text-gray-700" required={true}
-              name="fullName"
-              value={addressData.fullName}
-              onChange={handleInput}
-              inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
-              placeholder="ชื่อ-นามสกุล"
-              type=""
-              error={error?.fullName}
-            />
-          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-          <div>
-            <Input
-              label="เบอร์มือถือ"
-              labelClassName="block text-sm font-medium text-gray-700"
-              required={true}
-              name="mobile"
-              value={addressData.mobile}
-              onChange={handleInput}
-              inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
-              placeholder="เบอร์มือถือ"
-              type=""
-              error={error?.mobile}
-            />
-          </div>
-
-          <div>
-            <Input
-              label="บ้านเลขที่"
-              labelClassName="block text-sm font-medium text-gray-700"
-              required={true}
-              name="houseNo"
-              value={addressData.houseNo}
-              onChange={handleInput}
-              inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
-              placeholder="บ้านเลขที่"
-              type=""
-              error={error?.houseNo}
-            />
-          </div>
-
-          <div>
-            <Input
-              label="หมู่"
-              labelClassName="block text-sm font-medium text-gray-700"
-              name="moo"
-              value={addressData.moo}
-              onChange={handleInput}
-              inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
-              placeholder="หมู่"
-              type=""
-              error={error?.moo}
-            />
-          </div>
-
-          <Dropdown
-            label="จังหวัด"
-            options={provinces}
-            value={selectedProvince}
-            onChange={onChangeProvince}
-            optionLabel={(item) => `${item.name_th}`}
-            optionValue={(item) => item.id}
-          />
-          {error?.province && (
-            <p className="text-sm text-red-500 mt-1 animate-fade-in">
-              {error.province.message}
-            </p>
-          )}
-          <Dropdown
-            label="อำเภอ"
-            options={districts}
-            value={selectedDistrict}
-            onChange={onChangeAmphure}
-            optionLabel={(item) => `${item.name_th}`}
-            optionValue={(item) => item.id}
-          />
-          {error?.district && (
-            <p className="text-sm text-red-500 mt-1 animate-fade-in">
-              {error.district.message}
-            </p>
-          )}
-          <Dropdown
-            label="ตำบล"
-            options={subDistricts}
-            value={selectedSubDistrict}
-            onChange={onChangeSubDistrict}
-            optionLabel={(item) => `${item.name_th}`}
-            optionValue={(item) => item.id}
-          />
-          {error?.subDistrict && (
-            <p className="text-sm text-red-500 mt-1 animate-fade-in">
-              {error.subDistrict.message}
-            </p>
-          )}
-          <div>
-            <Input
-              label="รหัสไปรษณีย์"
-              labelClassName="block text-sm font-medium text-gray-700"
-              required={true}
-              name="postalCode"
-              value={addressData.postalCode}
-              onChange={handleInput}
-              inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
-              placeholder="รหัสไปรษณีย์"
-              type=""
-              error={error?.postalCode}
-            />
-          </div>
-
-          <div>
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                value={2}
-                name="addressStatusId"
-                checked={addressData.addressStatusId === 2}
+            <div>
+              <Input label="ชื่อ-นามสกุล" labelClassName="block text-sm font-medium text-gray-700" required={true}
+                name="fullName"
+                value={addressData.fullName}
                 onChange={handleInput}
+                inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+                placeholder="ชื่อ-นามสกุล"
+                type=""
+                error={error?.fullName}
               />
-              <span>ตั้งเป็นค่าเริ่มต้น</span>
-              <input
-                type="radio"
-                value={1}
-                name="addressStatusId"
-                checked={addressData.addressStatusId === 1}
+            </div>
+
+            <div>
+              <Input
+                label="เบอร์มือถือ"
+                labelClassName="block text-sm font-medium text-gray-700"
+                required={true}
+                name="mobile"
+                value={addressData.mobile}
                 onChange={handleInput}
+                inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+                placeholder="เบอร์มือถือ"
+                type=""
+                error={error?.mobile}
               />
-              <span>ไม่ตั้งค่า</span>
-            </label>
+            </div>
+
+            <div>
+              <Input
+                label="บ้านเลขที่"
+                labelClassName="block text-sm font-medium text-gray-700"
+                required={true}
+                name="houseNo"
+                value={addressData.houseNo}
+                onChange={handleInput}
+                inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+                placeholder="บ้านเลขที่"
+                type=""
+                error={error?.houseNo}
+              />
+            </div>
+
+            <div>
+              <Input
+                label="หมู่"
+                labelClassName="block text-sm font-medium text-gray-700"
+                name="moo"
+                value={addressData.moo}
+                onChange={handleInput}
+                inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+                placeholder="หมู่"
+                type=""
+                error={error?.moo}
+              />
+            </div>
+
+            <Dropdown
+              label="จังหวัด"
+              options={provinces}
+              value={selectedProvince}
+              onChange={onChangeProvince}
+              optionLabel={(item) => `${item.name_th}`}
+              optionValue={(item) => item.id}
+            />
+            {error?.province && (
+              <p className="text-sm text-red-500 mt-1 animate-fade-in">
+                {error.province.message}
+              </p>
+            )}
+            <Dropdown
+              label="อำเภอ"
+              options={districts}
+              value={selectedDistrict}
+              onChange={onChangeAmphure}
+              optionLabel={(item) => `${item.name_th}`}
+              optionValue={(item) => item.id}
+            />
+            {error?.district && (
+              <p className="text-sm text-red-500 mt-1 animate-fade-in">
+                {error.district.message}
+              </p>
+            )}
+            <Dropdown
+              label="ตำบล"
+              options={subDistricts}
+              value={selectedSubDistrict}
+              onChange={onChangeSubDistrict}
+              optionLabel={(item) => `${item.name_th}`}
+              optionValue={(item) => item.id}
+            />
+            {error?.subDistrict && (
+              <p className="text-sm text-red-500 mt-1 animate-fade-in">
+                {error.subDistrict.message}
+              </p>
+            )}
+            <div>
+              <Input
+                label="รหัสไปรษณีย์"
+                labelClassName="block text-sm font-medium text-gray-700"
+                required={true}
+                name="postalCode"
+                value={addressData.postalCode}
+                onChange={handleInput}
+                inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+                placeholder="รหัสไปรษณีย์"
+                type=""
+                error={error?.postalCode}
+              />
+            </div>
+
+            <div>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  value={2}
+                  name="addressStatusId"
+                  checked={addressData.addressStatusId === 2}
+                  onChange={handleInput}
+                />
+                <span>ตั้งเป็นค่าเริ่มต้น</span>
+                <input
+                  type="radio"
+                  value={1}
+                  name="addressStatusId"
+                  checked={addressData.addressStatusId === 1}
+                  onChange={handleInput}
+                />
+                <span>ไม่ตั้งค่า</span>
+              </label>
+            </div>
           </div>
 
           <div className="flex justify-end gap-2">

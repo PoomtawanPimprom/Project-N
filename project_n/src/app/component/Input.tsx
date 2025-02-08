@@ -51,36 +51,15 @@ export default function Input({
       )}
       <div className="relative">
         {type === "textarea" ? (
-          <textarea
-            id={name}
-            name={name}
-            value={value}
-            placeholder={placeholder}
-            onChange={onChange}
-            disabled={disabled}
+          <textarea id={name} name={name} value={value} placeholder={placeholder} onChange={onChange} disabled={disabled}
             className={cn(
-              `
-                            bg-white dark:bg-black
-             text-black dark:text-white
-              w-96
-              h-32
-              p-3
-              border
-              rounded-md
-              outline-none
-              border-gray-500
-              transition-all
-              duration-200
-              resize-none
+              ` bg-white dark:bg-black text-black dark:text-white w-96 h-32 p-3 border rounded-md
+                outline-none border-gray-500 transition-all duration-200 resize-none
               ${
-                disabled
-                  ? "bg-gray-100 text-gray-500 cursor-not-allowed"
-                  : "bg-white"
+                disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white"
               }
               ${
-                error
-                  ? "border-red-500 hover:border-red-600 focus:ring-2 focus:ring-red-200"
-                  : "border-gray-300 hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                error ? "border-red-500 hover:border-red-600 focus:ring-2 focus:ring-red-200" : "border-gray-300 hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
               }
               placeholder:text-gray-400
               text-sm

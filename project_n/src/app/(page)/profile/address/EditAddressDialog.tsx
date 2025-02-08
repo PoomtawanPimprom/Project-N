@@ -61,10 +61,7 @@ const Dropdown = <T,>({
 }: DropdownProps<T>) => {
   return (
     <div>
-      <label
-        htmlFor={label}
-        className="block text-sm font-medium text-gray-700"
-      >
+      <label htmlFor={label} className="block text-sm font-medium text-gray-700">
         {label}
       </label>
       <select
@@ -84,24 +81,16 @@ const Dropdown = <T,>({
   );
 };
 
-export const EditAddressDialog: React.FC<EditAddressDialogProps> = ({
-  address,
-  onAddressUpdated,
-  classNameButton
-}) => {
+export const EditAddressDialog: React.FC<EditAddressDialogProps> = ({ address, onAddressUpdated, classNameButton }) => {
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
   const [subDistricts, setSubDistricts] = useState<SubDistrict[]>([]);
   const [selectedProvince, setSelectedProvince] = useState<string | number>();
   const [selectedDistrict, setSelectedDistrict] = useState<string | number>();
-  const [selectedSubDistrict, setSelectedSubDistrict] = useState<
-    string | number
-  >();
+  const [selectedSubDistrict, setSelectedSubDistrict] = useState< string | number >();
   const [addressData, setAddressData] = useState<userAddressInterface>(address);
 
-  const [error, setError] = useState<{
-    [key: string]: { message: string };
-  } | null>(null);
+  const [error, setError] = useState<{ [key: string]: { message: string } } | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,27 +105,19 @@ export const EditAddressDialog: React.FC<EditAddressDialogProps> = ({
   const initializeLocationData = async () => {
     try {
       // Fetch provinces
-      const provincesRes = await fetch(
-        "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json"
-      );
+      const provincesRes = await fetch("https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json");
       const provincesJson = await provincesRes.json();
       setProvinces(provincesJson);
 
       // Find and set selected province
-      const selectedProvinceData = provincesJson.find(
-        (p: Province) => p.name_th === address.province
-      );
+      const selectedProvinceData = provincesJson.find( (p: Province) => p.name_th === address.province );
       if (selectedProvinceData) {
         setSelectedProvince(selectedProvinceData.id);
 
         // Fetch districts for selected province
-        const districtsRes = await fetch(
-          "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json"
-        );
+        const districtsRes = await fetch("https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json");
         const districtsJson = await districtsRes.json();
-        const filteredDistricts = districtsJson.filter(
-          (d: District) => d.province_id === selectedProvinceData.id
-        );
+        const filteredDistricts = districtsJson.filter( (d: District) => d.province_id === selectedProvinceData.id );
         setDistricts(filteredDistricts);
 
         // Find and set selected district
@@ -147,9 +128,7 @@ export const EditAddressDialog: React.FC<EditAddressDialogProps> = ({
           setSelectedDistrict(selectedDistrictData.id);
 
           // Fetch subdistricts for selected district
-          const subDistrictsRes = await fetch(
-            "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json"
-          );
+          const subDistrictsRes = await fetch("https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json");
           const subDistrictsJson = await subDistrictsRes.json();
           const filteredSubDistricts = subDistrictsJson.filter(
             (sd: SubDistrict) => sd.amphure_id === selectedDistrictData.id
@@ -291,9 +270,7 @@ export const EditAddressDialog: React.FC<EditAddressDialogProps> = ({
     <Dialog>
       <DialogTrigger asChild>
         <button 
-          className={cn(`w-full sm:w-auto px-4 py-2 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,classNameButton)}
-        
-        >
+          className={cn(`w-full sm:w-auto px-4 py-2 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,classNameButton)}>
           <MdEdit />
         </button>
       </DialogTrigger>
@@ -305,138 +282,141 @@ export const EditAddressDialog: React.FC<EditAddressDialogProps> = ({
           </DialogDescription>
         </DialogHeader>
         <form className="space-y-4" onSubmit={handleSubmit}>
-          <div>
-            <Input
-              label="ชื่อ-นามสกุล"
-              labelClassName="block text-sm font-medium text-gray-700"
-              required={true}
-              name="fullName"
-              value={addressData.fullName}
-              onChange={handleInput}
-              inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
-              placeholder="ชื่อ-นามสกุล"
-              type=""
-              error={error?.fullName}
-            />
-          </div>
-
-          <div>
-            <Input
-              label="เบอร์มือถือ"
-              labelClassName="block text-sm font-medium text-gray-700"
-              required={true}
-              name="mobile"
-              value={addressData.mobile}
-              onChange={handleInput}
-              inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
-              placeholder="เบอร์มือถือ"
-              type=""
-              error={error?.mobile}
-            />
-          </div>
-
-          <div>
-            <Input
-              label="บ้านเลขที่"
-              labelClassName="block text-sm font-medium text-gray-700"
-              required={true}
-              name="houseNo"
-              value={addressData.houseNo}
-              onChange={handleInput}
-              inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
-              placeholder="บ้านเลขที่"
-              type=""
-              error={error?.houseNo}
-            />
-          </div>
-
-          <div>
-            <Input
-              label="หมู่"
-              labelClassName="block text-sm font-medium text-gray-700"
-              name="moo"
-              value={addressData.moo}
-              onChange={handleInput}
-              inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
-              placeholder="หมู่"
-              type=""
-              error={error?.moo}
-            />
-          </div>
-
-          <Dropdown
-            label="จังหวัด"
-            options={provinces}
-            value={selectedProvince}
-            onChange={onChangeProvince}
-            optionLabel={(item) => `${item.name_th}`}
-            optionValue={(item) => item.id}
-          />
-          {error?.province && (
-            <p className="text-sm text-red-500 mt-1 animate-fade-in">
-              {error.province.message}
-            </p>
-          )}
-          <Dropdown
-            label="อำเภอ"
-            options={districts}
-            value={selectedDistrict}
-            onChange={onChangeAmphure}
-            optionLabel={(item) => `${item.name_th}`}
-            optionValue={(item) => item.id}
-          />
-          {error?.district && (
-            <p className="text-sm text-red-500 mt-1 animate-fade-in">
-              {error.district.message}
-            </p>
-          )}
-          <Dropdown
-            label="ตำบล"
-            options={subDistricts}
-            value={selectedSubDistrict}
-            onChange={onChangeSubDistrict}
-            optionLabel={(item) => `${item.name_th}`}
-            optionValue={(item) => item.id}
-          />
-          {error?.subDistrict && (
-            <p className="text-sm text-red-500 mt-1 animate-fade-in">
-              {error.subDistrict.message}
-            </p>
-          )}
-          <div>
-            <Input
-              label="รหัสไปรษณีย์"
-              labelClassName="block text-sm font-medium text-gray-700"
-              required={true}
-              name="postalCode"
-              value={addressData.postalCode}
-              onChange={handleInput}
-              inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
-              placeholder="รหัสไปรษณีย์"
-              type=""
-              error={error?.postalCode}
-            />
-          </div>
-
-          <div>
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                value={2}
-                name="addressStatusId"
-                checked={addressData.addressStatusId === 2}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <Input
+                label="ชื่อ-นามสกุล"
+                labelClassName="block text-sm font-medium text-gray-700"
+                required={true}
+                name="fullName"
+                value={addressData.fullName}
                 onChange={handleInput}
+                inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+                placeholder="ชื่อ-นามสกุล"
+                type=""
+                error={error?.fullName}
               />
-              <span>ตั้งเป็นค่าเริ่มต้น</span>
-              <input
-                type="radio"
-                value={1}
-                name="addressStatusId"
-                checked={addressData.addressStatusId === 1}
+            </div>
+
+            <div>
+              <Input
+                label="เบอร์มือถือ"
+                labelClassName="block text-sm font-medium text-gray-700"
+                required={true}
+                name="mobile"
+                value={addressData.mobile}
                 onChange={handleInput}
+                inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+                placeholder="เบอร์มือถือ"
+                type=""
+                error={error?.mobile}
               />
-              <span>ไม่ตั้งคเป็นค่าเริ่มต้น</span>
-            </label>
+            </div>
+
+            <div>
+              <Input
+                label="บ้านเลขที่"
+                labelClassName="block text-sm font-medium text-gray-700"
+                required={true}
+                name="houseNo"
+                value={addressData.houseNo}
+                onChange={handleInput}
+                inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+                placeholder="บ้านเลขที่"
+                type=""
+                error={error?.houseNo}
+              />
+            </div>
+
+            <div>
+              <Input
+                label="หมู่"
+                labelClassName="block text-sm font-medium text-gray-700"
+                name="moo"
+                value={addressData.moo}
+                onChange={handleInput}
+                inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+                placeholder="หมู่"
+                type=""
+                error={error?.moo}
+              />
+            </div>
+
+            <Dropdown
+              label="จังหวัด"
+              options={provinces}
+              value={selectedProvince}
+              onChange={onChangeProvince}
+              optionLabel={(item) => `${item.name_th}`}
+              optionValue={(item) => item.id}
+            />
+            {error?.province && (
+              <p className="text-sm text-red-500 mt-1 animate-fade-in">
+                {error.province.message}
+              </p>
+            )}
+            <Dropdown
+              label="อำเภอ"
+              options={districts}
+              value={selectedDistrict}
+              onChange={onChangeAmphure}
+              optionLabel={(item) => `${item.name_th}`}
+              optionValue={(item) => item.id}
+            />
+            {error?.district && (
+              <p className="text-sm text-red-500 mt-1 animate-fade-in">
+                {error.district.message}
+              </p>
+            )}
+            <Dropdown
+              label="ตำบล"
+              options={subDistricts}
+              value={selectedSubDistrict}
+              onChange={onChangeSubDistrict}
+              optionLabel={(item) => `${item.name_th}`}
+              optionValue={(item) => item.id}
+            />
+            {error?.subDistrict && (
+              <p className="text-sm text-red-500 mt-1 animate-fade-in">
+                {error.subDistrict.message}
+              </p>
+            )}
+            <div>
+              <Input
+                label="รหัสไปรษณีย์"
+                labelClassName="block text-sm font-medium text-gray-700"
+                required={true}
+                name="postalCode"
+                value={addressData.postalCode}
+                onChange={handleInput}
+                inputClassName="border-none focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+                placeholder="รหัสไปรษณีย์"
+                type=""
+                error={error?.postalCode}
+              />
+            </div>
+
+            <div>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  value={2}
+                  name="addressStatusId"
+                  checked={addressData.addressStatusId === 2}
+                  onChange={handleInput}
+                />
+                <span>ตั้งเป็นค่าเริ่มต้น</span>
+                <input
+                  type="radio"
+                  value={1}
+                  name="addressStatusId"
+                  checked={addressData.addressStatusId === 1}
+                  onChange={handleInput}
+                />
+                <span>ไม่ตั้งคเป็นค่าเริ่มต้น</span>
+              </label>
+            </div>
+
           </div>
           <div className="flex justify-end gap-2">
             <DialogClose asChild>
