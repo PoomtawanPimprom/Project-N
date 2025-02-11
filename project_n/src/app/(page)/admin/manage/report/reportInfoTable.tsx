@@ -174,8 +174,8 @@ const ReportInfoTable = () => {
               ))}
             </TableBody>
           </Table>
-          <div className="flex justify-end mt-2">
-            <div className="flex  border-2 border-slate-800 rounded-lg bg-slate-500 ">
+          <div className="flex justify-end mt-2 text-white">
+            <div className="flex rounded-lg bg-primary ">
               <button
                 onClick={handlePreviousPage}
                 disabled={currentPage === 1}
@@ -187,7 +187,7 @@ const ReportInfoTable = () => {
               {numbers.map((item, index) => (
                 <div
                   key={index}
-                  className="px-2 py-2 border-x-[1px] border-slate-800"
+                  className="flex px-2 py-2 w-[40px] justify-center items-center border-black border-x-[1px] "
                 >
                   <a href="">{item}</a>
                 </div>

@@ -11,43 +11,42 @@ type prop = {
 
 const ModalInfoReport = ({ reportData, open, OnClose }: prop) => {
   return (
-    <Modal open={open} onClose={OnClose}>
-      <div className="w-96 space-y-6">
-        <div className="text-black text-3xl mt-2 ">
+    <Modal  open={open} onClose={OnClose}>
+      <div className="w-96 space-y-3 ">
+        <div className="text-black dark:text-white font-bold text-3xl mt-2 ">
           <p className="mb-2">รายละเอียดการายงาน</p>
-          <div className="flex w-full bg-gray-200 h-[1px]"></div>
         </div>
-        <div className=" space-y-1  text-black">
+        <div className=" space-y-2  text-black dark:text-white ">
           <div className="">
             <p className="flex items-center gap-2 justify-between">
-              <p className="font-bold text-base">ส่งคำร้องเรียนเมื่อ : </p>
-              <p className="text-base ">
+              <span className="font-semibold text-base">ส่งคำร้องเรียนเมื่อ : </span>
+              <span className="text-base ">
                 {new Date(reportData?.createdAt!).toLocaleString()}
-              </p>
+              </span>
             </p>
           </div>
           <div>
             <p className="flex items-center gap-2 justify-between">
-              <p className="font-bold text-base">ชื่อสินค้า : </p>
-              <p className="text-base ">{reportData?.product?.name}</p>
+              <span className="font-semibold text-base">ชื่อสินค้า : </span>
+              <span className="text-base ">{reportData?.product?.name}</span>
             </p>
           </div>
           <div>
             <p className="flex items-center gap-2 justify-between">
-              <p className="font-bold text-base">ข้อความที่ร้องเรียน : </p>
-              <p className="text-base">{reportData?.comment}</p>
+              <span className="font-semibold text-base">ข้อความที่ร้องเรียน : </span>
+              <span className="text-base">{reportData?.comment}</span>
             </p>
           </div>
           <div>
             <p className="flex items-center gap-2 justify-between">
-              <p className="font-bold text-base">ประเภทของคำร้องเรียน :</p>
-              <p className="text-base"> {reportData?.reportCategory?.name}</p>
+              <span className="font-semibold text-base">ประเภทของคำร้องเรียน :</span>
+              <span className="text-base"> {reportData?.reportCategory?.name}</span>
             </p>
           </div>
           <div>
             <p className="flex items-center gap-2 justify-between">
-              <p className="font-bold text-base">สถานะของคำร้องเรียน :</p>
-              <p className="text-base"> {reportData?.reportStatus?.name}</p>
+              <span className="font-semibold text-base">สถานะของคำร้องเรียน :</span>
+              <span className="text-base"> {reportData?.reportStatus?.name}</span>
             </p>
           </div>
         </div>

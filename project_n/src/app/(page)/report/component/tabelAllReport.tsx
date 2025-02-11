@@ -11,11 +11,16 @@ interface prop {
 
 const TabelAllReport = ({ userId,reportDataByUserID }: prop) => {
   const [openModal, setOpenModal] = useState(false);
+  const [report, setReport] = useState<reportInterface|null>(null);
+  const handleOpenReport = (data:reportInterface) =>{
+    setOpenModal(true)
+    setReport(data)
+  }
   return (
     <div className="flex flex-col w-full h-full px-4 mx-auto ">
       <div className=" mt-4 relative w-full h-full overflow-x-auto border  rounded-lg">
         <table className=" w-full text-sm text-left rtl:text-right  rounded-lg text-gray-500 dark:text-gray-400">
-          <thead className="text-baserp text-gray-700 uppercase border-b bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <thead className="text-baserp text-gray-700 uppercase border-b bg-gray-50 dark:bg-black dark:text-white">
             <tr>
               <th scope="col" className="px-6 py-3">
                 ข้อความ
@@ -41,7 +46,7 @@ const TabelAllReport = ({ userId,reportDataByUserID }: prop) => {
             {reportDataByUserID.map((item, index) => (
               <tr
               key={index}
-              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              className="bg-white border-b dark:text-zinc-200 dark:bg-zinc-800  hover:bg-gray-50 dark:hover:bg-zinc-600">
                 <td className="px-6 py-2">{item.comment}</td>
                 <td className="px-6 py-2">
                   {new Date(item.createdAt).toLocaleDateString("th-TH")}
@@ -51,23 +56,21 @@ const TabelAllReport = ({ userId,reportDataByUserID }: prop) => {
                 <td className="px-6 py-2">{item.reportCategory?.name}</td>
                 <td className=" px-6 py-2 flex justify-center">
                   <button
-                    onClick={() => {
-                      setOpenModal(true);
-                    }}
+                    onClick={()=>handleOpenReport(item)}
                     className=" rounded-xl text-white px-6 py-2 bg-primary"
                   >
                     ดู
                   </button>
                 </td>
-                <ModalInfoReport
-                  reportData={item}
-                  open={openModal}
-                  OnClose={() => setOpenModal(false)}
-                />
               </tr>
             ))}
           </tbody>
         </table>
+            <ModalInfoReport
+              reportData={report}
+              open={openModal}
+              OnClose={() => setOpenModal(false)}
+            />
       </div>
     </div>
   );
