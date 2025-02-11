@@ -136,6 +136,9 @@ export default function Navbar() {
                     <DropdownMenuItem>
                       <Link href="/favorite" className="w-full">สินค้าที่ชอบ</Link>
                     </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link href="/report/myreport" className="w-full">การรายงานของฉัน</Link>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => { signOut(); router.push("/"); }}>
                       ออกจากระบบ
