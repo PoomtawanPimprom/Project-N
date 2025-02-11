@@ -63,3 +63,13 @@ export async function checkUserCreatedStore(userId: number) {
     });
     return res.json();
 }
+
+export async function getInfomationForDashboardByStoreID(storeID: number) {
+    const res = await fetch(`/api/store/${storeID}/dashboard`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    return res.json();
+}
