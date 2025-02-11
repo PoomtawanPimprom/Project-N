@@ -3,9 +3,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 
-export async function GET(request: NextRequest, props: { params: { id: string } }) {
+export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     try {
-        const storeId = Number(props.params.id);
+        const storeId = Number(params.id);
 
         if (isNaN(storeId)) {
             return new NextResponse("Invalid store ID", { status: 400 });

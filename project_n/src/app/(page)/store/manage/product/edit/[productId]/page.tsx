@@ -291,7 +291,7 @@ export default function editProductpage(props: {
   }, []);
 
   return (
-    <div className="min-h-screen flex ">
+    <div className="min-h-screen flex relative">
       <StoreSideBar storeId={storeId!} />
       <div className="w-full border p-4">
         <div className="flex flex-col w-full border p-4 rounded-lg bg-white  dark:bg-black dark:border-gray-600 dark:border-x">

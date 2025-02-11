@@ -25,6 +25,7 @@ import {
   LoaderIcon,
 } from "lucide-react";
 import StoreSideBar from "../../StoreSideBar";
+import { useSession } from "next-auth/react";
 
 const options: Intl.DateTimeFormatOptions = {
   weekday: "long", // "long" ถูกต้อง
@@ -34,6 +35,7 @@ const options: Intl.DateTimeFormatOptions = {
 };
 
 export default function Dashboard(props: { params: Promise<{ id: number }> }) {
+  const {data:session} = useSession()
   const params = use(props.params);
   const storeID = params.id;
   const [data, setData] = useState({
@@ -47,7 +49,10 @@ export default function Dashboard(props: { params: Promise<{ id: number }> }) {
 
   const fetchdata = async () => {
     try {
-      const res = await getInfomationForDashboardByStoreID(1);
+      if(session?.user.storeId === null || session?.user.storeId ===undefined ){
+        return null
+      }
+      const res = await getInfomationForDashboardByStoreID(Number(session?.user.storeId));
       setData(res);
     } finally {
       setIsLoading(false);

@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma/db";
-import { Box, PackagePlus, Settings, Truck, Warehouse } from "lucide-react";
+import { Box, LayoutDashboard, PackagePlus, Settings, Truck, Warehouse } from "lucide-react";
 import { productInterface } from "@/app/interface/productInterface";
 import { orderItemInterface } from "@/app/interface/orderItemInterface";
 
@@ -22,11 +22,12 @@ export default async function ManageStorePage(
     where:{storeId:storeId,orderItemStatusId:2}
 })) as orderItemInterface[]
 
+  const count = toShipItems.length != 0 ?  toShipItems.length : 0
   const statsBoxes = [
     {
       icon: <Truck className="w-8 h-8 text-red-500" />,
       title: "สินค้าที่ต้องส่ง",
-      count: toShipItems.length,
+      count: count,
       bgColor: "bg-red-50 dark:bg-zinc-800 hover:bg-red-200 dark:hover:bg-zinc-600 ",
       href: `/store/manage/toShip/${storeId}`,
     },
@@ -36,6 +37,12 @@ export default async function ManageStorePage(
       count: products.length,
       bgColor: "bg-indigo-50 dark:bg-zinc-800 hover:bg-indigo-200 dark:hover:bg-zinc-600 ",
       href: `/store/manage/product/${storeId}`,
+    },
+    {
+      icon: <LayoutDashboard className="w-8 h-8 text-fuchsia-500" />,
+      title: "แดชบอร์ด",
+      bgColor: "bg-fuchsia-50 dark:bg-zinc-800 hover:bg-fuchsia-200 dark:hover:bg-zinc-600 ",
+      href: `/store/manage/dashboard/${storeId}`,
     },
     {
       icon: <Warehouse className="w-8 h-8 text-teal-500" />,
@@ -58,17 +65,17 @@ export default async function ManageStorePage(
   ];
 
   return (
-    <div className="min-h-screen  flex">
+    <div className="min-h-screen  relative flex">
       <StoreSideBar storeId={storeId.toString()} />
       <main className="flex-grow p-6  bg-gray-100 dark:bg-background">
         <div className="bg-white dark:bg-black h-full  shadow-md rounded-lg p-6 mb-6">
           <div className="text-black dark:text-white  bg-white dark:bg-zinc-900 shadow-md rounded-lg p-6 mb-6">
             <h1 className="text-4xl font-semibold mb-4">
-              ยินดีต้อนรับสู่ Store Dashboard
+              ยินดีต้อนรับสู่ Store Overview
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {statsBoxes.map((box, index) => (
               <CardInfo box={box} key={index}/>
             ))}

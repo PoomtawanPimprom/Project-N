@@ -12,7 +12,7 @@ export default async function manageProductPage(props: {
     where: { storeID: storeID, deletedAt: null },
   })) as productInterface[];
   return (
-    <div className="min-h-screen  flex">
+    <div className="min-h-screen relative flex">
       <StoreSideBar storeId={storeID.toString()} />
       <div className="w-full border p-4">
         <div className="flex flex-col w-full border dark:border-none p-6 rounded-lg bg-white h-full  dark:bg-black dark:border-gray-600 dark:border-x gap-2">

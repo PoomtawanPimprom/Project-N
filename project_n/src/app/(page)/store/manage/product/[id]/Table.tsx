@@ -71,15 +71,15 @@ const DataTable = ({ products }: prop) => {
           {/* Mobile view */}
           <div className="md:hidden">
             {products.map((item) => (
-              <div key={item.id} className="bg-white p-4 border-b">
+              <div key={item.id} className="bg-white p-4 dark:bg-black border-b">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="font-semibold">ID: {item.id}</span>
-                  <span className="text-gray-600">${item.name}</span>
+                <span className="text-xl text-gray-600 dark:text-white">{item.name}</span>
+                  <span className="text-zinc-600">{item.price} บาท</span>
                 </div>
                 <div className="mb-3">
-                  <span className="text-gray-600">{item.price}</span>
+
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 justify-end">
                   <button className="flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors bg-black hover:bg-gray-800 text-white">
                     <SquarePen className="mr-2" />
                     Update

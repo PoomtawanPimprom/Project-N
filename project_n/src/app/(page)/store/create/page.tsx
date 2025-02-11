@@ -140,18 +140,18 @@ export default function CreateStorePage() {
       //validate
       validateWithZod(StoreSchema, data);
 
-      const res:any = await CreateStore(data);
-      
+      const res: any = await CreateStore(data);
+
       if (!res.success) {
         throw new Error(res.message); // ดึง message จาก API แล้วโยน error ออกไป
-    }
+      }
       toast({
         variant: "success",
         description: "สร้างร้านค้าสำเร็จ",
       });
       router.push(`/`);
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       const deleteLogoRef = ref(storage, `store/logo/${logoFileName}`);
       const deleteBgRef = ref(storage, `store/background/${BgFileName}`);
 
@@ -195,7 +195,7 @@ export default function CreateStorePage() {
   return (
     <div className="flex px-4">
       <div className="flex flex-col h-full w-full max-w-[1200px] mt-4 p-4 mx-auto border rounded-lg">
-        <h1 className="text-5xl font-bold mb-4">สร้างร้านค้าของคุณ!</h1>
+        <h1 className="text-3xl sm:text-5xl  font-bold mb-4">สร้างร้านค้าของคุณ!</h1>
         <Form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
             <Input
@@ -204,8 +204,10 @@ export default function CreateStorePage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               label="ชื่อร้านค้าของคุณ"
+              labelClassName="font-medium sm:font-bold"
               placeholder="ชื่อร้านค้า..."
               type=""
+              inputClassName="w-full sm:w-96"
               error={error?.name}
             />
 
@@ -215,57 +217,61 @@ export default function CreateStorePage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               label="รายละเอียดร้าน"
+              labelClassName="font-medium sm:font-bold"
               placeholder="รายละเอียดร้านค้า..."
               type="textarea"
+              inputClassName="w-full sm:w-96"
               error={error?.description}
             />
 
             <div>
-              <div className="flex text-xl font-bold">
+              <div className="flex text-xl font-medium sm:font-bold">
                 <p className=" mb-2">รูปโลโก้ร้านค้าของคุณ</p>
                 <span className="text-red-500 ml-1">*</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-start justify-start w-full">
-                  <label
-                    htmlFor="image-logo"
-                    className="flex flex-col items-center justify-center h-[400px] w-[400px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
-                  >
-                    <div className="flex flex-col h-[400px] w-[400px] items-center justify-center pt-5 pb-6">
-                      <svg
-                        className="w-8 h-8 mb-4 text-gray-500"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 20 16"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                        />
-                      </svg>
-                      <p className="mb-2 text-sm text-gray-500">
-                        <span className="font-semibold">Click to upload</span>{" "}
-                        or drag and drop
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        SVG, PNG, JPG or GIF (MAX. 120x120px)
-                      </p>
-                    </div>
-                    <input
-                      disabled={imageLogo ? true : false}
-                      accept="image/*"
-                      name="image-logo"
-                      id="image-logo"
-                      type="file"
-                      className="hidden"
-                      onChange={handleLogoFileChange}
-                    />
-                  </label>
-                </div>
+                {imageLogo == null && (
+                  <div className="flex items-start justify-start w-full">
+                    <label
+                      htmlFor="image-logo"
+                      className="flex flex-col items-center justify-center w-full h-full md:h-[400px] md:w-[400px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      <div className="flex flex-col h-[400px] w-[400px] items-center justify-center pt-5 pb-6">
+                        <svg
+                          className="w-8 h-8 mb-4 text-gray-500"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 20 16"
+                        >
+                          <path
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                          />
+                        </svg>
+                        <p className="hidden sm:block mb-2 text-sm text-gray-500">
+                          <span className="font-semibold">Click to upload</span>{" "}
+                          or drag and drop
+                        </p>
+                        <p className="hidden sm:block text-xs text-gray-500">
+                          SVG, PNG, JPG or GIF (MAX. 120x120px)
+                        </p>
+                      </div>
+                      <input
+                        disabled={imageLogo ? true : false}
+                        accept="image/*"
+                        name="image-logo"
+                        id="image-logo"
+                        type="file"
+                        className="hidden"
+                        onChange={handleLogoFileChange}
+                      />
+                    </label>
+                  </div>
+                )}
                 {logoPreview && (
                   <div className=" flex items-start justify-start">
                     <div className="flex relative">
@@ -274,7 +280,7 @@ export default function CreateStorePage() {
                         width={400}
                         height={400}
                         alt="Logo preview"
-                        className="rounded-lg"
+                        className="object-cover   rounded-lg w-[400px] h-[400px]"
                       />
                       <button
                         type="button"
@@ -296,53 +302,55 @@ export default function CreateStorePage() {
             </div>
 
             <div>
-              <div className="flex text-xl font-bold">
-                <p className="text-xl font-bold mb-2">
+              <div className="flex text-xl font-medium sm:font-bold">
+                <p className="">
                   รูปพื้นหลังร้านค้าของคุณ
                 </p>
                 <span className="text-red-500 ml-1">*</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-start justify-start w-full">
-                  <label
-                    htmlFor="image-background"
-                    className="flex flex-col items-center justify-center h-[400px] w-[400px]  border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
-                  >
-                    <div className="flex flex-col h-[400px] w-[400px] items-center justify-center pt-5 pb-6">
-                      <svg
-                        className="w-8 h-8 mb-4 text-gray-500"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 20 16"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                        />
-                      </svg>
-                      <p className="mb-2 text-sm text-gray-500">
-                        <span className="font-semibold">Click to upload</span>{" "}
-                        or drag and drop
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        SVG, PNG, JPG or GIF
-                      </p>
-                    </div>
-                    <input
-                      disabled={imageBackground ? true : false}
-                      name="image-background"
-                      id="image-background"
-                      accept="image/*"
-                      type="file"
-                      className="hidden"
-                      onChange={handleBgFileChange}
-                    />
-                  </label>
-                </div>
+                {imageBackground == null && (
+                  <div className="flex items-start justify-start w-full">
+                    <label
+                      htmlFor="image-background"
+                      className="flex flex-col items-center justify-center w-full h-full md:h-[400px] md:w-[400px]  border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      <div className="flex flex-col h-[400px] w-[400px] items-center justify-center pt-5 pb-6">
+                        <svg
+                          className="w-8 h-8 mb-4 text-gray-500"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 20 16"
+                        >
+                          <path
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                          />
+                        </svg>
+                        <p className="hidden sm:block mb-2 text-sm text-gray-500">
+                          <span className="font-semibold">Click to upload</span>{" "}
+                          or drag and drop
+                        </p>
+                        <p className="text-xs hidden sm:block text-gray-500">
+                          SVG, PNG, JPG or GIF
+                        </p>
+                      </div>
+                      <input
+                        disabled={imageBackground ? true : false}
+                        name="image-background"
+                        id="image-background"
+                        accept="image/*"
+                        type="file"
+                        className="hidden"
+                        onChange={handleBgFileChange}
+                      />
+                    </label>
+                  </div>
+                )}
                 {bgPreview && (
                   <div className=" flex items-start justify-start">
                     <div className="flex relative">
@@ -351,7 +359,7 @@ export default function CreateStorePage() {
                         width={400}
                         height={400}
                         alt="Background preview"
-                        className="rounded-lg"
+                        className="object-cover   rounded-lg w-[400px] h-[400px]"
                       />
                       <button
                         type="button"

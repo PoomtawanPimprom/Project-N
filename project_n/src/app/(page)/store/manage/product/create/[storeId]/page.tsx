@@ -114,6 +114,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
       validateWithZod(productSchema, data);
       await CreateProdcut(data);
       toast({
+        variant: "success",
         description: "สร้างสินค้าเรียบร้อยแล้ว",
       });
       setTimeout(() => {
@@ -152,7 +153,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
             : String(error.fieldErrors.inventory);
         toast({
           description: inventoryErrorMessage,
-          variant:"destructive"
+          variant: "destructive",
         });
       }
 
@@ -166,7 +167,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex relative">
       <StoreSideBar storeId={storeId.toString()} />
       <div className=" w-full border p-4">
         <div className="flex flex-col w-full border p-4 rounded-lg bg-white  dark:bg-black dark:border-gray-600 dark:border-x">
@@ -179,19 +180,19 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
             <div className="flex flex-col w-full">
               <form className="space-y-2" onSubmit={onSubmitCreateProduct}>
                 <Input
-                labelClassName="text-lg"
+                  labelClassName="text-lg"
                   required={true}
                   label="ชื่อสินค้า"
                   name="name"
                   onChange={(e) => setName(e.target.value)}
                   placeholder="โปรดระบุชื่อสินค้า..."
+                  inputClassName="w-full sm:w-96"
                   type="text"
                   value={name}
                   error={error?.name}
                 />
                 <Input
-                labelClassName="text-lg"
-
+                  labelClassName="text-lg"
                   label="รายละเอียดสินค้า"
                   required={true}
                   type="textarea"
@@ -199,11 +200,12 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                   value={description}
                   name="description"
                   placeholder="โปรดระบุรายละเอียดสินค้า"
+                  inputClassName="w-full sm:w-96"
                   error={error?.description}
                 />
                 <Input
-                labelClassName="text-lg"
-
+                  labelClassName="text-lg"
+                  inputClassName="w-full sm:w-96"
                   label="ราคา"
                   required={true}
                   name="price"
@@ -212,7 +214,6 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                   error={error?.price}
                   type="text"
                   placeholder="โปรดระบุราคาสินค้า"
-                  inputClassName="w-64"
                 />
                 {/* input inventory */}
                 <div className="space-y-2 flex flex-col">
@@ -293,7 +294,7 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                 {/* input image */}
                 <div className="space-y-2">
                   <p className="text-xl font-bold">รูปสินค้า</p>
-                  <div className="grid grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-3">
                     {images.map((file, index) => (
                       <div key={index} className="relative aspect-square">
                         <img
@@ -332,13 +333,13 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
                                 d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                               />
                             </svg>
-                            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                            <p className="hidden sm:block  mb-2 text-sm text-gray-500 dark:text-gray-400">
                               <span className="font-semibold">
                                 Click to upload
                               </span>{" "}
                               or drag and drop
                             </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                            <p className="hidden sm:block  text-xs text-gray-500 dark:text-gray-400">
                               SVG, PNG, JPG or GIF (MAX. 120x120px)
                             </p>
                           </div>
