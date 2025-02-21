@@ -399,21 +399,14 @@ export const EditAddressDialog: React.FC<EditAddressDialogProps> = ({ address, o
             <div>
               <label className="flex items-center space-x-2">
                 <input
-                  type="radio"
-                  value={2}
-                  name="addressStatusId"
+                  type="checkbox"
                   checked={addressData.addressStatusId === 2}
-                  onChange={handleInput}
+                  onChange={(e) => setAddressData((prevState) => ({
+                    ...prevState,
+                    addressStatusId: e.target.checked ? 2 : 1,
+                  }))}
                 />
                 <span>ตั้งเป็นค่าเริ่มต้น</span>
-                <input
-                  type="radio"
-                  value={1}
-                  name="addressStatusId"
-                  checked={addressData.addressStatusId === 1}
-                  onChange={handleInput}
-                />
-                <span>ไม่ตั้งคเป็นค่าเริ่มต้น</span>
               </label>
             </div>
 

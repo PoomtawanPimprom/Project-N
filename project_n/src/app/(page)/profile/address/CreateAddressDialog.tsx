@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+// React Hooks
+import React, { useEffect, useState } from "react";
+// Shadcn ui
 import {
   Dialog,
   DialogClose,
@@ -45,7 +47,7 @@ type DropdownProps<T> = {
 };
 
 interface CreateAddressDialogProps {
-    classNameButton?: string;
+  classNameButton?: string;
   onAddressCreated: () => void;
   userId: number;
 }
@@ -60,7 +62,7 @@ const Dropdown = <T,>({
 }: DropdownProps<T>) => {
   return (
     <div>
-      <label htmlFor={label} className="block text-sm font-medium text-gray-700">{label}</label>
+      <label htmlFor={label} className="dark:text-white block text-sm font-medium text-gray-700">{label}</label>
       <select id={label} value={value ?? ""} onChange={onChange} className="focus:outline-none mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm">
         <option value="">เลือก...</option>
         {options.map((item, index) => (
@@ -81,7 +83,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
   const [selectedDistrict, setSelectedDistrict] = useState<string | number>();
   const [selectedSubDistrict, setSelectedSubDistrict] = useState<string | number>();
 
-  const [error, setError] = useState<{[key: string]: { message: string };} | null>(null);
+  const [error, setError] = useState<{ [key: string]: { message: string }; } | null>(null);
   const [loading, setLoading] = useState(false);
 
   const [addressData, setAddressData] = useState<userAddressInterface>({
@@ -139,7 +141,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
   };
 
   // Handle province change
-  const onChangeProvince = async ( event: React.ChangeEvent<HTMLSelectElement>) => {
+  const onChangeProvince = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const index = event.target.selectedIndex;   // Get index of selected province
     const label = event.target.options[index].text; // Get label for selected province
     const provinceId = event.target.value; // Get selected province
@@ -169,7 +171,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
   };
 
   // Handle district change
-  const onChangeAmphure = async ( event: React.ChangeEvent<HTMLSelectElement>) => {
+  const onChangeAmphure = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const index = event.target.selectedIndex;
     const label = event.target.options[index].text;
     const amphureId = event.target.value;
@@ -252,7 +254,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button onClick={resetForm} className={cn(`w-full sm:w-auto px-4 py-2 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,classNameButton)}>
+        <button onClick={resetForm} className={cn(`w-full sm:w-auto px-4 py-2 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`, classNameButton)}>
           + เพิ่มที่อยู่
         </button>
       </DialogTrigger>
@@ -267,7 +269,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
             <div>
-              <Input label="ชื่อ-นามสกุล" labelClassName="block text-sm font-medium text-gray-700" required={true}
+              <Input label="ชื่อ-นามสกุล" labelClassName="dark:text-white block text-sm font-medium text-gray-700" required={true}
                 name="fullName"
                 value={addressData.fullName}
                 onChange={handleInput}
@@ -281,7 +283,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
             <div>
               <Input
                 label="เบอร์มือถือ"
-                labelClassName="block text-sm font-medium text-gray-700"
+                labelClassName="dark:text-white block text-sm font-medium text-gray-700"
                 required={true}
                 name="mobile"
                 value={addressData.mobile}
@@ -296,7 +298,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
             <div>
               <Input
                 label="บ้านเลขที่"
-                labelClassName="block text-sm font-medium text-gray-700"
+                labelClassName="dark:text-white block text-sm font-medium text-gray-700"
                 required={true}
                 name="houseNo"
                 value={addressData.houseNo}
@@ -311,7 +313,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
             <div>
               <Input
                 label="หมู่"
-                labelClassName="block text-sm font-medium text-gray-700"
+                labelClassName="dark:text-white block text-sm font-medium text-gray-700"
                 name="moo"
                 value={addressData.moo}
                 onChange={handleInput}
@@ -364,7 +366,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
             <div>
               <Input
                 label="รหัสไปรษณีย์"
-                labelClassName="block text-sm font-medium text-gray-700"
+                labelClassName="dark:text-white block text-sm font-medium text-gray-700"
                 required={true}
                 name="postalCode"
                 value={addressData.postalCode}
@@ -379,23 +381,17 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
             <div>
               <label className="flex items-center space-x-2">
                 <input
-                  type="radio"
-                  value={2}
-                  name="addressStatusId"
+                  type="checkbox"
                   checked={addressData.addressStatusId === 2}
-                  onChange={handleInput}
+                  onChange={(e) => setAddressData((prevState) => ({
+                    ...prevState,
+                    addressStatusId: e.target.checked ? 2 : 1,
+                  }))}
                 />
                 <span>ตั้งเป็นค่าเริ่มต้น</span>
-                <input
-                  type="radio"
-                  value={1}
-                  name="addressStatusId"
-                  checked={addressData.addressStatusId === 1}
-                  onChange={handleInput}
-                />
-                <span>ไม่ตั้งค่า</span>
               </label>
             </div>
+
           </div>
 
           <div className="flex justify-end gap-2">
@@ -409,9 +405,9 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
             </DialogClose>
             <div>
               <button
-              disabled={loading}
+                disabled={loading}
                 type="submit"
-                className={`${loading ? "bg-gray-600/10":""} px-4 py-2 text-sm text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`}
+                className={`${loading ? "bg-gray-600/10" : ""} px-4 py-2 text-sm text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`}
               >
                 บันทึก
               </button>

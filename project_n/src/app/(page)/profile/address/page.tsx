@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import MenuLeft from '../menuleft';
 import { Separator } from "@/app/components/ui/separator"
 import { deleteAddress, getUserAddress } from "@/app/service/address/service";
@@ -15,6 +15,7 @@ import { EditAddressDialog } from "./EditAddressDialog";
 
 export default function editAddress() {
     const { data: session } = useSession();
+    const userId = useMemo(() => Number(session?.user.id), [session?.user.id]);
     const [addresses, setAddresses] = useState<userAddressInterface[]>([]);
     const [userData, setUserData] = useState<userInterface>({
         id: 0,
@@ -33,28 +34,57 @@ export default function editAddress() {
         resetTokenExp: new Date(),
     });
 
+    // Pagination states
+    const [currentPage, setCurrentPage] = useState(1);
+    const addressesPerPage = 5;
 
-    const deleteDataAddress = async (id: Number) => {
+    // const fetchAddressData = async () => {
+    //     const userAddress = await getUserAddress(Number(session?.user.id));
+    //     setAddresses(userAddress)
+    // }
+    const fetchAddressData = useCallback(async () => {
+        if (!userId) return;
+        const userAddress = await getUserAddress(userId);
+        setAddresses(userAddress);
+      }, [userId]);
+
+    const deleteDataAddress = useCallback(async (id: number) => {
         await deleteAddress(id);
         fetchAddressData();
-    }
+      }, [fetchAddressData]);
+    
 
-    const fetchAddressData = async () => {
-        const userAddress = await getUserAddress(Number(session?.user.id));
-        setAddresses(userAddress)
-    }
-
-    const fetchUserData = async () => {
-        const res = await getUserById(Number(session?.user.id));
+    // const fetchUserData = async () => {
+    //     const res = await getUserById(Number(session?.user.id));
+    //     setUserData(res);
+    // }
+    const fetchUserData = useCallback(async () => {
+        if (!userId) return;
+        const res = await getUserById(userId);
         setUserData(res);
-    }
-
-
+      }, [userId]);
 
     useEffect(() => {
         fetchAddressData();
         fetchUserData();
     }, [session]);
+
+     // Handle pagination
+     const indexOfLastAddress = currentPage * addressesPerPage;
+     const indexOfFirstAddress = indexOfLastAddress - addressesPerPage;
+     const currentAddresses = addresses.slice(indexOfFirstAddress, indexOfLastAddress);
+ 
+     const nextPage = () => {
+         if (currentPage < Math.ceil(addresses.length / addressesPerPage)) {
+             setCurrentPage(prev => prev + 1);
+         }
+     };
+ 
+     const prevPage = () => {
+         if (currentPage > 1) {
+             setCurrentPage(prev => prev - 1);
+         }
+     };
 
     return (
         <section id="profile">
@@ -65,15 +95,12 @@ export default function editAddress() {
 
                     <div className='dark:text-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3'>
                         <h1 className='text-2xl font-bold'>ที่อยู่ของฉัน</h1>
-
                         {/* Create Addresses */}
-                        <CreateAddressDialog onAddressCreated={fetchAddressData} userId={Number(session?.user.id)}/>
+                        <CreateAddressDialog onAddressCreated={fetchAddressData} userId={Number(session?.user.id)} />
                     </div>
-
                     <Separator className='dark:bg-white' />
-
                     {/* Fetch list data */}
-                    {addresses.map((address) => (
+                    {currentAddresses.map((address) => (
                         <div key={address.id} className="flex flex-col gap-2 p-4  rounded-lg">
 
                             <div className="dark:bg-zinc-700 p-4 rounded-xl shadow-md space-y-4">
@@ -86,7 +113,7 @@ export default function editAddress() {
                                     <p className="dark:text-white text-gray-600 text-sm">{address.mobile || "No Number"}</p>
                                     {/* Show Tag Default */}
                                     {address.addressStatusId === 2 && (
-                                        <span className="ml-2 px-2 py-1 text-xs font-semibold  bg-green-500 rounded-lg">
+                                        <span className="text-white ml-2 px-2 py-1 text-xs font-semibold  bg-green-500 rounded-lg">
                                             Default
                                         </span>
                                     )}
@@ -94,46 +121,36 @@ export default function editAddress() {
 
                                 {/* ข้อมูลที่อยู่ */}
                                 <div className="dark:text-white grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-700">
-                                    <p>
-                                        <span className="font-medium">บ้านเลขที่: </span>
-                                        {address.houseNo || "N/A"}
-                                    </p>
-                                    <p>
-                                        <span className="font-medium">หมู่: </span>
-                                        {address.moo || "N/A"}
-                                    </p>
-                                    <p>
-                                        <span className="font-medium">จังหวัด: </span>
-                                        {address.province || "N/A"}
-                                    </p>
-                                    <p>
-                                        <span className="font-medium">อำเภอ: </span>
-                                        {address.district || "N/A"}
-                                    </p>
-                                    <p>
-                                        <span className="font-medium">ตำบล: </span>
-                                        {address.subDistrict || "N/A"}
-                                    </p>
-                                    <p>
-                                        <span className="font-medium">รหัสไปรษณีย์: </span>
-                                        {address.postalCode || "N/A"}
-                                    </p>
+                                    <p><span className="font-medium">บ้านเลขที่: </span>{address.houseNo || "N/A"}</p>
+                                    <p><span className="font-medium">หมู่: </span>{address.moo || "N/A"}</p>
+                                    <p><span className="font-medium">จังหวัด: </span>{address.province || "N/A"}</p>
+                                    <p><span className="font-medium">อำเภอ: </span>{address.district || "N/A"}</p>
+                                    <p><span className="font-medium">ตำบล: </span>{address.subDistrict || "N/A"}</p>
+                                    <p><span className="font-medium">รหัสไปรษณีย์: </span>{address.postalCode || "N/A"}</p>
                                 </div>
 
                                 {/* ปุ่มสำหรับการจัดการ */}
                                 <div className="flex justify-end">
-                                    <EditAddressDialog address={address} onAddressUpdated={fetchAddressData}/>
-                                   
-                                    <button onClick={() => deleteDataAddress(address.id)} className="ml-1 self-end text-sm px-4 py-2 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                    <EditAddressDialog address={address} onAddressUpdated={fetchAddressData} />
+
+                                    <button onClick={() => deleteDataAddress(address.id)} className="ml-1 self-end text-sm px-4 py-2 text-white bg-red-600 rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                                         <FaRegTrashAlt />
                                     </button>
                                 </div>
                             </div>
 
-                            {/* Dialog for editing the address */}
-
                         </div>
                     ))}
+
+                    {/* Pagination Controls */}
+                    <div className="flex justify-between mt-4">
+                        <button onClick={prevPage}  className={`px-4 py-2 text-white bg-gray-500 rounded-lg ${currentPage === 1 ? "hidden" : ""}`}>
+                            Prev
+                        </button>
+                        <button  onClick={nextPage} className={`px-4 py-2 text-white bg-gray-500 rounded-lg ${currentPage === Math.ceil(addresses.length / addressesPerPage) ? "hidden" : ""}`} >
+                            Next
+                        </button>
+                    </div>
 
                 </div>
             </div>
