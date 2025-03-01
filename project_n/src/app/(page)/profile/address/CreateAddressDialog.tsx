@@ -240,7 +240,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
       resetForm();
     } catch (error: any) {
       if (error.fieldErrors) {
-        setError(error.fieldErrors); // ตั้งค่าข้อผิดพลาดโดยตรง
+        setError(error.fieldErrors); 
       }
     } finally {
       setLoading(false);

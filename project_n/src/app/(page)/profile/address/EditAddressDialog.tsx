@@ -263,7 +263,6 @@ export const EditAddressDialog: React.FC<EditAddressDialogProps> = ({ address, o
       if (error.fieldErrors) {
         setError(error.fieldErrors);
       }
-      console.error("Validation error:", error);
       toast({
         title: "แก้ไขที่อยู่ไม่สำเร็จ",
         variant: "destructive",
@@ -281,7 +280,7 @@ export const EditAddressDialog: React.FC<EditAddressDialogProps> = ({ address, o
     <Dialog>
       <DialogTrigger asChild>
         <button 
-          className={cn(`w-full sm:w-auto px-4 py-2 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,classNameButton)}>
+          className={cn(` sm:w-auto px-4 py-2 text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`,classNameButton)}>
           <MdEdit />
         </button>
       </DialogTrigger>
