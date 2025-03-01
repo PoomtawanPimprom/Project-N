@@ -14,6 +14,7 @@ import { MdEdit } from "react-icons/md";
 import { userAddressSchema, validateWithZod } from "@/lib/zod/Schema";
 import Input from "@/app/component/Input";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 type Province = {
   id: number;
@@ -89,7 +90,7 @@ export const EditAddressDialog: React.FC<EditAddressDialogProps> = ({ address, o
   const [selectedDistrict, setSelectedDistrict] = useState<string | number>();
   const [selectedSubDistrict, setSelectedSubDistrict] = useState< string | number >();
   const [addressData, setAddressData] = useState<userAddressInterface>(address);
-
+  const { toast } = useToast();
   const [error, setError] = useState<{ [key: string]: { message: string } } | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -246,6 +247,7 @@ export const EditAddressDialog: React.FC<EditAddressDialogProps> = ({ address, o
         mobile: addressData.mobile,
         addressStatusId: Number(addressData.addressStatusId),
       };
+      console.log(addressData.id);
 
       //validate data
       validateWithZod(userAddressSchema, data);
@@ -253,10 +255,19 @@ export const EditAddressDialog: React.FC<EditAddressDialogProps> = ({ address, o
       //update data
       await updateUserAddress(addressData.id, data);
       onAddressUpdated();
+      toast({
+        title: "แก้ไขที่อยู่สำเร็จ",
+        variant: "success",
+    });
     } catch (error: any) {
       if (error.fieldErrors) {
-        setError(error.fieldErrors); // ตั้งค่าข้อผิดพลาดโดยตรง
+        setError(error.fieldErrors);
       }
+      console.error("Validation error:", error);
+      toast({
+        title: "แก้ไขที่อยู่ไม่สำเร็จ",
+        variant: "destructive",
+    });
     } finally {
       setLoading(false);
     }

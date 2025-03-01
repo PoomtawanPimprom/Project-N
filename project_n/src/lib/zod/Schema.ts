@@ -118,7 +118,6 @@ export const userAddressSchema = z.object({
       .refine((val) => val.toString().length === 10, {
         message: "เบอร์โทรศัพท์ควรเป็นตัวเลข 10 หลัก",
       }),
-    userId: z.number().int(),
     addressStatusId: z.number().optional()
   });
 
