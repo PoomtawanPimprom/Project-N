@@ -5,10 +5,10 @@ import Image from 'next/image'
 import { useToast } from "@/hooks/use-toast";
 import MenuLeft from './menuleft'
 import { getUserById, updateUserById } from '@/app/service/profile/service';
-
+import Input from "@/app/component/Input";
 import { deleteUploadedImage, genarateImageName, uploadImageToFirebase } from "@/lib/firebase/firebase";
 import { useSession } from 'next-auth/react';
-
+import { profileSchema, validateWithZod } from "@/lib/zod/Schema";
 
 function Profile() {
     const { data: session } = useSession();
@@ -16,6 +16,8 @@ function Profile() {
     const [profileImage, setProfileImage] = useState<string>("");
     const [user, setUser] = useState<userInterface | null>(null);
     const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
+    const [error, setError] = useState<{ [key: string]: { message: string } } | null>(null);
+    const [loading, setLoading] = useState(false);
     const [userData, setUserData] = useState<userInterface>({
         id: 0,
         name: "",
@@ -117,21 +119,41 @@ function Profile() {
                 email: userData.email,
                 mobile: userData.mobile,
                 birthdate: userData.birthdate,
-                profile: String(profileImage) || String(userData.profile),
-                saler: userData.saler,
-                genderId: userData.genderId,
-                roleId: userData.roleId,
-                userStatusId: userData.userStatusId,
             };
+            // Validation
+            const validationResult = profileSchema.safeParse(data);
+
+            if (!validationResult.success) {
+                // Get error messages 
+                const fieldErrors = validationResult.error.flatten().fieldErrors;
+                setError(
+                    Object.fromEntries(
+                        Object.entries(fieldErrors).map(([key, messages]) => [
+                            key,
+                            { message: messages[0] }, // เอาข้อความแรกสุด
+                        ])
+                    )
+                );
+                return;
+            }
+
             await updateUserById(userData.id, data);
             fetchUserData();
+            setError(null);
             toast({
                 title: "แก้ไขโปรไฟล์เสร็จสิ้น",
                 variant: "success",
             });
         } catch (error: any) {
-            console.error("Failed to update profile:", error.message);
-            alert(`Failed to update profile: ${error.message}`);
+            if (error.fieldErrors) {
+                setError(error.fieldErrors);
+            }
+            toast({
+                title: "แก้ไขที่อยู่ไม่สำเร็จ",
+                variant: "destructive",
+            });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -149,19 +171,25 @@ function Profile() {
                             <label htmlFor="name" className="dark:text-white block text-sm font-medium text-gray-700">
                                 ชื่อ
                             </label>
-                            <input name="name" type="name" id="name" value={userData.name ? userData.name : ""}
+                            <input
+                                name="name"
+                                type="text"
+                                id="name"
+                                value={userData.name}
                                 onChange={handleInputChange}
-                                className="w-full px-3 py-2 border dark:text-white border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/2"
+                                className={`w-full px-3 py-2 border dark:text-white border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/2 ${error?.name ? 'border-red-500' : 'border-gray-300'}`}
                             />
+                            {error?.name && <p className="text-red-500 text-sm">{error.name.message}</p>}
                         </div>
                         <div className="space-y-1">
                             <label htmlFor="email" className="dark:text-white block text-sm font-medium text-gray-700">
                                 อีเมล
                             </label>
-                            <input name="email" type="email" id="email" value={userData.email ? userData.email :""}
+                            <input name="email" type="email" id="email" value={userData.email ? userData.email : ""}
                                 onChange={handleInputChange}
-                                className="w-full px-3 py-2 border dark:text-white border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/2"
+                                className={`w-full px-3 py-2 border dark:text-white border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/2 ${error?.email ? 'border-red-500' : 'border-gray-300'}`}
                             />
+                            {error?.email && <p className="text-red-500 text-sm">{error.email.message}</p>}
                         </div>
                         <div className="space-y-1">
                             <label htmlFor="mobile" className="dark:text-white block text-sm font-medium text-gray-700">
@@ -172,28 +200,35 @@ function Profile() {
                                 id="mobile"
                                 value={userData.mobile ? userData.mobile : ""}
                                 onChange={handleInputChange}
-                                className="w-1/2 px-3 py-2 border dark:text-white border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/3"
+                                className={`w-1/2 px-3 py-2 border dark:text-white border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/3" ${error?.mobile ? 'border-red-500' : 'border-gray-300'}`}
                             />
+                            {error?.mobile && <p className="text-red-500 text-sm">{error.mobile.message}</p>}
                         </div>
                         <div className="space-y-1">
-                            <label htmlFor="birthdate" className="dark:text-white block text-sm font-medium text-gray-700">
+                            <label
+                                htmlFor="birthdate"
+                                className="block text-sm font-medium text-gray-700 dark:text-white"
+                            >
                                 Date of Birth
                             </label>
                             <input
                                 type="date"
                                 id="birthdate"
                                 name="birthdate"
-
                                 value={userData.birthdate ? new Date(userData.birthdate).toISOString().split("T")[0] : ""}
                                 onChange={(e) => {
                                     setUserData((prevData) => ({
                                         ...prevData,
-                                        birthdate: new Date(e.target.value), 
+                                        birthdate: new Date(e.target.value),
                                     }));
                                 }}
-                                className="w-full px-3 py-2 border dark:text-white border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:w-1/3"
+                                className={`w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-3 py-2 border rounded-md shadow-sm  dark:text-white
+            focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500
+            ${error?.birthdate ? 'border-red-500' : 'border-gray-300'}`}
                             />
+                            {error?.birthdate && <p className="text-red-500 text-sm">{error.birthdate.message}</p>}
                         </div>
+
                         <div className="text-right">
                             <button
                                 type="submit"
