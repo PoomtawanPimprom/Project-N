@@ -128,3 +128,22 @@ export const transportSchema = z.object({
     .regex(/^\d+$/, "ราคาของบริษัทขนส่งควรเป็นตัวเลข")
     .min(1, "โปรดกรอกราคาของบริษัทขนส่ง"),
 });
+
+// Profile
+export const profileSchema = z.object({
+  name: z.string().min(1, "โปรดกรอกชื่อ"),
+  email: z.string().email("โปรดกรอก E-mail ให้ถูกต้อง"),
+  mobile: z.string()
+    .regex(/^\d+$/, "เบอร์โทรศัพท์ควรเป็นตัวเลขเท่านั้น")
+    .refine((val) => val.toString().length === 10, {
+      message: "เบอร์โทรศัพท์ควรเป็นตัวเลข 10 หลัก",
+  }),
+  birthdate: z.string()
+    .refine((val) => {
+      const date = new Date(val);
+      const today = new Date();
+      return !isNaN(date.getTime()) && date < today;
+    }, {
+      message: "โปรดกรอกวันเกิดให้ถูกต้อง และต้องเป็นวันที่ในอดีต",
+  }),
+})
