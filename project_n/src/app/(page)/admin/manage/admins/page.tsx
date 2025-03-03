@@ -19,8 +19,9 @@ export default async function ManageTransportPage(props: {
         }
       : {},
     orderBy: { roleId: "desc" },
+    include:{ role:true}
   })) as userInterface[];
-
+  const role = await prisma.role.findMany()
   return (
     <div className=" min-h-screen flex ">
       <AdminSideBar />
@@ -30,7 +31,7 @@ export default async function ManageTransportPage(props: {
             <p>จัดการแอดมิน</p>
           </div>
         </div>
-        <DataAdminTable userData={alluser} />
+        <DataAdminTable userData={alluser} role={role}/>
       </div>
     </div>
   );
