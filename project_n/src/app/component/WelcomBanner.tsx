@@ -14,7 +14,9 @@ const WelcomeBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [isOpen, setIsOpen] = useState(true);
 
-  const fullText = `ยินดีต้อนรับสู่ SHOPKUB คุณ ${user?.name}\nค้นหาสิ่งที่คุณต้องการได้เลย`;
+  const username = user?.name === undefined ? '' : `คุณ ${user?.name}`
+
+  const fullText = `ยินดีต้อนรับสู่ SHOPKUB ${username}\nค้นหาสิ่งที่คุณต้องการได้เลย`;
 
   useEffect(() => {
     if (text.length < fullText.length) {
