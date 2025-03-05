@@ -66,6 +66,11 @@ export async function PUT(request: NextRequest) {
               size: orderItem.size ? orderItem.size : "",
             },
           },
+          include: {
+            product: {
+              select: { name: true }
+            }
+          }
         });
 
         if (!inventory) {
@@ -73,8 +78,11 @@ export async function PUT(request: NextRequest) {
         }
 
         // ตรวจสอบว่าสินค้าเหลือพอไหม
-        if (inventory.quantity - orderItem.quantity <= 0) {
-          throw new Error(`สินค้า ${orderItem.productId} หมดแล้ว!`);
+        if (inventory.quantity - orderItem.quantity < 0) {
+          throw new Error(`${inventory.product.name} เหลือจำนวนไม่พอ!`);
+        }
+        if (inventory.quantity === 0) {
+          throw new Error(`${inventory.product.name} หมดแล้ว!`);
         }
 
         // อัปเดตจำนวนสต็อก
@@ -109,7 +117,7 @@ export async function PUT(request: NextRequest) {
         if (updatedInventory?.quantity && updatedInventory.quantity <= 5) {
           const product = await prisma.product.findUnique({
             where: { id: orderItem.productId },
-            select: { name: true, store: { select: { user:{ select:{ email:true}} } } },
+            select: { name: true, store: { select: { user: { select: { email: true } } } } },
           });
 
           if (product?.store?.user.email) {
@@ -129,7 +137,13 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({ message: "ชำระเงินเสร็จสิ้น" }, { status: 200 });
   } catch (error: any) {
-    console.log(error.message);
-    return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 });
+    console.log(error)
+    if (error.code === "ECONNRESET") {
+      return NextResponse.json({ message: "Database connection lost" }, { status: 500 });
+    }
+    let message = "internal server error: "
+    let status = 500
+    message = error.message
+    return NextResponse.json({ message }, { status });
   }
 }
