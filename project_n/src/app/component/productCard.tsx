@@ -44,12 +44,8 @@ const ProductCard = ({ product }: prop) => {
   }
 
   const handleGotoProductPage = () => {
-    if (!session) {
-      router.push(`/login`);
-      return;
-    } else {
+
       router.push(`/product/${product.id}`);
-    }
   };
 
   const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -71,7 +67,10 @@ const ProductCard = ({ product }: prop) => {
       toast({
         description: "เพิ่มสินค้าเข้าตะกร้าเรียบร้อยแล้ว",
       });
-    } catch (error) {
+    } catch (error:any) {
+      toast({
+        description: error.message,
+      });
       console.log(error);
     }
   }
