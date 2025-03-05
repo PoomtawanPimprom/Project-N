@@ -15,6 +15,7 @@ import { createAddress } from "@/app/service/address/service";
 import { userAddressSchema, validateWithZod } from "@/lib/zod/Schema";
 import Input from "@/app/component/Input";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 type Province = {
   id: number;
@@ -76,6 +77,7 @@ const Dropdown = <T,>({
 };
 
 export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddressCreated, userId, classNameButton }) => {
+  const router =  useRouter()
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
   const [subDistricts, setSubDistricts] = useState<SubDistrict[]>([]);
@@ -235,6 +237,7 @@ export const CreateAddressDialog: React.FC<CreateAddressDialogProps> = ({ onAddr
 
       //create new address
       await createAddress(data);
+      router.refresh()
       //fetch
       onAddressCreated();
       resetForm();
