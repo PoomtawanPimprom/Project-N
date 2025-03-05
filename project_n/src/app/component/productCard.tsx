@@ -18,7 +18,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/app/components/ui/drawer";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { getInventoriesByProductId } from "../service/inventory/service";
 import { inventoryInterface } from "../interface/inventoryInterface";
 import { createCart } from "../service/cart/service";
@@ -45,7 +45,7 @@ const ProductCard = ({ product }: prop) => {
 
   const handleGotoProductPage = () => {
 
-      router.push(`/product/${product.id}`);
+    router.push(`/product/${product.id}`);
   };
 
   const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -63,11 +63,11 @@ const ProductCard = ({ product }: prop) => {
         size: selectedSize,
         quantity: quantity,
       })
-      await fetchCartAll(); 
+      await fetchCartAll();
       toast({
         description: "เพิ่มสินค้าเข้าตะกร้าเรียบร้อยแล้ว",
       });
-    } catch (error:any) {
+    } catch (error: any) {
       toast({
         description: error.message,
       });
@@ -139,49 +139,65 @@ const ProductCard = ({ product }: prop) => {
                       </DrawerHeader>
 
                       <div className="p-4 space-y-6">
-                        {/* Color Selection */}
-                        <div className="max-w-sm mx-auto">
-                          <label htmlFor="color" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            เลือกขนาด
-                          </label>
-                          <select
-                            id="size"
-                            name="size"
-                            className="p-2.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                            value={selectedSize}
-                            onChange={handleSizeChange}
-                          >
-                            <option value="">กรุณาเลือกขนาด</option>
-                            {Array.from(new Set(inventory.map((item) => item.size))).map(
-                              (size, index) => (
-                                <option key={generateKey()} value={size.toString()}>
-                                  {size}
-                                </option>
-                              )
+                        {/* เงื่อนไข: ถ้ามีข้อมูล size หรือ color ค่อยแสดง UI */}
+                        {inventory.length > 0 && (
+                          <>
+                            {/* Size Selection */}
+                            {inventory.some(item => item.size) && (
+                              <div className="max-w-sm mx-auto">
+                                <label htmlFor="size" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                  เลือกขนาด
+                                </label>
+                                <select
+                                  id="size"
+                                  name="size"
+                                  className="p-2.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                  value={selectedSize}
+                                  onChange={handleSizeChange}
+                                >
+                                  <option value="">กรุณาเลือกขนาด</option>
+                                  {Array.from(new Set(inventory.map((item) => item.size))).map(
+                                    (size) => (
+                                      <option key={generateKey()} value={size?.toString()}>
+                                        {size}
+                                      </option>
+                                    )
+                                  )}
+                                </select>
+                              </div>
                             )}
-                          </select>
-                        </div>
 
-                        {/* Size Selection */}
-                        <div>
-                          <label htmlFor="size" className="block text-sm font-medium text-gray-700 mb-2">
-                            เลือก
-                          </label>
-                          <select
-                            id="color"
-                            name="color"
-                            className="p-2.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                            onChange={handleColorChange}
-                            disabled={!selectedSize} // ถ้ายังไม่ได้เลือก Size จะ disable
-                          >
-                            <option value="">กรุณาเลือกสี</option>
-                            {filteredColors.map((color, index) => (
-                              <option key={generateKey()} value={color}>
-                                {color}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
+                            {/* Color Selection */}
+                            {inventory.some(item => item.color) && (
+                              <div>
+                                <label htmlFor="color" className="block text-sm font-medium text-gray-700 mb-2">
+                                  เลือกสี
+                                </label>
+                                <select
+                                  id="color"
+                                  name="color"
+                                  className="p-2.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                  onChange={handleColorChange}
+                                  disabled={inventory.some(item => item.size) && !selectedSize} // ถ้ามี size ให้เลือกก่อน
+                                >
+                                  <option value="">กรุณาเลือกสี</option>
+                                  {filteredColors.length > 0
+                                    ? filteredColors.map((color) => (
+                                      <option key={generateKey()} value={color}>
+                                        {color}
+                                      </option>
+                                    ))
+                                    : inventory.map((item) => (
+                                      <option key={generateKey()} value={item.color}>
+                                        {item.color}
+                                      </option>
+                                    ))}
+                                </select>
+                              </div>
+                            )}
+                          </>
+                        )}
+
 
                         {/* Quantity Selection */}
                         <div className="flex items-center justify-center space-x-2">

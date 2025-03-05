@@ -164,9 +164,9 @@ function Profile() {
                 <MenuLeft userdata={user} checkCreatedStore={session?.user.storeId} profile={userData} />
 
                 {/* Content right */}
-                <div className="dark:bg-zinc-800 flex flex-col gap-6 lg:w-3/4 ">
+                <div className="flex flex-col gap-6 lg:w-3/4 ">
                     {/* Form Section */}
-                    <form onSubmit={onSubmitUpdate} action="" className="  shadow-md border-black p-6 rounded-lg space-y-4 sm:border sm:shadow-none">
+                    <form onSubmit={onSubmitUpdate} action="" className="dark:bg-zinc-800 shadow-md border-black p-6 rounded-lg space-y-4 sm:border sm:shadow-none">
                         <div className="space-y-1">
                             <label htmlFor="name" className="dark:text-white block text-sm font-medium text-gray-700">
                                 ชื่อ
