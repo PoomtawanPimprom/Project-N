@@ -107,6 +107,10 @@ function cart() {
     }
   };
 
+  const goToProduct = (id:string|number) =>{
+    router.push(`/product/${id}`)
+  }
+
   const deleteDataAddress = async (id: Number) => {
     await deleteCartById(id);
     fetchCartDatas();
@@ -148,14 +152,18 @@ function cart() {
                       onChange={() => handleCheckboxChange(cart.id)}
                     />
                     <div className="shrink-0">
-                      <img className="h-24 w-24 max-w-full rounded-lg object-cover" src={cart.product?.image!.image1}alt=""/>
+                      <img 
+                       onClick={()=> goToProduct(cart.product?.id!)}
+                      className="h-24 w-24 max-w-full rounded-lg object-cover hover:cursor-pointer" src={cart.product?.image!.image1}alt=""/>
                     </div>
 
                     <div className="relative flex flex-1 flex-col justify-between">
                       <div className="sm:col-gap-5 sm:grid sm:grid-cols-2">
 
                         <div className="pr-8 sm:pr-5">
-                          <p className="text-base font-semibold text-gray-900 dark:text-white">{cart.product?.name}</p>
+                          <p 
+                          onClick={()=> goToProduct(cart.product?.id!)}
+                          className="text-base font-semibold text-gray-900 dark:text-white hover:cursor-pointer hover:text-gray-400">{cart.product?.name}</p>
                           <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">{cart.size}</p>
                           <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">{cart.color}</p>
                         </div>
