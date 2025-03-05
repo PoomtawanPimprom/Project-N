@@ -34,23 +34,23 @@ export default async function PaymentPage() {
     where: { userId },
   })) as userAddressInterface[];
 
-  const orderDetailData = (await prisma.orderDetail.findFirst({
-    where: { userId: user.id, orderStatusId: 1 },
+  const orderDetailData = await prisma.orderDetail.findFirst({
+    where: { userId: userId, orderStatusId: 1 },
     include: { transport: true, discount: true },
-  })) as orderDetailInterface;
+  }) as orderDetailInterface | null; // ให้รองรับกรณีเป็น null
+  
+  if (!orderDetailData) {
+    redirect('/')
+  }
+
+
 
   const orderItemsData = (await prisma.orderItem.findMany({
     where: { orderDetailId: orderDetailData.id },
     include: { product: true },
   })) as orderItemInterface[];
 
-  const amount =
-    orderItemsData.reduce(
-      (sum, item) => sum + item.quantity * item.product!.price,
-      0
-    ) +
-    orderDetailData.transport?.transportPrice! -
-    (orderDetailData.discount?.discountAmount || 0);
+
 
   return (
     <>
