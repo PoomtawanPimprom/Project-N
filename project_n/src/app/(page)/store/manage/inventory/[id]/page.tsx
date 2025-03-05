@@ -131,12 +131,18 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
           >
             กรอง
           </button>
+          <button
+            className="w-full md:w-auto py-2 px-4 rounded-lg bg-primary text-white"
+            type="submit"
+            onClick={handleFliterChange}
+          >
+            โหลดใหม่
+          </button>
         </div>
         
         <div className="flex w-full justify-end items-end">
           <button
-            disabled={selectedIds.length === 0}
-            onClick={handleDeleteSelected}
+            onClick={fetchData}
             className={`w-full md:w-auto py-2 px-4 rounded-lg ${
               selectedIds.length === 0
                 ? "bg-gray-200 text-gray-700 dark:bg-bg-dark dark:text-white"
@@ -187,7 +193,7 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
                 <TableData className="hidden md:table-cell px-4 py-4 text-center">{item.product?.price}</TableData>
                 <TableData className="px-4 py-4 text-right">
                   <button
-                    onClick={() => router.push(`/product/edit/${item.product?.id}`)}
+                    onClick={() => router.push(`/store/manage/product/edit/${item.product?.id}`)}
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                   >
                     แก้ไข
