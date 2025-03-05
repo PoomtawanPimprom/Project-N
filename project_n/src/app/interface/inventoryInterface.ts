@@ -2,7 +2,7 @@ import { productInterface } from "./productInterface"
 
 export interface inventoryInterface {
     id: number
-    quantity: number
+    quantity: number |string
     size: string
     color: string
     //fk
