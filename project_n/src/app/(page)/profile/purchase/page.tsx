@@ -4,7 +4,6 @@ import MenuLeft from "../menuleft";
 import { useSession } from "next-auth/react";
 import { getUserById } from "@/app/service/profile/service";
 import { userInterface } from "@/app/interface/userInterface";
-import All from "./components/all";
 import ToPay from "./components/toPay";
 import ToReceive from "./components/toReceive";
 import Complete from "./components/complete";
@@ -15,7 +14,7 @@ import WaitforShip from "./components/waitforShip";
 
 export default function MyPurchase() {
   const { data: session } = useSession();
-  const [activeTab, setActiveTab] = useState("ALL");
+  const [activeTab, setActiveTab] = useState("TO_PAY");
   const [OrderItemsToPay, setOrderItemsToPay] = useState<orderItemInterface[]>(
     []
   );
@@ -37,7 +36,6 @@ export default function MyPurchase() {
   });
 
   const tabs = [
-    { id: "ALL", label: "ทั้งหมด" },
     { id: "TO_PAY", label: "ต้องชำระ" },
     { id: "WAIT_FOR_SHIP", label: "รอทางร้านจัดส่ง" },
     { id: "TO_RECEIVE", label: "รอรับสินค้า" },
@@ -56,8 +54,6 @@ export default function MyPurchase() {
   };
   const renderContent = () => {
     switch (activeTab) {
-      case "ALL":
-        return <All />;
       case "TO_PAY":
         return <ToPay OrderItemsToPay={OrderItemsToPay} refesh={fecthdata2}/>;
       case "WAIT_FOR_SHIP":
