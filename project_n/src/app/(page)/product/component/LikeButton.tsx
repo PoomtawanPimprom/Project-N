@@ -2,6 +2,8 @@
 
 import { favoriteInterface } from "@/app/interface/favoriteInterface";
 import { createFavorite, deleteFavoriteByid, getFavoriteByProductIdAndUserId } from "@/app/service/favorite/service";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 
@@ -13,8 +15,12 @@ interface propInterface {
 export default function LikeButtonProductPage(prop: propInterface) {
   const [isFavorite, setIsFavorite] = useState<boolean | null>(null);
   const [favoriteData, setFavoriteData] = useState<favoriteInterface | null>(null);
-
+  const router = useRouter()
+  const {data:session} = useSession()
   const fetchData = async () => {
+    if(!session){
+      return
+    }
     const dataFavorite = await getFavoriteByProductIdAndUserId(prop.productId, prop.userId);
     setFavoriteData(dataFavorite);
     setIsFavorite(dataFavorite !== null); // อัปเดต isFavorite เมื่อได้ข้อมูล
@@ -25,6 +31,11 @@ export default function LikeButtonProductPage(prop: propInterface) {
   }, []);
 
   const handleOnClick = async () => {
+    if(!session){
+      router.push('/login')
+      return
+    }
+    
     if (isFavorite === null) return; // ป้องกันกรณีค่า null
     
     setIsFavorite(!isFavorite); // อัปเดต UI ทันที
