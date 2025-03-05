@@ -35,13 +35,13 @@ export const createCart = async (data: any) => {
             },
             body: JSON.stringify(data),
         });
-
+        const data1 = await res.json()
         if (!res.ok) {
-            throw new Error('Failed to create promotion');
+            console.log(data1)
+            throw new Error(data1.message);
         }
 
     } catch (error) {
-        console.error("Error creating promotion:", error);
         throw error;
     }
 };

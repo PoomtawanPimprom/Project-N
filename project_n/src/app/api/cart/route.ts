@@ -23,26 +23,45 @@ export async function POST(request: NextRequest) {
             },
         });
 
+        // check inventory is enough?
+        const stock = await prisma.inventory.findFirst({
+            where: {
+                color,
+                size,
+            },
+        });
+
+        if (!stock) {
+            throw new Error("internal error");
+        }
+        if (stock.quantity === 0) {
+            throw new Error("สินค้าหมดแล้ว");
+        }
+
+        if (stock.quantity - quantity < 0) {
+            throw new Error("สินค้าไม่พอ");
+        }
+
         if (existingCartItem) {
-            // ถ้าพบสินค้า ให้ทำการอัปเดต quantity
+            // อัปเดต quantity ถ้ามีอยู่ใน cart แล้ว
             const updatedCartItem = await prisma.cartItem.update({
                 where: {
-                    id: existingCartItem.id, // ใช้ id ของรายการที่พบ
+                    id: existingCartItem.id,
                 },
                 data: {
-                    quantity: existingCartItem.quantity + quantity, // quantity++
+                    quantity: existingCartItem.quantity + quantity,
                 },
             });
 
-            return new NextResponse(
-                JSON.stringify({
+            return NextResponse.json(
+                {
                     message: "Cart updated successfully",
                     data: updatedCartItem,
-                }),
+                },
                 { status: 200 }
             );
         } else {
-            // ถ้าไม่พบสินค้า ให้สร้าง cart item ใหม่
+            // เพิ่มสินค้าเข้า cart ถ้าไม่มี
             const newCartItem = await prisma.cartItem.create({
                 data: {
                     userId,
@@ -53,42 +72,43 @@ export async function POST(request: NextRequest) {
                 },
             });
 
-            return new NextResponse(
-                JSON.stringify({
+            return NextResponse.json(
+                {
                     message: "Cart created successfully",
                     data: newCartItem,
-                }),
+                },
                 { status: 201 }
             );
         }
     } catch (e: any) {
         console.error(e);
+        let status = 500;
+        let message = "Internal server error";
+
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             switch (e.code) {
                 case "P2002":
-                    return new NextResponse(
-                        "Duplicate field value violates unique constraint",
-                        { status: 404 }
-                    );
+                    status = 409; // Conflict
+                    message = "Duplicate field value violates unique constraint";
+                    break;
                 default:
-                    return new NextResponse(`Database error: ${e.message}`, {
-                        status: 500,
-                    });
+                    message = `Database error: ${e.message}`;
             }
         } else if (e instanceof Prisma.PrismaClientUnknownRequestError) {
-            return new NextResponse("Unknown database error occurred", {
-                status: 500,
-            });
+            message = "Unknown database error occurred";
         } else if (e instanceof Prisma.PrismaClientValidationError) {
-            return new NextResponse(`Validation error: ${e.message}`, {
-                status: 422,
-            });
+            status = 422;
+            message = `Validation error: ${e.message}`;
         } else if (e instanceof SyntaxError) {
-            return new NextResponse("Invalid JSON payload", { status: 400 });
+            status = 400;
+            message = "Invalid JSON payload";
         } else if (e instanceof TypeError) {
-            return new NextResponse("Missing or invalid fields", { status: 422 });
+            status = 422;
+            message = "Missing or invalid fields";
         } else {
-            return new NextResponse("Internal server error", { status: 500 });
+            message = e.message || "Unknown error occurred";
         }
+
+        return NextResponse.json({ message }, { status });
     }
 }
