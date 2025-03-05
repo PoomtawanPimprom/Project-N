@@ -142,9 +142,6 @@ export default function CreateStorePage() {
 
       const res: any = await CreateStore(data);
 
-      if (!res.success) {
-        throw new Error(res.message); // ดึง message จาก API แล้วโยน error ออกไป
-      }
       toast({
         variant: "success",
         description: "สร้างร้านค้าสำเร็จ",
