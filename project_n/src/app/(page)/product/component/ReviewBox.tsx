@@ -13,10 +13,10 @@ export default function ReviewBox({ reviews }: prop) {
       <div className="flex flex-col w-full bg-white  lg:justify-between lg:w-full border p-4 rounded-xl dark:bg-black ">
         <div className="flex text-2xl font-semibold">รีวิวสินค้า</div>
         <div className="flex flex-col gap-2">
-          {reviews.map((item) => (
+          {reviews.map((item,index) => (
             <>
               <div
-                key={generateKey()}
+                key={"box review"+index}
                 className="flex flex-col justify-center p-2 border rounded-lg gap-2"
               >
                 <div className="flex gap-2">
@@ -43,7 +43,7 @@ export default function ReviewBox({ reviews }: prop) {
                     {item.images &&
                       Object.values(item.images).map((image, index) => (
                         <Image
-                          key={image}
+                          key={"image "+image}
                           src={image}
                           alt={`Image ${index + 1}`}
                           className="w-[100px] h-[100px] rounded-lg object-cover"
