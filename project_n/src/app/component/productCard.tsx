@@ -55,6 +55,24 @@ const ProductCard = ({ product }: prop) => {
 
 
   const onSubmitAddToCart = async () => {
+    // ตรวจสอบว่าต้องเลือก Size หรือไม่
+    const requiresSize = inventory.some(item => item.size);
+    if (requiresSize && !selectedSize) {
+      toast({
+        description: "กรุณาเลือกขนาดก่อนทำการเพิ่มลงตะกร้า",
+      });
+      return;
+    }
+  
+    // ตรวจสอบว่าต้องเลือก Color หรือไม่
+    const requiresColor = inventory.some(item => item.color);
+    if (requiresColor && !selectedColor) {
+      toast({
+        description: "กรุณาเลือกสีก่อนทำการเพิ่มลงตะกร้า",
+      });
+      return;
+    }
+  
     try {
       await createCart({
         userId: Number(session?.user.id),
@@ -62,7 +80,7 @@ const ProductCard = ({ product }: prop) => {
         color: selectedColor,
         size: selectedSize,
         quantity: quantity,
-      })
+      });
       await fetchCartAll();
       toast({
         description: "เพิ่มสินค้าเข้าตะกร้าเรียบร้อยแล้ว",
@@ -73,7 +91,8 @@ const ProductCard = ({ product }: prop) => {
       });
       console.log(error);
     }
-  }
+  };
+  
 
   // ฟังก์ชันเรียกใช้เมื่อเลือก Size
   const handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
