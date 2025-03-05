@@ -23,7 +23,6 @@ type prop = {
 export default function Payment({ orderDetailId,amount,userId }: prop) {
   const {toast} = useToast()
   const router = useRouter()
-  const amountInt = Math.floor(amount);  
   const [image, setImage] = useState<File | null>(null);
   const [showInput, setShowInput] = useState<boolean>(true);
 
@@ -54,8 +53,6 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
 
       //create payment
       const createPayment = await CreatePayment(data);
-      console.log(createPayment)
-      console.log("payment id",createPayment.payment.id)
 
       //verify payment
 
