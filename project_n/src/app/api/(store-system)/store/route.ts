@@ -34,12 +34,13 @@ export async function POST(request: NextRequest) {
             data: { saler: true }
         })
 
-        return NextResponse.json({ message: "สร้างร้านค้าเสร็จสิ้น" }, { status: 200 })
+        return NextResponse.json({ success: true, message: "สร้างร้านค้าเสร็จสิ้น" }, { status: 200 })
     } catch (error: any) {
         console.error(error);
 
         console.error("Unexpected error:", error);
         return NextResponse.json({
+            success: false,
             message: error instanceof Error ? error.message : "Unexpected error occurred."
         }, { status: 500 });
     }
