@@ -5,24 +5,24 @@ import nodemailer from "nodemailer"; // ใช้สำหรับส่งอ�
 const prisma = new PrismaClient();
 
 // ฟังก์ชันส่งอีเมลแจ้งเตือนสินค้าใกล้หมด
-// async function sendLowStockAlert(productName: string, storeEmail: string) {
-//   const transporter = nodemailer.createTransport({
-//     service: "gmail",
-//     auth: {
-//       user: process.env.EMAIL_USER, // กำหนดค่าใน .env
-//       pass: process.env.EMAIL_PASS,
-//     },
-//   });
+async function sendLowStockAlert(productName: string, storeEmail: string) {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER, // กำหนดค่าใน .env
+      pass: process.env.EMAIL_PASS,
+    },
+  });
 
-//   const mailOptions = {
-//     from: process.env.EMAIL_USER,
-//     to: storeEmail,
-//     subject: "แจ้งเตือนสินค้าใกล้หมด",
-//     text: `สินค้าชื่อ "${productName}" ใกล้หมดแล้ว! กรุณาเติมสต็อก`,
-//   };
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: storeEmail,
+    subject: "แจ้งเตือนสินค้าใกล้หมด",
+    text: `สินค้าชื่อ "${productName}" ใกล้หมดแล้ว! กรุณาเติมสต็อก`,
+  };
 
-//   await transporter.sendMail(mailOptions);
-// }
+  await transporter.sendMail(mailOptions);
+}
 
 export async function PUT(request: NextRequest) {
   const { paymentId, orderDetailId, userId } = await request.json();
@@ -114,16 +114,16 @@ export async function PUT(request: NextRequest) {
           },
         });
 
-        // if (updatedInventory?.quantity && updatedInventory.quantity <= 5) {
-        //   const product = await prisma.product.findUnique({
-        //     where: { id: orderItem.productId },
-        //     select: { name: true, store: { select: { user: { select: { email: true } } } } },
-        //   });
+        if (updatedInventory?.quantity && updatedInventory.quantity <= 5) {
+          const product = await prisma.product.findUnique({
+            where: { id: orderItem.productId },
+            select: { name: true, store: { select: { user: { select: { email: true } } } } },
+          });
 
-        //   if (product?.store?.user.email) {
-        //     await sendLowStockAlert(product.name, product.store.user.email);
-        //   }
-        // }
+          if (product?.store?.user.email) {
+            await sendLowStockAlert(product.name, product.store.user.email);
+          }
+        }
       })
     );
 
