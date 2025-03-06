@@ -31,27 +31,27 @@ export async function POST(request: NextRequest) {
     })
 
     // ตั้งค่า email transporter
-    const transporter = nodemailer.createTransport({
-      service:"Gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      }
-    })
+    // const transporter = nodemailer.createTransport({
+    //   service:"Gmail",
+    //   auth: {
+    //     user: process.env.EMAIL_USER,
+    //     pass: process.env.EMAIL_PASSWORD
+    //   }
+    // })
 
-    // ส่งอีเมลรีเซ็ตรหัสผ่าน
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
-      to: email,
-      subject: 'รีเซ็ตรหัสผ่าน',
-      html: `
-        <p>คลิกที่ลิงก์ด้านล่างเพื่อรีเซ็ตรหัสผ่านของคุณ:</p>
-        <a href="${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}">
-          รีเซ็ตรหัสผ่าน
-        </a>
-        <p>ลิงก์นี้จะหมดอายุใน 1 ชั่วโมง</p>
-      `
-    })
+    // // ส่งอีเมลรีเซ็ตรหัสผ่าน
+    // await transporter.sendMail({
+    //   from: process.env.EMAIL_FROM,
+    //   to: email,
+    //   subject: 'รีเซ็ตรหัสผ่าน',
+    //   html: `
+    //     <p>คลิกที่ลิงก์ด้านล่างเพื่อรีเซ็ตรหัสผ่านของคุณ:</p>
+    //     <a href="${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}">
+    //       รีเซ็ตรหัสผ่าน
+    //     </a>
+    //     <p>ลิงก์นี้จะหมดอายุใน 1 ชั่วโมง</p>
+    //   `
+    // })
 
     return NextResponse.json({ message: 'Reset password email sent' })
   } catch (error) {
