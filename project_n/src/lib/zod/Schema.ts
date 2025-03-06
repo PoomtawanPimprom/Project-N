@@ -73,17 +73,17 @@ export const productSchema = z.object({
       .min(1, "กรุณากรอกรายละเอีดยสินค้า")
       .max(200, "รายละเอีดยสินค้าความยาวเกินกำหนด"),
     price: z.string().regex(/^\d+$/, "ราคาควรเป็นตัวเลข").min(1, "กรุณากรอกราคาสินค้า"),
-    storeID: z.number().min(1),
+    storeID: z.number().min(1).optional(),
     image: z.object({}).optional(), // เปลี่ยนจาก image เป็น images และใช้ object แทน array
-    inventory: z
-    .array(
+    inventory: z.array(
       z.object({
-        quantity: z.string().regex(/^\d+$/, "จำนวนสินค้าควรเป็นตัวเลข").min(1, "กรุณากรอกจำนวนสินค้า"),
+        quantity: z.union([z.string(), z.number()])
+          .transform((val) => String(val))
+          .refine((val) => /^\d+$/.test(val), { message: "จำนวนสินค้าควรเป็นตัวเลข" }), // ใช้ .refine() แทน .regex()
         size: z.string().optional(),
         color: z.string().optional(),
       })
-    )
-    .min(1, "กรุณาเพิ่มสินค้าในสต็อก"),
+    ).min(1, "กรุณาเพิ่มสินค้าในสต็อก").optional()
   });
 
 //review
