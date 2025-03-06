@@ -40,6 +40,7 @@ export async function CreatePayment(data:any) {
 // }
 
 export async function UpdatePaymentStatusWhenChecked(data:any) {
+    
     const res = await fetch("/api/checkPayment", {
         method: "PUT",
         headers: {
@@ -47,10 +48,12 @@ export async function UpdatePaymentStatusWhenChecked(data:any) {
         },
         body: JSON.stringify(data),
     });
+    const data1 = await res.json()
     if (!res.ok) {
-        throw new Error("Failed to create");
+        console.log(data1)
+        throw new Error(data1.message);
     }
-    return res.json();
+    return data1
 }
 
 //update-transport
