@@ -57,39 +57,61 @@ export async function PUT(request: NextRequest, props: { params: Promise<{ id: s
         const inventoryId = Number(params.id);
         const productID = Number(productId);
 
-        const existingInventory = await prisma.inventory.findUnique({
-            where: { id: inventoryId },
-        });
-
+        let existingInventory = null;
         let data;
 
-        if (existingInventory) {
-            // หากมีใน db ให้ทำการ update
-            data = await prisma.inventory.update({
+        if (inventoryId) {
+            existingInventory = await prisma.inventory.findUnique({
                 where: { id: inventoryId },
-                data: {
-                    quantity: quantity,
-                    size: size,
-                    color: color,
-                },
-            });
-        } else {
-            // หากไม่มีใน db ให้ทำการ create
-            data = await prisma.inventory.create({
-                data: {
-                    quantity: quantity,
-                    size: size,
-                    color: color,
-                    productID:productID
-                }
             });
         }
-        return NextResponse.json({message:" update success"})
+
+        if (existingInventory) {
+            // ✅ หากมีอยู่ใน DB → Update
+            data = await prisma.inventory.update({
+                where: { id: inventoryId },
+                data: { quantity:Number(quantity), size, color },
+            });
+        } else {
+            // 🔍 เช็คว่ามี productID + size + color ซ้ำหรือไม่
+            const duplicateInventory = await prisma.inventory.findUnique({
+                where: {
+                    productID_size_color: {
+                        productID,
+                        size,
+                        color,
+                    },
+                },
+            });
+
+            if (duplicateInventory) {
+                // ✅ ถ้ามีอยู่แล้ว แค่ Update quantity
+                data = await prisma.inventory.update({
+                    where: { id: duplicateInventory.id },
+                    data: { quantity:Number(quantity) },
+                });
+            } else {
+                // ✅ ถ้าไม่มี → Create ใหม่
+                data = await prisma.inventory.create({
+                    data: {
+                        quantity:Number(quantity),
+                        size,
+                        color,
+                        productID,
+                    },
+                });
+            }
+        }
+
+        console.log("data", data);
+        return NextResponse.json({ message: "Update success" });
     } catch (error: any) {
-        console.error(error.message)
-        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 })
+        console.error(error.message);
+        return new NextResponse(error instanceof Error ? error.message : String(error), { status: 500 });
     }
 }
+
+
 
 //  deleteInvenByInvenId
 export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {

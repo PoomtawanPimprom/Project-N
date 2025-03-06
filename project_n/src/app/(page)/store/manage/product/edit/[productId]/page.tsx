@@ -3,6 +3,7 @@
 import { inventoryInterface } from "@/app/interface/inventoryInterface";
 import { productInterface } from "@/app/interface/productInterface";
 import {
+  deleteInventoryByInventoryId,
   getInventoriesByProductId,
   updateInventoryByInventoryId,
 } from "@/app/service/inventory/service";
@@ -53,7 +54,6 @@ export default function editProductpage(props: {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState<number>(0);
-  const [categoryId, setCategoryId] = useState<number>(0);
 
   //image
   const [oldImages, setOldImages] = useState<string[]>([]);
@@ -63,9 +63,7 @@ export default function editProductpage(props: {
 
   //inventory
   const [inventories, setInventories] = useState<inventoryInterface[]>([]);
-  const [inventory, setInventory] = useState<
-    { quantity: string; size: string; color: string }[]
-  >([{ quantity: "", size: "", color: "" }]);
+
 
   //image upload
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,27 +90,32 @@ export default function editProductpage(props: {
   };
 
   //inventory system
-  const removeInventoryRow = (index: number) => {
-    if (index == 0) return;
-    const updatedInventory = inventory.filter((_, i) => i !== index);
-    setInventory(updatedInventory);
+  const removeInventoryRow = async (index: number, id?: number) => {
+    if (index === 0) return;
+    try {
+      if (id) {
+        await deleteInventoryByInventoryId(id);
+      }
+  
+      setInventories((prev) => prev.filter((_, i) => i !== index));
+
+    } catch (error) {
+      console.error("Error deleting inventory:", error);
+    }
   };
+  
 
   const addInventoryRow = () => {
-    setInventory([...inventory, { quantity: "", size: "", color: "" }]);
+    setInventories((prev) => [...prev, { quantity: "", size: "", color: "" }]);
   };
 
-  const updateInventoryRow = (
-    index: number,
-    field: string,
-    value: string | number
-  ) => {
-    const updatedInventory = inventory.map((item, i) =>
-      i === index ? { ...item, [field]: value } : item
+  const updateInventoryRow = (index: number, field: string, value: string) => {
+    setInventories((prev) =>
+      prev.map((item, i) => (i === index ? { ...item, [field]: value } : item))
     );
-    setInventory(updatedInventory);
   };
 
+  //sumit form
   const onSubmitUpdateProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     let uploadedImages: { index: number; url: string; refPath: string }[] = [];
@@ -120,80 +123,110 @@ export default function editProductpage(props: {
     try {
       setLoading(true);
 
-      // Step 1: ลบรูปภาพเก่าก่อน
-      if (oldImagesURL.length > 0) {
-        await deleteUploadedImages(oldImagesURL); // ลบรูปภาพเก่า
+      if (newImages.length === 0) {
+        const ProductData = {
+          name: name,
+          price: price,
+          description: description,
+          inventory: inventories,
+        };
+        const validateData = {
+          name: name,
+          price: price.toString(),
+          description: description,
+          inventory: inventories,
+        };
+        validateWithZod(productSchema, validateData);
+        // Step 5: อัปเดตข้อมูลสินค้า
+        await updateProductbyID(ProductId, ProductData);
+
+        // Step 6: อัปเดตข้อมูลสินค้าคงคลัง
+        await Promise.all(
+          inventories.map(async (inventory) => {
+            console.log("inventory : ", inventory);
+            await updateInventoryByInventoryId(inventory.id!, {
+              quantity: inventory.quantity,
+              size: inventory.size,
+              color: inventory.color,
+              productId: ProductId,
+            });
+          })
+        );
+      } else {
+        // Step 1: ลบรูปภาพเก่าก่อน
+        if (oldImagesURL.length > 0) {
+          await deleteUploadedImages(oldImagesURL); // ลบรูปภาพเก่า
+        }
+
+        // Step 2: อัปโหลดรูปใหม่ไปที่ Firebase
+        uploadedImages = await Promise.all(
+          newImages.map(async (image, index) => {
+            const uniqueId = v4(); // Generate a unique ID for the image
+            const refPath = `products/${product?.storeID}/${uniqueId}`; // Path in Firebase
+            const storageRef = ref(storage, refPath);
+
+            await uploadBytes(storageRef, image);
+            const url = `https://firebasestorage.googleapis.com/v0/b/${
+              storage.app.options.storageBucket
+            }/o/${encodeURIComponent(refPath)}?alt=media`;
+
+            return { index, url, refPath };
+          })
+        );
+
+        // Step 3: รวมข้อมูลรูปภาพใหม่กับเก่า
+        const ProductData = {
+          name: name,
+          price: price,
+          description: description,
+          image: {
+            ...Object.fromEntries(
+              oldImages.map((url, idx) => [`image${idx + 1}`, url])
+            ),
+            ...Object.fromEntries(
+              uploadedImages.map((img, idx) => [
+                `image${oldImages.length + idx + 1}`,
+                img.url,
+              ])
+            ),
+          },
+        };
+
+        const validateData = {
+          name: name,
+          price: price.toString(),
+          description: description,
+          image: {
+            ...Object.fromEntries(
+              oldImages.map((url, idx) => [`image${idx + 1}`, url])
+            ),
+            ...Object.fromEntries(
+              uploadedImages.map((img, idx) => [
+                `image${oldImages.length + idx + 1}`,
+                img.url,
+              ])
+            ),
+          },
+          inventory: inventories,
+        };
+
+        validateWithZod(productSchema, validateData);
+
+        // Step 5: อัปเดตข้อมูลสินค้า
+        await updateProductbyID(ProductId, ProductData);
+
+        // Step 6: อัปเดตข้อมูลสินค้าคงคลัง
+        await Promise.all(
+          inventories.map(async (inventory) => {
+            await updateInventoryByInventoryId(inventory.id!, {
+              quantity: inventory.quantity,
+              size: inventory.size,
+              color: inventory.color,
+              productId: ProductId,
+            });
+          })
+        );
       }
-
-      // Step 2: อัปโหลดรูปใหม่ไปที่ Firebase
-      uploadedImages = await Promise.all(
-        newImages.map(async (image, index) => {
-          const uniqueId = v4(); // Generate a unique ID for the image
-          const refPath = `products/${product?.storeID}/${uniqueId}`; // Path in Firebase
-          const storageRef = ref(storage, refPath);
-
-          await uploadBytes(storageRef, image);
-          const url = `https://firebasestorage.googleapis.com/v0/b/${
-            storage.app.options.storageBucket
-          }/o/${encodeURIComponent(refPath)}?alt=media`;
-
-          return { index, url, refPath };
-        })
-      );
-
-      // Step 3: รวมข้อมูลรูปภาพใหม่กับเก่า
-      const ProductData = {
-        name: name,
-        price: price,
-        description: description,
-        image: {
-          ...Object.fromEntries(
-            oldImages.map((url, idx) => [`image${idx + 1}`, url])
-          ),
-          ...Object.fromEntries(
-            uploadedImages.map((img, idx) => [
-              `image${oldImages.length + idx + 1}`,
-              img.url,
-            ])
-          ),
-        },
-      };
-
-      const validateData = {
-        name: name,
-        price: price,
-        description: description,
-        image: {
-          ...Object.fromEntries(
-            oldImages.map((url, idx) => [`image${idx + 1}`, url])
-          ),
-          ...Object.fromEntries(
-            uploadedImages.map((img, idx) => [
-              `image${oldImages.length + idx + 1}`,
-              img.url,
-            ])
-          ),
-        },
-        inventory:inventories
-      };
-
-      validateWithZod(productSchema,validateData)
-
-      // Step 5: อัปเดตข้อมูลสินค้า
-      await updateProductbyID(ProductId, ProductData);
-
-      // Step 6: อัปเดตข้อมูลสินค้าคงคลัง
-      await Promise.all(
-        inventories.map(async (inventory) => {
-          await updateInventoryByInventoryId(inventory.id, {
-            quantity: inventory.quantity,
-            size: inventory.size,
-            color: inventory.color,
-            productId: ProductId,
-          });
-        })
-      );
-
       toast({
         description: "แก้ไขสินค้าเรียบร้อยแล้ว",
       });
@@ -202,7 +235,6 @@ export default function editProductpage(props: {
       if (uploadedImages.length > 0) {
         await deleteUploadedImages(uploadedImages.map((image) => image.url));
       }
-
 
       if (error instanceof Error) {
         console.error("Error uploading or submitting data", error);
@@ -216,7 +248,6 @@ export default function editProductpage(props: {
         });
       }
 
-
       if (error.fieldErrors) {
         setError(error.fieldErrors);
       }
@@ -229,10 +260,9 @@ export default function editProductpage(props: {
             : String(error.fieldErrors.inventory);
         toast({
           description: inventoryErrorMessage,
-          variant:"destructive"
+          variant: "destructive",
         });
       }
-
     } finally {
       setLoading(false);
     }
@@ -263,22 +293,20 @@ export default function editProductpage(props: {
 
   const fetchData = async () => {
     const invenData = await getInventoriesByProductId(ProductId, "");
-    setInventories(invenData);
-    if (invenData.length > 0) {
-      setInventory(
-        invenData.map((item:any) => ({
-          quantity: item.quantity.toString(),
-          size: item.size,
-          color: item.color,
-        }))
-      );
-    }
+    setInventories(
+      invenData.map((item: any) => ({
+        id:item.id,
+        quantity: item.quantity.toString(),
+        size: item.size,
+        color: item.color,
+      }))
+    );
+
     const productData = await getProductById(ProductId);
     setProduct(productData);
     setName(productData.name);
     setDescription(productData.description);
     setPrice(productData.price);
-    setCategoryId(productData.categoryID);
 
     const imageUrls = Object.values(productData.image as ProductImage).filter(
       (url) => url
@@ -286,6 +314,7 @@ export default function editProductpage(props: {
     setOldImages(imageUrls);
     setOldImagesURL(imageUrls);
   };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -303,7 +332,7 @@ export default function editProductpage(props: {
             <button
               onClick={onclickDeleteProduct}
               className="flex rounded-xl p-2 border font-bold text-white bg-red-600"
-              >
+            >
               ลบสินค้า
             </button>
             <ModalDelete
@@ -349,7 +378,7 @@ export default function editProductpage(props: {
                 />
                 <div className="  space-y-2">
                   <p className="">แก้ไขสต็อกสินค้า</p>
-                  {inventory.map((item, index) => (
+                  {inventories.map((item, index) => (
                     <div key={index} className="flex space-x-4">
                       <div>
                         <p>จำนวน</p>
@@ -363,7 +392,7 @@ export default function editProductpage(props: {
                               e.target.value
                             )
                           }
-                          className="p-2 border  rounded-lg"
+                          className="p-2 border rounded-lg"
                           placeholder="จำนวนสินค้า"
                         />
                       </div>
@@ -376,7 +405,7 @@ export default function editProductpage(props: {
                             updateInventoryRow(index, "size", e.target.value)
                           }
                           type="text"
-                          className="p-2 border  rounded-lg"
+                          className="p-2 border rounded-lg"
                           placeholder="ขนาดของสินค้า"
                         />
                       </div>
@@ -389,20 +418,18 @@ export default function editProductpage(props: {
                             updateInventoryRow(index, "color", e.target.value)
                           }
                           type="text"
-                          className="p-2 border  rounded-lg"
+                          className="p-2 border rounded-lg"
                           placeholder="สีของสินค้า"
                         />
                       </div>
                       <div className="flex items-end">
-                        <div className="flex rounded-lg">
-                          <button
-                            type="button"
-                            className="px-4 py-2  rounded-lg  text-center bg-red text-white bg-red-500"
-                            onClick={() => removeInventoryRow(index)}
-                          >
-                            -
-                          </button>
-                        </div>
+                        <button
+                          type="button"
+                          className="px-4 py-2 rounded-lg text-center bg-red-500 text-white"
+                          onClick={() => removeInventoryRow(index,item.id)}
+                        >
+                          -
+                        </button>
                       </div>
                     </div>
                   ))}
