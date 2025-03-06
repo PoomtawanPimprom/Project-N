@@ -12,6 +12,7 @@ import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/app/context/cartContext";
 import { useUser } from "@/app/context/userContext";
+import { useRouter } from "next/navigation";
 
 type SelectProp = {
   productId: number;
@@ -24,6 +25,7 @@ export default function SelectToCart({
   inventory,
   productId,
 }: SelectProp) {
+  const route = useRouter()
   const { toast } = useToast();
   const { fetchCartAll } = useCart();
   const [size, setSize] = useState<string | undefined>();
@@ -47,14 +49,19 @@ export default function SelectToCart({
     )
   );
 
-  const getAvailableQuantity = () => {
+  const getAvailableQuantity = () => { 
     const inventoryItem = inventories.find(
       (item) => item.size === size && item.color === color
     );
-    setAvailableQuantity(inventoryItem ? inventoryItem.quantity : null);
+    
+    // Convert quantity to a number before updating the state
+    setAvailableQuantity(inventoryItem ? Number(inventoryItem.quantity) : null);
   };
-
   const onSubmitAddToCart = async () => {
+    if(!session){
+      route.push("/login")
+      return
+    }
     try {
       await createCart({
         userId: Number(session?.user.id),
@@ -67,7 +74,12 @@ export default function SelectToCart({
       toast({
         description: "เพิ่มสินค้าเข้าตะกร้าเรียบร้อยแล้ว",
       });
-    } catch (error) {
+    } catch (error:any) {
+      if(error.message){
+        toast({
+          description: error.message
+        })
+      }
       console.log(error);
     }
   };
