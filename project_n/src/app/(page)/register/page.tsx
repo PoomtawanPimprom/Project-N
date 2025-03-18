@@ -99,19 +99,22 @@ function Register() {
           </button>
         </form>
         {/* <!-- Sign up Link --> */}
-        <div className="mt-2 text-gray-900 text-center">
+        <div className="mt-6 text-gray-900 text-center">
           <Link href="/login" className="hover:underline">
             Sign in Here
           </Link>
         </div>
       </div>
 
-      <div className="w-1/2 h-screen hidden lg:block">
-        <img
-          src="https://humanepro.org/sites/default/files/styles/article_new/public/images/hero/F2_shutterstock_474493482_2.jpg?itok=onS2mDk3"
-          alt="Placeholder Image"
-          className="object-cover w-full h-full"
-        />
+      <div className="w-1/2 h-screen hidden lg:block relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-primary flex flex-col justify-center items-center text-white p-8">
+          <h2 className="text-3xl font-semibold mb-4 text-center">
+            สร้างบัญชี Shopkub ของคุณ!
+          </h2>
+          <p className="text-lg text-center">
+            เริ่มต้นการช้อปปิ้งที่สะดวกและคุ้มค่ากับเราวันนี้
+          </p>
+        </div>
       </div>
     </div>
   );
