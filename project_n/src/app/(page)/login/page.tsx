@@ -52,12 +52,15 @@ const LoginPage = () => {
   return (
     <div className="bg-gray-100 flex justify-center items-center h-screen">
       {/* <!-- Left: Image --> */}
-      <div className="w-1/2 h-screen hidden lg:block">
-        <img
-          src="https://humanepro.org/sites/default/files/styles/article_new/public/images/hero/F2_shutterstock_474493482_2.jpg?itok=onS2mDk3"
-          alt="Placeholder Image"
-          className="object-cover w-full h-full"
-        />
+      <div className="w-1/2 h-screen hidden lg:block relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-primary flex flex-col justify-center items-center text-white p-8">
+          <h2 className="text-3xl font-semibold mb-4 text-center">
+            ยินดีต้อนรับสู่ Shopkub!
+          </h2>
+          <p className="text-lg text-center">
+            ลงชื่อเข้าใช้เพื่อสัมผัสประสบการณ์ช้อปปิ้งที่เหนือกว่า
+          </p>
+        </div>
       </div>
       {/* <!-- Right: Login Form --> */}
       <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2 ">
