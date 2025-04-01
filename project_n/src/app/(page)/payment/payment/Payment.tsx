@@ -53,7 +53,6 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
 
       //create payment
       const createPayment = await CreatePayment(data);
-
       //verify payment
 
       // const formData = new FormData();
@@ -75,6 +74,9 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
 
       }
       console.log(dataupdate)
+      if (!dataupdate.paymentId || !dataupdate.orderDetailId || !dataupdate.userId) {
+        throw new Error("ข้อมูล payment ไม่ครบถ้วน");
+    }
       await UpdatePaymentStatusWhenChecked(dataupdate)
       toast({
         variant:"success",
@@ -113,8 +115,6 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
     setImage(null);
     setShowInput(true); // Show input after removal
   };
-  const test = 500
-console.log("amount",amount)
   return (
     <div className="flex flex-col w-full space-y-2 p-4 border border-gray-300 rounded-xl">
       <div className="flex font-bold text-xl">
