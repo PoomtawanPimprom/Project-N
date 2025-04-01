@@ -1,12 +1,11 @@
 "use client";
 import Input from "@/app/component/Input";
 import Modal from "@/app/component/modal";
-import ShowError from "@/app/component/ShowError";
 import { reportCategoryInterface } from "@/app/interface/reportCategoryInterface";
 import { createReport } from "@/app/service/report/service";
-import { getAllReportCategoies } from "@/app/service/reportCategory/service";
+import { getAllReportCategories } from "@/app/service/reportCategory/service";
 import { useToast } from "@/hooks/use-toast";
-import { renderError, ReportSchema, validateWithZod } from "@/lib/zod/Schema";
+import {  ReportSchema, validateWithZod } from "@/lib/zod/Schema";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
@@ -56,7 +55,7 @@ const ModalReportForm = ({ productId, open, onClose }: prop) => {
   };
 
   const fetchData = async () => {
-    const data = await getAllReportCategoies();
+    const data = await getAllReportCategories();
     setReportCate(data);
   };
 
