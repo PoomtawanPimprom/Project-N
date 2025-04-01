@@ -17,7 +17,7 @@ export async function PUT(request: NextRequest, props: { params: Promise<{ id: s
         // update order items to status cancel
          await prisma.orderItem.updateMany({
             where:{orderDetailId:orderDetailId},
-            data:{orderItemStatusId:5}
+            data:{orderItemStatusId:4}
          })
         //check if this order detail has use discount.it will be remove discountId
          if(orderDetail.discountId !== null){      

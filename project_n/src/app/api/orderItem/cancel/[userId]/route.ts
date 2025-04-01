@@ -12,7 +12,7 @@ export async function GET(request: NextRequest, props: { params: Promise<{ userI
             where: { userId: userId, orderStatusId: 3 },
             include:{
                 OrderItem:{
-                    where:{orderItemStatusId: 5},
+                    where:{orderItemStatusId: 4},
                     include:{product:true}
                 }
             },

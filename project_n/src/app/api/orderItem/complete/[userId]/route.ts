@@ -8,11 +8,12 @@ export async function GET(request: NextRequest, props: { params: Promise<{ userI
     try {
         const userId = Number(params.userId);
         //get all order datail status complete and order items status complete
+
         const allOrderDetail = await prisma.orderDetail.findMany({
             where: { userId: userId, orderStatusId: 2 },
             include: {
                 OrderItem: {
-                    where: { orderItemStatusId: 4 },
+                    where: { orderItemStatusId: 3 },
                     include: { product: true }
                 },
                 payment: true,

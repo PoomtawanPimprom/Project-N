@@ -10,7 +10,7 @@ async function sendLowStockAlert(productName: string, storeEmail: string) {
     service: "gmail",
     auth: {
       user: process.env.EMAIL_USER, // กำหนดค่าใน .env
-      pass: process.env.EMAIL_PASS,
+      pass: process.env.EMAIL_PASSWORD,
     },
   });
 
@@ -19,6 +19,25 @@ async function sendLowStockAlert(productName: string, storeEmail: string) {
     to: storeEmail,
     subject: "แจ้งเตือนสินค้าใกล้หมด",
     text: `สินค้าชื่อ "${productName}" ใกล้หมดแล้ว! กรุณาเติมสต็อก`,
+  };
+
+  await transporter.sendMail(mailOptions);
+}
+
+async function sendtoshipAlert(storeEmail: string) {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER, // กำหนดค่าใน .env
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: storeEmail,
+    subject: "แจ้งเตือนสินค้าต้องส่ง",
+    text: `มีสินค้าต้องส่งแล้ว อย่าลืมส่งนะะะะะะ`,
   };
 
   await transporter.sendMail(mailOptions);
@@ -124,7 +143,23 @@ export async function PUT(request: NextRequest) {
             await sendLowStockAlert(product.name, product.store.user.email);
           }
         }
+
+        const email = await prisma.product.findFirst({
+          include: {
+            store: {
+              include: {
+                user:{
+                  select:{email:true}
+                }
+              }
+            }
+          }
+        })
+        await sendtoshipAlert(email?.store.user.email!)
       })
+
+
+
     );
 
     // ลบสินค้าที่ซื้อแล้วออกจากตะกร้า
