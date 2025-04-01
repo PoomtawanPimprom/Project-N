@@ -9,11 +9,10 @@ import {
 } from "@/app/service/inventory/service";
 import {
   getProductById,
-  updateProductbyID,
+  updateProductById,
 } from "@/app/service/product/service";
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState, use } from "react";
 import { IoMdClose } from "react-icons/io";
 import ModalDelete from "./ModalDelete";
@@ -24,6 +23,7 @@ import Form from "@/app/component/Form";
 import Input from "@/app/component/Input";
 import StoreSideBar from "../../../StoreSideBar";
 import { productSchema, validateWithZod } from "@/lib/zod/Schema";
+import { useSession } from "next-auth/react";
 
 interface ProductImage {
   [key: string]: string;
@@ -32,12 +32,10 @@ interface ProductImage {
 export default function editProductpage(props: {
   params: Promise<{ productId: number }>;
 }) {
+  const {data:session} = useSession()
   const params = use(props.params);
-  const searchparams = useSearchParams();
   const ProductId = params.productId;
   const { toast } = useToast();
-  const router = useRouter();
-  const storeId = searchparams.get("storeId");
   //modal
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
@@ -138,7 +136,7 @@ export default function editProductpage(props: {
         };
         validateWithZod(productSchema, validateData);
         // Step 5: อัปเดตข้อมูลสินค้า
-        await updateProductbyID(ProductId, ProductData);
+        await updateProductById(ProductId, ProductData);
 
         // Step 6: อัปเดตข้อมูลสินค้าคงคลัง
         await Promise.all(
@@ -213,7 +211,7 @@ export default function editProductpage(props: {
         validateWithZod(productSchema, validateData);
 
         // Step 5: อัปเดตข้อมูลสินค้า
-        await updateProductbyID(ProductId, ProductData);
+        await updateProductById(ProductId, ProductData);
 
         // Step 6: อัปเดตข้อมูลสินค้าคงคลัง
         await Promise.all(
@@ -321,7 +319,7 @@ export default function editProductpage(props: {
 
   return (
     <div className="min-h-screen flex relative">
-      <StoreSideBar storeId={storeId!} />
+      <StoreSideBar storeId={session?.user.storeId!} />
       <div className="w-full border p-4">
         <div className="flex flex-col w-full border p-4 rounded-lg bg-white  dark:bg-black dark:border-gray-600 dark:border-x">
           {/* header */}
