@@ -1,44 +1,51 @@
-const PATH_API = "/api/inventory"
+import axios from 'axios';
 
-//GET /api/inventory/prodect/:prodectId
-export async function getInventoryByProductId(prodectId:number) {
-    const res = await fetch(`${PATH_API}/product/${prodectId}`, {
-        method: "GET",
-        headers:{
-            "Content-Type": "application/json",
-        },
-    });
-    return res.json();
+const PATH_API = '/api/inventory';
+
+// GET /api/inventory/product/:prodectId
+export async function getInventoryByProductId(prodectId: number): Promise<any> {
+    try {
+        const res = await axios.get(`${PATH_API}/product/${prodectId}`, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'ไม่สามารถดึงข้อมูลสินค้าจากคลังได้');
+    }
 }
 
-//GET /api/inventory/:prodectId
-export async function getInventoriesByProductId(productId:number,query:string){
-    const res = await fetch(`${PATH_API}/${productId}?${query}`, {
-        method: "GET",
-        headers:{
-            "Content-Type": "application/json",
-        },
-    });
-    return res.json();
+// GET /api/inventory/:productId
+export async function getInventoriesByProductId(productId: number, query: string): Promise<any> {
+    try {
+        const res = await axios.get(`${PATH_API}/${productId}?${query}`, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'ไม่สามารถดึงข้อมูลสินค้าจากคลังได้');
+    }
 }
 
-//PUT /api/inventory/:inventortId
-export async function updateInventoryByInventoryId(InvenId:number, invenData:any) {
-    const res = await fetch(`${PATH_API}/${InvenId}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(invenData),
-    });
+// PUT /api/inventory/:inventoryId
+export async function updateInventoryByInventoryId(InvenId: number, invenData: any): Promise<any> {
+    try {
+        const res = await axios.put(`${PATH_API}/${InvenId}`, invenData, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'ไม่สามารถอัปเดตข้อมูลคลังสินค้าได้');
+    }
 }
 
-//DELETE /api/inventory/:inventortId
-export async function deleteInventoryByInventoryId(InvenId:number) {
-    const res = await fetch(`${PATH_API}/${InvenId}`, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+// DELETE /api/inventory/:inventoryId
+export async function deleteInventoryByInventoryId(InvenId: number): Promise<any> {
+    try {
+        const res = await axios.delete(`${PATH_API}/${InvenId}`, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'ไม่สามารถลบข้อมูลคลังสินค้าได้');
+    }
 }

@@ -1,42 +1,41 @@
-const PATH_API = "/api/transport"
+import axios from 'axios';
+
+const PATH_API = "/api/transport";
 
 //GET /api/transport
 export async function getAllTransport() {
-    const res = await fetch(`/api/transport`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
-    return res.json();
+    try {
+        const response = await axios.get(`${PATH_API}`);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || "ไม่สามารถดึงข้อมูลการขนส่งได้");
+    }
 }
 
 //POST /api/transport
 export async function createTransport(data: any) {
-    const res = await fetch(`${PATH_API}/`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data)
-    });
-
-    if (!res.ok) {
-        return res.json();
+    try {
+        const response = await axios.post(`${PATH_API}/`, data, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || "ไม่สามารถสร้างข้อมูลการขนส่งได้");
     }
 }
 
 //DELETE /api/transport
 export async function deleteTransportByTransportId(id: number) {
-    const res = await fetch(`${PATH_API}/${id}`, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        
-    });
-
-    if (!res.ok) {
-        return res.json();
+    try {
+        const response = await axios.delete(`${PATH_API}/${id}`, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || "ไม่สามารถลบข้อมูลการขนส่งได้");
     }
 }

@@ -1,15 +1,14 @@
+import axios from 'axios';
 
-export async function updateRoleById(id:string|number,roleId:any) {
-    const response = await fetch(`/api/profile/${id}/role`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(roleId),
-    });
-    const res = await response.json();
-    if (!response.ok) {
-        throw new Error("Failed to update user");
+export async function updateRoleById(id: string | number, roleId: any): Promise<any> {
+    try {
+        const response = await axios.put(`/api/profile/${id}/role`, roleId, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || "ไม่สามารถอัปเดตบทบาทของผู้ใช้ได้");
     }
-    return res
 }

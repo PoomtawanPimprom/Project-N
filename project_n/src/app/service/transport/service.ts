@@ -1,11 +1,14 @@
-const API_URL = '/api/transport'
+import axios from 'axios';
 
-export async function GetAllTransport() {
-    const res = await fetch(`${API_URL}`,
-        {
-            method: 'GET',
+const API_URL = '/api/transport';
+
+export async function GetAllTransport(): Promise<any> {
+    try {
+        const res = await axios.get(API_URL, {
             headers: { 'Content-Type': 'application/json' }
-        }
-    )
-    return res.json()
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'Failed to fetch transport data');
+    }
 }

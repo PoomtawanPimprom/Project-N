@@ -1,61 +1,75 @@
-const API_URL = '/api/orderItem'
+import axios from 'axios';
 
-export async function GetAllOrderItemsToPay(userId:number) {
-    const res = await fetch(`${API_URL}/toPay/${userId}`,
-        {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        }
-    )
-    return res.json()
+const API_URL = '/api/orderItem';
+
+// GET /api/orderItem/toPay/:userId
+export async function GetAllOrderItemsToPay(userId: number): Promise<any> {
+    try {
+        const res = await axios.get(`${API_URL}/toPay/${userId}`, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'ไม่สามารถดึงข้อมูลคำสั่งซื้อที่ต้องชำระเงินได้');
+    }
 }
 
-export async function GetAllOrderItemsWaitToShip(userId:number) {
-    const res = await fetch(`${API_URL}/waitToShip/${userId}`,
-        {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        }
-    )
-    return res.json()
+// GET /api/orderItem/waitToShip/:userId
+export async function GetAllOrderItemsWaitToShip(userId: number): Promise<any> {
+    try {
+        const res = await axios.get(`${API_URL}/waitToShip/${userId}`, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'ไม่สามารถดึงข้อมูลคำสั่งซื้อที่รอการจัดส่งได้');
+    }
 }
 
-export async function GetAllOrderItemsToRecevie(userId:number) {
-    const res = await fetch(`${API_URL}/toReceive/${userId}`,
-        {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        }
-    )
-    return res.json()
+// GET /api/orderItem/toReceive/:userId
+export async function GetAllOrderItemsToRecevie(userId: number): Promise<any> {
+    try {
+        const res = await axios.get(`${API_URL}/toReceive/${userId}`, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'ไม่สามารถดึงข้อมูลคำสั่งซื้อที่รอรับได้');
+    }
 }
 
-export async function updateStatusOrderItemsToRecevie(userId:number) {
-    const res = await fetch(`${API_URL}/toReceive/${userId}`,
-        {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' }
-        }
-    )
-    return res.json()
+// PUT /api/orderItem/toReceive/:userId
+export async function updateStatusOrderItemsToRecevie(userId: number): Promise<any> {
+    try {
+        const res = await axios.put(`${API_URL}/toReceive/${userId}`, {}, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'ไม่สามารถอัปเดตสถานะคำสั่งซื้อที่รอรับได้');
+    }
 }
 
-export async function GetAllOrderItemsComplete(userId:number) {
-    const res = await fetch(`${API_URL}/complete/${userId}`,
-        {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        }
-    )
-    return res.json()
+// GET /api/orderItem/complete/:userId
+export async function GetAllOrderItemsComplete(userId: number): Promise<any> {
+    try {
+        const res = await axios.get(`${API_URL}/complete/${userId}`, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'ไม่สามารถดึงข้อมูลคำสั่งซื้อที่เสร็จสมบูรณ์ได้');
+    }
 }
 
-export async function GetAllOrderItemsCancel(userId:number) {
-    const res = await fetch(`${API_URL}/cancel/${userId}`,
-        {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        }
-    )
-    return res.json()
+// GET /api/orderItem/cancel/:userId
+export async function GetAllOrderItemsCancel(userId: number): Promise<any> {
+    try {
+        const res = await axios.get(`${API_URL}/cancel/${userId}`, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'ไม่สามารถดึงข้อมูลคำสั่งซื้อที่ถูกยกเลิกได้');
+    }
 }

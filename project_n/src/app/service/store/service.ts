@@ -1,75 +1,85 @@
-// POST /api/store
-export async function CreateStore(data: any) {
-    const res = await fetch("/api/store", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
-    // ดึงข้อมูลจากเซิร์ฟเวอร์
-    const result = await res.json();
+import axios from "axios";
 
-    if (!res.ok) {
-        throw new Error(result.message || "เกิดข้อผิดพลาดในการสร้างร้านค้า");
+// POST /api/store
+export async function CreateStore(data: any): Promise<any> {
+    try {
+        const res = await axios.post("/api/store", data, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || "เกิดข้อผิดพลาดในการสร้างร้านค้า");
     }
 }
 
 // GET /api/store/${storeID}
-export async function getStoreByID(storeID: number) {
-    const res = await fetch(`/api/store/${storeID}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
-    return res.json();
-}
-
-//PUT /api/store/${storeID}
-export async function updateStoreById(storeID: number, data: any) {
-    const res = await fetch(`/api/store/${storeID}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
-    // ดึงข้อมูลจากเซิร์ฟเวอร์
-    const result = await res.json();
-
-    if (!res.ok) {
-        throw new Error(result.message || "เกิดข้อผิดพลาดในการสร้างร้านค้า");
+export async function getStoreByID(storeID: number): Promise<any> {
+    try {
+        const res = await axios.get(`/api/store/${storeID}`, {
+            headers: {
+                "Content-Type": "application/json"
+            },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || "ไม่สามารถดึงข้อมูลร้านค้าได้");
     }
 }
 
-//DELETE /api/store/${storeID}
-export async function deleteListById(storeID: number) {
-    const res = await fetch(`/api/store/${storeID}`, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+// PUT /api/store/${storeID}
+export async function updateStoreById(storeID: number, data: any): Promise<any> {
+    try {
+        const res = await axios.put(`/api/store/${storeID}`, data, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || "เกิดข้อผิดพลาดในการอัปเดตร้านค้า");
+    }
 }
 
-
-export async function checkUserCreatedStore(userId: number) {
-    const res = await fetch(`/api/checkStore/${userId}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
-    return res.json();
+// DELETE /api/store/${storeID}
+export async function deleteListById(storeID: number): Promise<any> {
+    try {
+        const res = await axios.delete(`/api/store/${storeID}`, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || "เกิดข้อผิดพลาดในการลบร้านค้า");
+    }
 }
 
-export async function getInfomationForDashboardByStoreID(storeID: number) {
-    const res = await fetch(`/api/store/${storeID}/dashboard`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
-    return res.json();
+// GET /api/checkStore/${userId}
+export async function checkUserCreatedStore(userId: number): Promise<any> {
+    try {
+        const res = await axios.get(`/api/checkStore/${userId}`, {
+            headers: {
+                "Content-Type": "application/json"
+            },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || "ไม่สามารถตรวจสอบร้านค้าของผู้ใช้ได้");
+    }
+}
+
+// GET /api/store/${storeID}/dashboard
+export async function getInfomationForDashboardByStoreID(storeID: number): Promise<any> {
+    try {
+        const res = await axios.get(`/api/store/${storeID}/dashboard`, {
+            headers: {
+                "Content-Type": "application/json"
+            },
+        });
+        return res.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || "ไม่สามารถดึงข้อมูล Dashboard ของร้านค้าได้");
+    }
 }
