@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import { getUserById } from "@/app/service/profile/service";
 import { userInterface } from "@/app/interface/userInterface";
 import ToPay from "./components/toPay";
-import ToReceive from "./components/toReceive";
 import Complete from "./components/complete";
 import Cancelled from "./components/cancelled";
 import { orderItemInterface } from "@/app/interface/orderItemInterface";
@@ -38,8 +37,7 @@ export default function MyPurchase() {
   const tabs = [
     { id: "TO_PAY", label: "ต้องชำระ" },
     { id: "WAIT_FOR_SHIP", label: "รอทางร้านจัดส่ง" },
-    { id: "TO_RECEIVE", label: "รอรับสินค้า" },
-    { id: "COMPLETE", label: "เสร็จสิ้น" },
+    { id: "COMPLETE", label: "สินค้าได้จัดส่งแล้ว" },
     { id: "CANCELLED", label: "ยกเลิกคำสั่งซื้อ" },
   ];
   const fecthdata2 = async () => {
@@ -58,8 +56,6 @@ export default function MyPurchase() {
         return <ToPay OrderItemsToPay={OrderItemsToPay} refesh={fecthdata2}/>;
       case "WAIT_FOR_SHIP":
         return <WaitforShip />;
-      case "TO_RECEIVE":
-        return <ToReceive />;
       case "COMPLETE":
         return <Complete />;
       case "CANCELLED":
