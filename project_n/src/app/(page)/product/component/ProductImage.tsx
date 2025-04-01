@@ -65,8 +65,8 @@ export default function ProductImage({ product }: prop) {
     </div>
 
     {/* Thumbnail Navigation */}
-    <div className="flex gap-2 overflow-x-auto px-2 pb-2 scrollbar-hide">
-      <div className="flex gap-2 mx-auto item-start">
+    <div className="flex gap-2 overflow-x-auto px-2 pb-2  scrollbar-hide">
+      <div className="flex gap-2 mx-auto item-start mt-1">
         {imageArray.map((img, index) => (
           <button
             key={img}
