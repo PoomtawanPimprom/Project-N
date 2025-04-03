@@ -21,11 +21,9 @@ type prop = {
 };
 
 const DataAdminTable = ({ userData, role }: prop) => {
-  const searchParams = useSearchParams();
   const { user } = useUser();
   const [search, setSearch] = useState("");
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
-  const [openModalDelete, setOpenModalDelete] = useState(false);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -44,13 +42,13 @@ const DataAdminTable = ({ userData, role }: prop) => {
             type=""
           />
           <Link
-            className="flex text-lg font-semibold px-6 py-2 bg-primary rounded-lg text-center items-center"
+            className="flex text-lg font-semibold px-6 py-2 bg-primary text-white rounded-lg text-center items-center"
             href={`/admin/manage/admins?search=${search}`}
           >
             ค้นหา
           </Link>
           <Link
-            className="flex text-lg font-semibold px-6 py-2 bg-secondary text-white rounded-lg text-center items-center text-nowrap"
+            className="flex text-lg font-semibold px-6 py-2 bg-black   text-white rounded-lg text-center items-center text-nowrap"
             href={`/admin/manage/admins`}
           >
             reset
@@ -67,18 +65,17 @@ const DataAdminTable = ({ userData, role }: prop) => {
             <Table className="w-full text-sm text-left rtl:text-right text-accent-foreground hidden md:table">
               <TableHeader className="text-sm 2xl:text-base  text-gray-800  bg-gray-50 dark:bg-black dark:text-accent-foreground">
                 <TableRow className="font-semibold">
-
                   <TableHead className="px-6 py-3 text-left text-sm">
-                    Name
+                    ชื่อผู้ใช้งาน
                   </TableHead>
                   <TableHead className="px-6 py-3 text-left text-sm">
-                    Email
+                    อีเมล
                   </TableHead>
                   <TableHead className="px-6 py-3 text-left text-sm">
-                    Role
+                    ตำแหน่ง
                   </TableHead>
                   <TableHead className="px-6 py-3 text-right text-sm">
-                    Action
+                    แก้ไข
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -89,10 +86,11 @@ const DataAdminTable = ({ userData, role }: prop) => {
                       key={index}
                       className="bg-white border-b dark:bg-zinc-900 hover:bg-gray-50 dark:hover:bg-zinc-600"
                     >
-
                       <TableData className="px-6 py-4">{item.name}</TableData>
                       <TableData className="px-6 py-4">{item.email}</TableData>
-                      <TableData className="px-6 py-4">{item.role?.name}</TableData>
+                      <TableData className="px-6 py-4">
+                        {item.role?.name}
+                      </TableData>
                       <TableData className="px-6 py-4">
                         <div className="flex justify-end gap-2">
                           <UpdateRole_Dialog id={item.id} role={role} />
@@ -109,26 +107,13 @@ const DataAdminTable = ({ userData, role }: prop) => {
               {userData.map((item) => (
                 <div key={item.id} className="bg-white p-4 border-b">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="font-semibold">ID: {item.id}</span>
-                    <span className="text-gray-600">${item.name}</span>
+                    <span className="font-semibold">รหัส: {item.id}</span>
+                    <span className="text-gray-600">ชื่อผู้ใช้งาน: {item.name}</span>
                   </div>
                   <div className="mb-3">
-                    <span className="text-gray-600">{item.email}</span>
+                    <span className="text-gray-600">อีเมล: {item.email}</span>
                   </div>
-                  <div className="flex gap-2">
-                    <button
-                      className="flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors bg-black hover:bg-gray-800 text-white"
-                      onClick={() => setOpenModalUpdate(true)}
-                    >
-                      <SquarePen className="mr-2" />
-                      Update
-                    </button>
-                    {/* <UpdateTransportModal
-                      transport={item}
-                        onClose={() => setOpenModalUpdate(false)}
-                        open={openModalUpdate}
-                      /> */}
-                  </div>
+                  <UpdateRole_Dialog id={item.id} role={role} />
                 </div>
               ))}
             </div>
