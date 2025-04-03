@@ -309,7 +309,7 @@ export default function AdminPromotions() {
                                   htmlFor="discountAmount"
                                   className="block text-sm font-medium"
                                 >
-                                  Discount Amount
+                                  ส่วนลด
                                 </label>
                                 <input
                                   type="number"

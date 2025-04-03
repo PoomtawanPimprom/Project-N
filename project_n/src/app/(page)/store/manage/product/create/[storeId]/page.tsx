@@ -1,6 +1,6 @@
 "use client";
 import Input from "@/app/component/Input";
-import { CreateProdcut } from "@/app/service/product/service";
+import { CreateProduct } from "@/app/service/product/service";
 import { useToast } from "@/hooks/use-toast";
 import { storage } from "@/lib/firebase/firebase";
 import { productSchema, validateWithZod } from "@/lib/zod/Schema";
@@ -112,14 +112,11 @@ const createProductpage = (props: { params: Promise<{ storeId: number }> }) => {
         inventory: inventory,
       };
       validateWithZod(productSchema, data);
-      await CreateProdcut(data);
+      await CreateProduct(data);
       toast({
         variant: "success",
         description: "สร้างสินค้าเรียบร้อยแล้ว",
       });
-      setTimeout(() => {
-        router.push(`/store/manage/product/${storeId}`);
-      }, 2000);
     } catch (error: any) {
       if (uploadedImages.length > 0) {
         await Promise.all(

@@ -27,16 +27,16 @@ const DataTable = ({ transports }: prop) => {
             <TableHeader className="text-sm 2xl:text-base  text-gray-800  bg-gray-50 dark:bg-black dark:text-accent-foreground">
               <TableRow className="font-semibold">
                 <TableHead className="px-6 py-3 text-left text-sm  ">
-                  ID
+                  รหัส
                 </TableHead>
                 <TableHead className="px-6 py-3 text-left text-sm ">
-                  Provider Name
+                  ผู้ให้บริการขนส่ง
                 </TableHead>
                 <TableHead className="px-6 py-3 text-left text-sm  ">
-                  Price
+                  ราคา
                 </TableHead>
                 <TableHead className="px-6 py-3 text-right text-sm ">
-                  Action
+                  แก้ไข
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -59,7 +59,7 @@ const DataTable = ({ transports }: prop) => {
                         onClick={() => setOpenModalUpdate(true)}
                       >
                         <SquarePen className="mr-2" />
-                        Update
+                        แก้ไข
                       </button>
                       <UpdateTransportModal
                       transport={item}
@@ -71,7 +71,7 @@ const DataTable = ({ transports }: prop) => {
                         onClick={() => setOpenModalDelete(true)}
                       >
                         <Trash2 className="mr-2"/>
-                        Delete
+                        ลบ
                       </button>
                       <DeleteTransportModal
                         id={item.id}
@@ -102,7 +102,7 @@ const DataTable = ({ transports }: prop) => {
                         onClick={() => setOpenModalUpdate(true)}
                       >
                         <SquarePen className="mr-2" />
-                        Update
+                        แก้ไข
                       </button>
                       <UpdateTransportModal
                       transport={item}
@@ -114,7 +114,7 @@ const DataTable = ({ transports }: prop) => {
                         onClick={() => setOpenModalDelete(true)}
                       >
                         <Trash2 className="mr-2"/>
-                        Delete
+                        ลบ  
                       </button>
                       <DeleteTransportModal
                         id={item.id}
