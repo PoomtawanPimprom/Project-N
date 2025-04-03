@@ -56,52 +56,54 @@ export function UpdateRole_Dialog({ id, role }: prop) {
 
   return (
     <Dialog>
-  <DialogTrigger asChild>
-    <button className="flex items-center px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-black hover:bg-zinc-700 hover:shadow-lg hover:scale-105 text-white">
-      <SquarePen className="mr-2" /> แก้ไข
-    </button>
-  </DialogTrigger>
-  <DialogContent className="sm:max-w-[425px]">
-    <DialogHeader>
-      <DialogTitle className="text-xl font-bold">แก้ไขระดับของผู้ใช้</DialogTitle>
-    </DialogHeader>
-    <Select onValueChange={(value) => setSelectId(value)}>
-      <SelectTrigger className="w-full border-2 focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 hover:border-gray-400">
-        <SelectValue placeholder="ระดับของผู้ใช้" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel className="font-medium">ตำแหน่ง</SelectLabel>
-          {role.map((item, index) => (
-            <SelectItem 
-              value={item.id.toString()} 
-              key={`select-${index}`}
-              className="hover:bg-gray-100 transition-colors cursor-pointer"
-            >
-              {item.name}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
-    <DialogFooter className="gap-2 mt-4">
-      <DialogClose asChild ref={closeRef}>
-        <button
-          type="button"
-          className="flex items-center px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-zinc-700 hover:bg-zinc-600 hover:shadow-md text-white"
-        >
-          Close
+      <DialogTrigger asChild>
+        <button className="flex items-center px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-black hover:bg-zinc-700 hover:shadow-lg hover:scale-105 text-white">
+          <SquarePen className="mr-2" /> แก้ไข
         </button>
-      </DialogClose>
-      <button
-        onClick={handleChangeRole}
-        className="flex items-center px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-primary hover:bg-primary/80 hover:shadow-md hover:scale-105 text-white"
-        type="submit"
-      >
-        ยืนยัน
-      </button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-bold">
+            แก้ไขระดับของผู้ใช้
+          </DialogTitle>
+        </DialogHeader>
+        <Select onValueChange={(value) => setSelectId(value)}>
+          <SelectTrigger className="w-full border-2 focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 hover:border-gray-400">
+            <SelectValue placeholder="ระดับของผู้ใช้" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel className="font-medium">ตำแหน่ง</SelectLabel>
+              {role.map((item, index) => (
+                <SelectItem
+                  value={item.id.toString()}
+                  key={`select-${index}`}
+                  className="hover:bg-gray-100 transition-colors cursor-pointer"
+                >
+                  {item.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <DialogFooter className="gap-2 mt-4">
+          <DialogClose asChild ref={closeRef}>
+            <button
+              type="button"
+              className="flex items-center px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-zinc-700 hover:bg-zinc-600 hover:shadow-md text-white"
+            >
+              Close
+            </button>
+          </DialogClose>
+          <button
+            onClick={handleChangeRole}
+            className="flex items-center px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-primary hover:bg-primary/80 hover:shadow-md hover:scale-105 text-white"
+            type="submit"
+          >
+            ยืนยัน
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
