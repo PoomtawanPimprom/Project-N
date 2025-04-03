@@ -44,6 +44,7 @@ const ModalReportForm = ({ productId, open, onClose }: prop) => {
       toast({
         description: "ส่งคำรายงานเรียบร้อย",
       });
+      onClose()
     } catch (error: any) {
       console.log(error);
       if (error.fieldErrors) {

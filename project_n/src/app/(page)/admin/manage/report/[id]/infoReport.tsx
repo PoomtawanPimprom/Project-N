@@ -16,7 +16,7 @@ const InfoReportComponent = async ({ reportId }: prop) => {
   const report = (await prisma.report.findUnique({
     where: { id: reportId },
     include: {
-
+      product: { select: { name: true } },
       user: { select: { id: true, name: true } },
       reportStatus: { select: { id: true, name: true } },
     },
@@ -112,7 +112,7 @@ const InfoReportComponent = async ({ reportId }: prop) => {
                   ))}
                 </select>
                 <button
-                  className="py-2 px-4 bg-black text-white rounded-lg"
+                  className="py-2 px-4 bg-primary text-white rounded-lg"
                   type="submit"
                 >
                   อัพเดทสถานะ
@@ -121,7 +121,6 @@ const InfoReportComponent = async ({ reportId }: prop) => {
             </div>
           </div>
         </div>
-        
       </div>
     </>
   );

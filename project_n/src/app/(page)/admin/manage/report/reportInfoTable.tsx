@@ -9,7 +9,7 @@ import TableRow from "@/app/component/table/TableRow";
 import { reportCategoryInterface } from "@/app/interface/reportCategoryInterface";
 import { reportInterface } from "@/app/interface/reportInterface";
 import { getAllReport } from "@/app/service/report/service";
-import { getAllReportCategoies } from "@/app/service/reportCategory/service";
+import { getAllReportCategories } from "@/app/service/reportCategory/service";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -42,7 +42,7 @@ const ReportInfoTable = () => {
   };
 
   const fetchReportCateData = async () => {
-    const reportCateData = await getAllReportCategoies();
+    const reportCateData = await getAllReportCategories();
     setReportCategories(reportCateData);
   };
 
