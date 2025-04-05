@@ -5,6 +5,21 @@ interface prop {
 }
 
 export default function OrderItemCard({ orderItem }: prop) {
+
+ 
+  const renderWord = (status:number) =>{
+    switch (status) {
+      case 2:
+        return <p className="text-gray-600">ชำระเงินเมื่อ : {new Date(orderItem.updatedAt).toLocaleDateString()}</p>
+
+      case 3:
+        return<p className="text-gray-600">จัดส่งเมื่อ : {new Date(orderItem.updatedAt).toLocaleDateString()}</p>
+    
+      default:
+        break;
+    }
+  }
+
   return (
     <div
       className="flex flex-col sm:flex-row sm:items-center sm:gap-4 p-4 hover:bg-zinc-200 border-gray-200"
@@ -30,6 +45,9 @@ export default function OrderItemCard({ orderItem }: prop) {
           {orderItem.size ? "ไซส์ของสินค้า : " + orderItem.size : ""}
         </p>
         <p className="text-gray-600">จำนวน : {orderItem.quantity}</p>
+        {renderWord(orderItem.orderItemStatusId)}
+        
+        
       </div>
 
       {/* Price Info */}
