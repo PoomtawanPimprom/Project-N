@@ -31,9 +31,6 @@ model User {
   userStatusId Int        @default(1)
   userStatus   UserStatus @relation(fields: [userStatusId], references: [id])
 
-  // userAddressId Int?
-  // userAddress   UserAddress? @relation(fields: [userAddressId], references: [id])
-
   UserAddress UserAddress[]
   Favorite    Favorite[]
   Report      Report[]
@@ -231,6 +228,7 @@ model OrderItem {
   quantity      Int
   storeId       Int?
   userAddressId Int?
+  updatedAt     DateTime @updatedAt()
   createdAt     DateTime @default(now())
 
   orderDetailId     Int
