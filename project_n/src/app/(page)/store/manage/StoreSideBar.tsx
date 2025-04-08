@@ -31,11 +31,6 @@ export default function StoreSideBar({storeId}:prop) {
       label: "แก้ไขรายละเอียดร้านค้า",
     },
     {
-      href: `/store/manage/product/${storeId}`,
-      icon: <Box  className="w-6 h-6" />,
-      label: "จัดการสินค้า",
-    },
-    {
       href: `/store/manage/product/create/${storeId}`,
       icon: <Plus  className="w-6 h-6" />,
       label: "สร้างสินค้า",
