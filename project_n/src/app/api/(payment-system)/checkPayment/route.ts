@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer"; // ใช้สำหรับส่งอีเมล
+import nodemailer from "nodemailer"; 
 
 const prisma = new PrismaClient();
 
