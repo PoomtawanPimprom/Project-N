@@ -13,7 +13,7 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -146,7 +146,8 @@ export default function CreateStorePage() {
         variant: "success",
         description: "สร้างร้านค้าสำเร็จ",
       });
-      router.push(`/`);
+      signOut();
+      router.push("/login");
     } catch (error: any) {
       console.log(error);
       const deleteLogoRef = ref(storage, `store/logo/${logoFileName}`);
