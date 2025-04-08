@@ -138,7 +138,7 @@ export const profileSchema = z.object({
     .refine((val) => val.toString().length === 10, {
       message: "เบอร์โทรศัพท์ควรเป็นตัวเลข 10 หลัก",
   }),
-  birthdate: z.string()
+  birthdate: z.date()
     .refine((val) => {
       const date = new Date(val);
       const today = new Date();
