@@ -1,5 +1,5 @@
 import Modal from "@/app/component/modal";
-import { deleteProductByID } from "@/app/service/product/service";
+import { deleteProductById } from "@/app/service/product/service";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 
@@ -15,7 +15,7 @@ export default function ModalDelete({ id, open, onClose,storeId }: ModalDeletepr
     const { toast }= useToast();
     const handleDelete = async (id:number) => {
         try {
-            await deleteProductByID(id);
+            await deleteProductById(id);
             router.refresh();
         } catch (error) {
             if (error instanceof Error) {
