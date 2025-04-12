@@ -1,5 +1,5 @@
 "use client"
-import { Box, LayoutDashboard, Menu, Plus, Settings,  Truck, Warehouse, X } from "lucide-react";
+import { Box, FileClock, LayoutDashboard, Menu, Plus, Settings,  Truck, Warehouse, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -26,14 +26,19 @@ export default function StoreSideBar({storeId}:prop) {
       label: "คลังสินค้า",
     },
     {
+      href: `/store/manage/product/create/${storeId}`,
+      icon: <Plus  className="w-6 h-6" />,
+      label: "สร้างสินค้า",
+    },
+    {
       href: `/store/manage/edit/${storeId}`,
       icon: <Settings  className="w-6 h-6" />,
       label: "แก้ไขรายละเอียดร้านค้า",
     },
     {
-      href: `/store/manage/product/create/${storeId}`,
-      icon: <Plus  className="w-6 h-6" />,
-      label: "สร้างสินค้า",
+      href: `/store/manage/history/${storeId}`,
+      icon: <FileClock   className="w-6 h-6" />,
+      label: "ประวัติการขาย",
     },
   ];
   return (
