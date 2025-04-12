@@ -230,6 +230,7 @@ model OrderItem {
   userAddressId Int?
   updatedAt     DateTime @updatedAt()
   createdAt     DateTime @default(now())
+  reportAt      DateTime? 
 
   orderDetailId     Int
   orderDetail       OrderDetail?     @relation(fields: [orderDetailId], references: [id])
