@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma/db";
 import StoreSideBar from "../../StoreSideBar";
-import ProductCard from "../productCard";
 import { orderItemInterface } from "@/app/interface/orderItemInterface";
+import ProductTable from "../productTable";
 
 export default async function HistorySalePage(props: {
   params: Promise<{ id: number }>;
@@ -10,19 +10,20 @@ export default async function HistorySalePage(props: {
   const storeId = Number(params.id);
 
   const historyProduct = await prisma.orderItem.findMany({
-    where:{ storeId:storeId},
-    select:{
-      size:true,
-      color:true,
-      product:{
-        select:{
-          image:true,
-          name:true,
-          price:true,
-        }
-      }
-    }
-  })
+    where: { storeId: storeId },
+    select: {
+      createdAt:true,
+      size: true,
+      color: true,
+      product: {
+        select: {
+          image: true,
+          name: true,
+          price: true,
+        },
+      },
+    },
+  });
 
   return (
     <div className="min-h-screen flex relative">
@@ -33,11 +34,9 @@ export default async function HistorySalePage(props: {
             <p>ประวัติการขายสินค้า</p>
           </div>
           <div className="flex flex-col space-y-2 w-full">
-            { historyProduct.map((item,index)=>(
-              <ProductCard  orderItem={item as orderItemInterface} key={`/store/manage/edit/${item.color}-${index}`} />
-            ))
-
-            }
+            <ProductTable
+              historyProducts={historyProduct as orderItemInterface[]}
+            />
           </div>
         </div>
       </div>
