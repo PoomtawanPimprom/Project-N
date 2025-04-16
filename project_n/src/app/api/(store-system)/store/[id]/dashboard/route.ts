@@ -13,12 +13,27 @@ export async function GET(request: NextRequest, props: { params: Promise<{ id: s
         }
 
         // 1. ยอดขายรวม (Total Revenue)
-        const totalRevenue = await prisma.orderDetail.aggregate({
+        const orderDetails = await prisma.orderDetail.findMany({
             where: {
-                OrderItem: { some: { storeId } }, 
+              OrderItem: {
+                some: {
+                  storeId: storeId,
+                },
+              },
             },
-            _sum: { total: true },
-        });
+            select: {
+              total: true,
+              transport: {
+                select: {
+                  transportPrice: true,
+                },
+              },
+            },
+          });
+          const totalRevenue = orderDetails.reduce((sum, order) => {
+            const net = (order.total ?? 0) - (order.transport?.transportPrice ?? 0);
+            return sum + net;
+          }, 0);
 
         // 2. จำนวนออเดอร์ (Total Orders)
         const totalOrders = await prisma.orderDetail.count({
@@ -75,7 +90,7 @@ export async function GET(request: NextRequest, props: { params: Promise<{ id: s
         });
 
         return NextResponse.json({
-            totalRevenue: totalRevenue._sum.total || 0,
+            totalRevenue: totalRevenue || 0,
             totalOrders,
             bestSellingProductsWithNames,
             lowStockProducts,
