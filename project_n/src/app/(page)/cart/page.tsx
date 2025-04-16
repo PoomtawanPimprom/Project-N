@@ -58,15 +58,13 @@ function cart() {
     }
   };
 
-  // const isOutOfStock = (cart: cartItemInterface): boolean => {
-  //   const inventory = cart.product?.Inventory || []; // ต้องใช้ตัวใหญ่
-  //   const match = inventory.find(
-  //     (inv) => inv.size === cart.size && inv.color === cart.color
-  //   );
-  //   return !match || Number(match.quantity) === 0;
-  // };
-  
-  
+  const isOutOfStock = (cart: cartItemInterface): boolean => {
+    const inventory = cart.product?.Inventory || [];
+    const match = inventory.find(
+      (inv) => inv.size === cart.size && inv.color === cart.color
+    );
+    return !match || Number(match.quantity) === 0;
+  };
 
   const handleCheckboxChange = (id: number) => {
     setSelectedItems(
@@ -109,7 +107,7 @@ function cart() {
     } catch (error: any) {
       if (error.message) {
         toast({
-          variant:"destructive",
+          variant: "destructive",
           description: error.message,
         });
         router.push(`/profile/purchase`)
@@ -117,7 +115,7 @@ function cart() {
     }
   };
 
-  const goToProduct = (id:string|number) =>{
+  const goToProduct = (id: string | number) => {
     router.push(`/product/${id}`)
   }
 
@@ -157,23 +155,26 @@ function cart() {
               <ul className="-my-8 ">
                 {item.map((cart, index) => (
                   <li key={cart.id} className="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0">
-                    <input type="checkbox" className="h-5 w-5 dark:bg-zinc-700 dark:border-zinc-600" 
+                    <input
+                      type="checkbox"
+                      className="h-5 w-5 dark:bg-zinc-700 dark:border-zinc-600"
                       checked={selectedItems.includes(cart.id)}
                       onChange={() => handleCheckboxChange(cart.id)}
+                      disabled={isOutOfStock(cart)}
                     />
                     <div className="shrink-0">
-                      <img 
-                       onClick={()=> goToProduct(cart.product?.id!)}
-                      className="h-24 w-24 max-w-full rounded-lg object-cover hover:cursor-pointer" src={cart.product?.image!.image1}alt=""/>
+                      <img
+                        onClick={() => goToProduct(cart.product?.id!)}
+                        className="h-24 w-24 max-w-full rounded-lg object-cover hover:cursor-pointer" src={cart.product?.image!.image1} alt="" />
                     </div>
 
                     <div className="relative flex flex-1 flex-col justify-between">
                       <div className="sm:col-gap-5 sm:grid sm:grid-cols-2">
 
                         <div className="pr-8 sm:pr-5">
-                          <p 
-                          onClick={()=> goToProduct(cart.product?.id!)}
-                          className="text-base font-semibold text-gray-900 dark:text-white hover:cursor-pointer hover:text-gray-400">{cart.product?.name}</p>
+                          <p
+                            onClick={() => goToProduct(cart.product?.id!)}
+                            className="text-base font-semibold text-gray-900 dark:text-white hover:cursor-pointer hover:text-gray-400">{cart.product?.name}</p>
                           <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">{cart.size}</p>
                           <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">{cart.color}</p>
                         </div>
@@ -186,22 +187,47 @@ function cart() {
                           <div className="sm:order-1">
                             <div className="dark:text-gray-300 mx-auto flex h-8 items-stretch text-gray-600">
 
-                              {/* Decrease button */}
-                              <button onClick={() => handleQuantityChange(index, -1)}
-                                className="dark:bg-zinc-700 flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white">
+                              {/* Decrease button
+                              <button onClick={() => handleQuantityChange(index, -1)} className="dark:bg-zinc-700 flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white">
                                 -
                               </button>
                               {/* Quantity display */}
-                              <div className="dark:bg-zinc-600 flex w-full items-center justify-center bg-gray-100 px-4 text-xs uppercase transition">
+                              {/* <div className="dark:bg-zinc-600 flex w-full items-center justify-center bg-gray-100 px-4 text-xs uppercase transition">
+                                {cart.quantity || 1}
+                              </div> */}
+                              {/* Increase button */}
+                              {/* <button onClick={() => handleQuantityChange(index, 1)} className="dark:bg-zinc-700 flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black hover:text-white">
+                                +
+                              </button> */}
+
+                              <button
+                                onClick={() => handleQuantityChange(index, -1)}
+                                disabled={isOutOfStock(cart)}
+                                className={`dark:bg-zinc-700 flex items-center justify-center rounded-l-md px-4 transition ${isOutOfStock(cart)
+                                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                  : "bg-gray-200 hover:bg-black hover:text-white"
+                                  }`}
+                              >
+                                -
+                              </button>
+
+                              <div className={`flex w-full items-center justify-center px-4 text-xs uppercase transition ${isOutOfStock(cart) ? "bg-gray-300 text-gray-500" : "bg-gray-100 dark:bg-zinc-600"
+                                }`}>
                                 {cart.quantity || 1}
                               </div>
-                              {/* Increase button */}
+
                               <button
                                 onClick={() => handleQuantityChange(index, 1)}
-                                className="dark:bg-zinc-700 flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black hover:text-white"
+                                disabled={isOutOfStock(cart)}
+                                className={`dark:bg-zinc-700 flex items-center justify-center rounded-r-md px-4 transition ${isOutOfStock(cart)
+                                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                  : "bg-gray-200 hover:bg-black hover:text-white"
+                                  }`}
                               >
                                 +
                               </button>
+
+
                             </div>
                           </div>
 
