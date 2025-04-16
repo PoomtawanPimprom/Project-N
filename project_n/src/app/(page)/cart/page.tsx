@@ -58,6 +58,16 @@ function cart() {
     }
   };
 
+  // const isOutOfStock = (cart: cartItemInterface): boolean => {
+  //   const inventory = cart.product?.Inventory || []; // ต้องใช้ตัวใหญ่
+  //   const match = inventory.find(
+  //     (inv) => inv.size === cart.size && inv.color === cart.color
+  //   );
+  //   return !match || Number(match.quantity) === 0;
+  // };
+  
+  
+
   const handleCheckboxChange = (id: number) => {
     setSelectedItems(
       (prevSelected) =>

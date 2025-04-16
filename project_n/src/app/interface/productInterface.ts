@@ -1,3 +1,4 @@
+import { inventoryInterface } from "./inventoryInterface";
 import { productStatusInterface } from "./productStatusInterface";
 import { storeInterface } from "./storeInterface";
 
@@ -26,4 +27,6 @@ export interface productInterface {
 
     productstatusID?: number
     productstatus?: productStatusInterface
+
+    Inventory?: inventoryInterface[];
 }

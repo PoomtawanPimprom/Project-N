@@ -9,7 +9,9 @@ export async function GET(request: NextRequest, props: { params: Promise<{ id: s
         const userId = Number(params.id);
         const posts = await prisma.cartItem.findMany({
             where: { userId: userId },
-            include: { product: true }
+            include: { 
+                product: { include: { Inventory: true } }
+            }
         });
         return NextResponse.json(posts)
     } catch (error) {
