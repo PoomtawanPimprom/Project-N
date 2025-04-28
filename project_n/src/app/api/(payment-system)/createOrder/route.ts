@@ -10,13 +10,13 @@ export async function POST(request: NextRequest) {
         if (!userId || !Array.isArray(items) || items.length === 0) {
             return NextResponse.json({ message: "โปรดเลือกสินค้าที่ต้องการชำระ" }, { status: 400 });
         }
-        //check user have status 1( continues )
-        const checkOrder = await prisma.orderDetail.findMany({
-            where:{ userId: userId,orderStatusId:1}
-        })
-        if(checkOrder.length >=1){
-            return NextResponse.json({ message: "โปรดชำระรายการก่อนหน้านี้"},{status:400})
-        }
+        // //check user have status 1( continues )
+        // const checkOrder = await prisma.orderDetail.findMany({
+        //     where:{ userId: userId,orderStatusId:1}
+        // })
+        // if(checkOrder.length >=1){
+        //     return NextResponse.json({ message: "โปรดชำระรายการก่อนหน้านี้"},{status:400})
+        // }
 
         // 1. คำนวณราคาสินค้าทั้งหมด
         let total = 0;
