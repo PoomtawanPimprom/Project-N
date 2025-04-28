@@ -8,7 +8,7 @@ import ToPay from "./components/toPay";
 import Complete from "./components/complete";
 import Cancelled from "./components/cancelled";
 import { orderItemInterface } from "@/app/interface/orderItemInterface";
-import { GetAllOrderItemsToPay } from "@/app/service/orderItem/service";
+import { GetAllOrderDetailToPay } from "@/app/service/orderItem/service";
 import WaitforShip from "./components/waitforShip";
 
 export default function MyPurchase() {
@@ -40,10 +40,9 @@ export default function MyPurchase() {
     { id: "COMPLETE", label: "สินค้าได้จัดส่งแล้ว" },
     { id: "CANCELLED", label: "ยกเลิกคำสั่งซื้อ" },
   ];
-  const fecthdata2 = async () => {
-    const data = await GetAllOrderItemsToPay(Number(session?.user.id));
+  const fecthOrderDetailToPay = async () => {
+    const data = await GetAllOrderDetailToPay(Number(session?.user.id));
     setOrderItemsToPay(data);
-    console.log(data);
   };
 
   const fetchUserData = async () => {
@@ -53,7 +52,7 @@ export default function MyPurchase() {
   const renderContent = () => {
     switch (activeTab) {
       case "TO_PAY":
-        return <ToPay OrderItemsToPay={OrderItemsToPay} refesh={fecthdata2}/>;
+        return <ToPay OrderDetailToPay={OrderItemsToPay} refesh={fecthOrderDetailToPay}/>;
       case "WAIT_FOR_SHIP":
         return <WaitforShip />;
       case "COMPLETE":
@@ -67,7 +66,7 @@ export default function MyPurchase() {
 
   useEffect(() => {
     fetchUserData();
-    fecthdata2();
+    fecthOrderDetailToPay();
   }, [session]);
 
   return (
