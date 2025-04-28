@@ -3,7 +3,7 @@ import axios from 'axios';
 const API_URL = '/api/orderItem';
 
 // GET /api/orderItem/toPay/:userId
-export async function GetAllOrderItemsToPay(userId: number): Promise<any> {
+export async function GetAllOrderDetailToPay(userId: number): Promise<any> {
     try {
         const res = await axios.get(`${API_URL}/toPay/${userId}`, {
             headers: { 'Content-Type': 'application/json' },

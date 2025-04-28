@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// Create Order
+// Create Order สำหรับ cart
 export async function CreateOrder(data: any): Promise<any> {
     try {
         const res = await axios.post("/api/createOrder", data, {
