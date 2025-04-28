@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
         await prisma.user.create({
             data: {
-                name: "user" + generateKey().slice(0, 6),
+                name: username,
                 username,
                 email,
                 password: hashpassword,
