@@ -1,7 +1,7 @@
 import { orderItemInterface } from "@/app/interface/orderItemInterface";
 
 interface prop {
-  orderItem: orderItemInterface;
+  orderItem: orderItemInterface | undefined;
 }
 
 export default function OrderItemCard({ orderItem }: prop) {

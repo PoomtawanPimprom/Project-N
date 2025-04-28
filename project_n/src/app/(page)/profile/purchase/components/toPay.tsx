@@ -1,16 +1,15 @@
 "use client";
-import { orderItemInterface } from "@/app/interface/orderItemInterface";
 import { CancelOrder } from "@/app/service/(payment)/service";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
 import OrderItemCard from "./OrderItemCard";
+import { orderDetailInterface } from "@/app/interface/orderDetailInterface";
 
 interface prop {
-  OrderItemsToPay: orderItemInterface[];
+  OrderDetailToPay: orderDetailInterface[];
   refesh:() => void;
 }
 
-export default function ToPay({ OrderItemsToPay ,refesh}: prop) {
+export default function ToPay({ OrderDetailToPay ,refesh}: prop) {
   const router = useRouter();
 
   const handleOnCancel = async (id: number) => {
@@ -21,14 +20,14 @@ export default function ToPay({ OrderItemsToPay ,refesh}: prop) {
   return (
     <div className="max-w-7xl mx-auto p-4 hover:shadow-lg rounded-lg">
       <div className="space-y-4">
-        {OrderItemsToPay.map((orderItem, index) => (
+        {OrderDetailToPay.map((orderItem, index) => (
           <div key={index}>
             <OrderItemCard orderItem={orderItem} />
           </div>
         ))}
-        { OrderItemsToPay.length >0 && <div className="flex p-4 font-semibold border-gray-200 text-right justify-end gap-2">
+        { OrderDetailToPay.length >0 && <div className="flex p-4 font-semibold border-gray-200 text-right justify-end gap-2">
           <button
-            onClick={() => handleOnCancel(OrderItemsToPay[0].orderDetailId)}
+            onClick={() => handleOnCancel(OrderDetailToPay[0].orderDetailId)}
             className="px-6 py-2 bg-red-500 text-white rounded-lg "
           >
             ยกเลิก
