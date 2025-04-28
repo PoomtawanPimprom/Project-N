@@ -31,13 +31,15 @@ model User {
   userStatusId Int        @default(1)
   userStatus   UserStatus @relation(fields: [userStatusId], references: [id])
 
-  UserAddress UserAddress[]
-  Favorite    Favorite[]
-  Report      Report[]
-  Store       Store[]
-  OrderDetail OrderDetail[]
-  CartItem    CartItem[]
-  Review      Review[]
+  approvedWithdrawals WithdrawalRequest[] @relation("ApprovedWithdrawals")
+
+  UserAddress       UserAddress[]
+  Favorite          Favorite[]
+  Report            Report[]
+  Store             Store[]
+  OrderDetail       OrderDetail[]
+  CartItem          CartItem[]
+  Review            Review[]
 }
 
 model Gender {
@@ -103,7 +105,8 @@ model Store {
   storeStatusId Int         @default(1)
   storeStatus   StoreStatus @relation(fields: [storeStatusId], references: [id])
 
-  Product Product[]
+  Product           Product[]
+  WithdrawalRequest WithdrawalRequest[]
 }
 
 model StoreStatus {
@@ -166,7 +169,7 @@ model Discount {
   discountAmount Int     @default(0)
   isActive       Boolean @default(false)
 
-  OrderDetail    OrderDetail[]
+  OrderDetail OrderDetail[]
 }
 
 //----------------------------------------------------------------------------------------------
@@ -222,15 +225,17 @@ model ReportStatus {
 
 //payment system
 model OrderItem {
-  id            Int      @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   color         String?
   size          String?
   quantity      Int
   storeId       Int?
   userAddressId Int?
-  updatedAt     DateTime @updatedAt()
-  createdAt     DateTime @default(now())
-  reportAt      DateTime? 
+  updatedAt     DateTime  @updatedAt()
+  createdAt     DateTime  @default(now())
+  reportAt      DateTime?
+  
+  Already_withdrawn Boolean @default(false)
 
   orderDetailId     Int
   orderDetail       OrderDetail?     @relation(fields: [orderDetailId], references: [id])
@@ -253,7 +258,7 @@ model OrderDetail {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  discountId Int?     
+  discountId Int?
   discount   Discount? @relation(fields: [discountId], references: [id])
 
   userId        Int
@@ -269,10 +274,10 @@ model OrderDetail {
 }
 
 model Payment {
-  id              Int           @id @default(autoincrement())
-  moneySlip       String?
-  createAt        DateTime      @default(now())
-  updatedAt       DateTime?     @updatedAt
+  id        Int       @id @default(autoincrement())
+  moneySlip String?
+  createAt  DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
   paymentStatusId Int
   paymentStatus   PaymentStatus @relation(fields: [paymentStatusId], references: [id])
@@ -292,7 +297,6 @@ model Transport {
   transportPrice Float
   OrderDetail    OrderDetail[]
 }
-
 
 model PaymentStatus {
   id      Int       @id @default(autoincrement())
@@ -328,4 +332,34 @@ model CartItem {
   color    String?
   size     String?
   quantity Int
+}
+
+// เบิกเงิน
+model WithdrawalRequest {
+  id            Int      @id @default(autoincrement())
+  accountNumber String // เลขบัญชี
+  accountName   String // ชื่อเจ้าของบัญชี
+  bankName      String // ชื่อธนาคาร
+  amount        Float // จำนวนเงินที่ขอเบิก
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // สถานะของการเบิก เช่น รออนุมัติ, อนุมัติแล้ว, ถูกปฏิเสธ
+  status   WithdrawalStatus @relation(fields: [statusId], references: [id])
+  statusId Int
+
+  // FK เชื่อมกับร้านที่ทำเรื่องเบิก
+  storeId Int
+  store   Store @relation(fields: [storeId], references: [id])
+
+  approvedById Int?     // Admin ที่อนุมัติ
+  approvedBy   User?     @relation("ApprovedWithdrawals", fields: [approvedById], references: [id])
+  approvedAt   DateTime? // เวลาอนุมัติ
+}
+
+model WithdrawalStatus {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  requests WithdrawalRequest[]
 }

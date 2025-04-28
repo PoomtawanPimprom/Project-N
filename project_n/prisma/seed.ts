@@ -69,8 +69,14 @@ const orderItemStatus =[
     {name:"ยกเลิกแล้ว"},
 ]
 
+const WithdrawalStatus =[
+    {name: "pending"},
+    {name:"approved"},
+    {name:"rejected"},
+]
 async function main() {
     try {
+        await prisma.withdrawalStatus.createMany({data:WithdrawalStatus})
         await prisma.orderItemStatus.createMany({data:orderItemStatus})
         await prisma.orderStatus.createMany({ data: orderStatusData })
         await prisma.transport.createMany({ data: transportData })
