@@ -235,7 +235,7 @@ model OrderItem {
   createdAt     DateTime  @default(now())
   reportAt      DateTime?
   
-  Already_withdrawn Boolean @default(false)
+  Already_withdrawn Int @default(0)
 
   orderDetailId     Int
   orderDetail       OrderDetail?     @relation(fields: [orderDetailId], references: [id])
