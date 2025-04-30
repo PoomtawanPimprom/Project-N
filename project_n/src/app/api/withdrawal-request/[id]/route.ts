@@ -16,7 +16,7 @@ export async function GET(
       //   include: { product: { select: { price: true } } },
       where: {
         storeId: storeId,
-        Already_withdrawn: false,
+        Already_withdrawn: 0,
         orderItemStatusId: 3,
       },
     });

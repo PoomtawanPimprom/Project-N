@@ -21,7 +21,14 @@ export async function PUT(
   try {
     if (status === `update`) {
       const data = await prisma.withdrawalRequest.update({
-        select: { store: { select: { name: true } } },
+        select: {
+          store: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
         where: { id: requestId },
         data: {
           statusId: 2, // สมมติว่า "2" คือ approved
@@ -29,6 +36,12 @@ export async function PUT(
           approvedAt: new Date(),
         },
       });
+
+      await prisma.orderItem.updateMany({
+        data: { Already_withdrawn: 2 },
+        where: { storeId: data.store.id },
+      });
+
       return NextResponse.json({
         success: true,
         message: `ทำการอนุมัติการเบิกเงินของร้านค้า ${data.store.name} เรียบร้อย
@@ -36,13 +49,27 @@ export async function PUT(
       });
     } else {
       const data = await prisma.withdrawalRequest.update({
-        select: { store: { select: { name: true } } },
+        select: {
+          store: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
         where: { id: requestId },
         data: {
           statusId: 3, // สมมติว่า "3" คือ rejected
           approvedById,
           approvedAt: new Date(),
         },
+      });
+      await prisma.orderItem.updateMany({
+        data: { Already_withdrawn: 0 },
+        where: { 
+          storeId: data.store.id,
+          Already_withdrawn:1
+         },
       });
       return NextResponse.json({
         success: true,
