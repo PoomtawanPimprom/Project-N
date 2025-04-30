@@ -46,6 +46,20 @@ export async function getAmountByStoreId(storeId: number | string) {
   }
 }
 
+//get All request
+export async function getAllDrawalRequestToApprove() {
+  try {
+    const res = await axios.get(`${path}`, {
+      headers: { "Content-Type": "application/json" },
+    });
+    return res.data;
+  } catch (error: any) {
+    throw new Error(
+      error.response?.data?.message || "เกิดข้อผิดพลาดจากเซิฟเวอร์"
+    );
+  }
+}
+
 //update status approve or reject
 export async function updateApproveStatusDrawal(storeId: number | string,adminId:number|string) {
   try {
