@@ -2,7 +2,7 @@ import { storeInterface } from "./storeInterface"
 import { userInterface } from "./userInterface"
 import { WithDrawalStatusInterface } from "./withDrawalStatusInterface"
 
-export interface WithdrawalRequestInterface{
+export interface WithDrawalRequestInterface{
     id?:number
     accountNumber :string 
     accountName   :string 
