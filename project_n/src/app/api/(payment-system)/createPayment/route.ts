@@ -12,10 +12,9 @@ export async function POST(request: NextRequest) {
       select: {
         orderDetail: { select: { userId: true } },
       },
-      where: { id: orderId },
+      where: { orderDetailId: orderId },
     });
     const userAddress = await prisma.userAddress.findFirst({
-      select: { user: { select: { name: true } } },
       where: {
         userId: order?.orderDetail?.userId,
         addressStatusId: 2,
