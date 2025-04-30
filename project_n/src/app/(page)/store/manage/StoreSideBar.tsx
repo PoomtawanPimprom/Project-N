@@ -1,5 +1,5 @@
 "use client"
-import { Box, FileClock, LayoutDashboard, Menu, Plus, Settings,  Truck, Warehouse, X } from "lucide-react";
+import { Banknote, Box, FileClock, LayoutDashboard, Menu, PiggyBank, Plus, Settings,  Truck, Warehouse, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -39,6 +39,16 @@ export default function StoreSideBar({storeId}:prop) {
       href: `/store/manage/history/${storeId}`,
       icon: <FileClock   className="w-6 h-6" />,
       label: "ประวัติการขาย",
+    },
+    {
+      href: `/store/manage/amount/${storeId}`,
+      icon: <PiggyBank   className="w-6 h-6" />,
+      label: "เบิกรายได้",
+    },
+    {
+      href: `/store/manage/historyDrawal/${storeId}`,
+      icon: <Banknote   className="w-6 h-6" />,
+      label: "ประวัติการเบิก",
     },
   ];
   return (
