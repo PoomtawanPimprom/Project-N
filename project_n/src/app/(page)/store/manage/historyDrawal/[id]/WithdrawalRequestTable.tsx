@@ -1,5 +1,5 @@
 "use client";
-import { WithdrawalRequestInterface } from "@/app/interface/withdrawalRequestInterface";
+import { WithdrawalRequestInterface } from "@/app/interface/withDrawalRequestInterface";
 import { getWithDrawalByStoreId } from "@/app/service/withdrawal-request/service";
 import { useEffect, useState } from "react";
 
