@@ -1,5 +1,5 @@
 "use client"
-import { BarChart2, Tag, Truck, User } from "lucide-react";
+import { BarChart2, HandCoins, Tag, Truck, User } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
@@ -23,6 +23,11 @@ const menuItems = [
     href: "/admin/manage/admins",
     icon: <User className="w-6 h-6" />,
     label: "จัดการแอดมิน",
+  },
+  {
+    href: "/admin/manage/drawal",
+    icon: <HandCoins className="w-6 h-6" />,
+    label: "จัดการการเบิกเงิน",
   },
 ];
 export default function AdminSideBar() {
