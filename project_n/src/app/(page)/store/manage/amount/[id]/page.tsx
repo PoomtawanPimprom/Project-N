@@ -17,7 +17,7 @@ export default async function AmountPage(props: {
             <p>เบิกรายได้</p>
           </div>
           <div className="flex justify-center items-center">
-            <WithdrawalCard/>
+            <WithdrawalCard storeId={storeId}/>
           </div>
         </div>
       </div>
