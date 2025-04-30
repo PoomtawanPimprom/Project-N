@@ -5,12 +5,16 @@ import { productInterface } from "./productInterface"
 
 export interface orderItemInterface {
     id: number
+    color?: string;
+    size?: string;
     quantity: number
     storeId:number
     userAddressId?:number
     updatedAt:Date
     createdAt:Date
     
+    Already_withdrawn:number
+
     orderDetailId: number
     orderDetail?: orderDetailInterface
 
@@ -19,7 +23,4 @@ export interface orderItemInterface {
 
     productId: number
     product?: productInterface
-
-    color?: string;
-    size?: string;
 }
