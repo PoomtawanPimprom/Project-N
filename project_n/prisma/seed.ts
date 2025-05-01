@@ -80,7 +80,7 @@ async function main() {
         await prisma.orderItemStatus.createMany({data:orderItemStatus})
         await prisma.orderStatus.createMany({ data: orderStatusData })
         await prisma.transport.createMany({ data: transportData })
-        await prisma.addressStatus.createMany({ data: userAddressStatusData })
+        await prisma.userAddressStatus.createMany({ data: userAddressStatusData })
         await prisma.paymentStatus.createMany({ data: paymentStatusData })
         await prisma.productStatus.createMany({ data: productStatusData })
         await prisma.storeStatus.createMany({ data: storeStatusData })
