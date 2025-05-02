@@ -57,24 +57,25 @@ export default function Password() {
                 passwordCurrent: currentPassword,
                 passwordNew: newPassword,
             });
-
+        
             toast({
                 title: "Success",
                 description: "เปลี่ยนรหัสผ่านสำเร็จ",
                 variant: "default",
             });
-
+        
             setCurrentPassword("");
             setNewPassword("");
             setConfirmPassword("");
         } catch (error: any) {
-            console.error("Error changing password:", error);
+            const errorMsg = error?.response?.data?.error || error?.message || "เกิดข้อผิดพลาดขณะเปลี่ยนรหัสผ่าน";
+        
             toast({
                 title: "Error",
-                description: error.message || "เกิดข้อผิดพลาดขณะเปลี่ยนรหัสผ่าน",
+                description: errorMsg,
                 variant: "destructive",
             });
-        }
+        }        
     };
 
     const fetchUserData = async () => {
