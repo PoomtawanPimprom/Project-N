@@ -38,7 +38,7 @@ export default function MyPurchase() {
     { id: "TO_PAY", label: "ต้องชำระ" },
     { id: "WAIT_FOR_SHIP", label: "รอทางร้านจัดส่ง" },
     { id: "COMPLETE", label: "สินค้าได้จัดส่งแล้ว" },
-    { id: "CANCELLED", label: "ยกเลิกคำสั่งซื้อ" },
+    { id: "CANCELLED", label: "รายการที่ถูกยกเลิก" },
   ];
   const fecthOrderDetailToPay = async () => {
     const data = await GetAllOrderDetailToPay(Number(session?.user.id));
