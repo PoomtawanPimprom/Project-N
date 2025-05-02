@@ -154,7 +154,12 @@ function cart() {
 
               <ul className="-my-8 ">
                 {item.map((cart, index) => (
-                  <li key={cart.id} className="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0">
+                  <li
+                    key={cart.id}
+                    className={`flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0 ${isOutOfStock(cart) ? "opacity-50" : ""
+                      }`}
+                  >
+
                     <input
                       type="checkbox"
                       className="h-5 w-5 dark:bg-zinc-700 dark:border-zinc-600"
