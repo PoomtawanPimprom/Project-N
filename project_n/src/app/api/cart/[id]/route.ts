@@ -15,8 +15,8 @@ export async function GET(request: NextRequest, props: { params: Promise<{ id: s
         });
         return NextResponse.json(posts)
     } catch (error) {
-        console.error("Error fetching user address:", error);
-        throw new Error("Failed to fetch user address");
+        console.error("Error fetching cart:", error);
+        throw new Error("Failed to fetch cart");
     }
 }
 
