@@ -7,9 +7,11 @@ export async function updatePassword(id: number, data: { passwordCurrent: string
         body: JSON.stringify(data),
     });
 
+    const responseData = await response.json();
+
     if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to update password");
+        throw new Error(responseData.error || "เกิดข้อผิดพลาดในการเปลี่ยนรหัสผ่าน");
     }
-    return await response.json();
+
+    return responseData;
 }
