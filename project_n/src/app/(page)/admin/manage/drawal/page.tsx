@@ -1,5 +1,5 @@
 "use client";
-
+import { z } from "zod";
 import { WithDrawalRequestInterface } from "@/app/interface/withDrawalRequestInterface";
 import {
   getAllDrawalRequestToApprove,
@@ -18,12 +18,18 @@ import {
 } from "@/app/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/app/context/userContext";
+import { validateWithZod } from "@/lib/zod/Schema";
 
 const AdminSideBar = dynamic(() => import("../../AdminSideBar"));
+const rejectMessageSchema = z.object({
+  message: z.string().min(5, "ข้อความต้องมีอย่างน้อย 5 ตัวอักษร").max(80,"ข้อความต้องไม่เกิน 80 ตัวอักษร"),
+});
 
 export default function DrawalPage() {
   const { user } = useUser();
   const { toast } = useToast();
+  const [message, setMessage] = useState("");
+  const [isRejecting, setIsRejecting] = useState(false);
   const [drawal, setDrawal] = useState<WithDrawalRequestInterface[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] =
@@ -38,6 +44,10 @@ export default function DrawalPage() {
     fetchData();
   }, []);
 
+  const handleRejectClick = () => {
+    setIsRejecting(true); // เปิด Dialog พิมพ์ข้อความ
+  };
+
   const handleOpenDialog = (request: WithDrawalRequestInterface) => {
     setSelectedRequest(request);
     setIsDialogOpen(true);
@@ -50,18 +60,31 @@ export default function DrawalPage() {
 
   const handleReject = async (drawalId: number | string) => {
     try {
-      const res = await updateRejectStatusDrawal(drawalId, user?.id!);
+      validateWithZod(rejectMessageSchema,{message})
+      const res = await updateRejectStatusDrawal(drawalId, user?.id!,message);
       handleCloseDialog();
       toast({
         variant: "success",
         description: res.message,
       });
-      fetchData()
+      setIsRejecting(false);
+      setMessage("");
+      fetchData();
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        description: error.message,
-      });
+      console.log(error)
+      if(error.fieldErrors){
+        toast({
+          variant: "destructive",
+          description: error.fieldErrors.message.message,
+        });
+      }
+      else{
+
+        toast({
+          variant: "destructive",
+          description: error.message,
+        });
+      }
     }
   };
 
@@ -73,7 +96,7 @@ export default function DrawalPage() {
         variant: "success",
         description: res.message,
       });
-      fetchData()
+      fetchData();
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -123,7 +146,7 @@ export default function DrawalPage() {
                   {drawal.length > 0 ? (
                     drawal.map((request, index) => (
                       <tr
-                        key={index}
+                        key={`${index} request`}
                         className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
                       >
                         <td className="py-2 px-4 border-b">
@@ -240,16 +263,52 @@ export default function DrawalPage() {
             <button
               type="button"
               className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-              onClick={()=>handleReject(selectedRequest!.id!)}
+              onClick={handleRejectClick}
             >
               ปฏิเสธ
             </button>
             <button
               type="button"
               className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-              onClick={()=>handleApprove(selectedRequest!.id!)}
+              onClick={() => handleApprove(selectedRequest!.id!)}
             >
               อนุมัติ
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isRejecting} onOpenChange={setIsRejecting}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>เหตุผลในการปฏิเสธ</DialogTitle>
+            <DialogDescription>
+              กรุณาระบุเหตุผลที่ต้องการปฏิเสธคำขอนี้
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-2">
+            <textarea
+              className="w-full p-2 border rounded"
+              rows={4}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="ระบุเหตุผล..."
+            />
+          </div>
+
+          <DialogFooter className="flex justify-end">
+            <button
+              className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+              onClick={() => setIsRejecting(false)}
+            >
+              ยกเลิก
+            </button>
+            <button
+              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 ml-2"
+              onClick={()=> handleReject(selectedRequest!.id!)}
+            >
+              ยืนยันการปฏิเสธ
             </button>
           </DialogFooter>
         </DialogContent>
