@@ -12,14 +12,15 @@ import {
 import BankAccountForm from "./BankAccountForm";
 import { createWithDrawalReq } from "@/app/service/withdrawal-request/service";
 import { useToast } from "@/hooks/use-toast";
+import { bankAccountSchema, validateWithZod } from "@/lib/zod/Schema";
 
 interface WithdrawalDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onClose: () => void;
   withdrawableAmount: number;
-  storeId:number|string
-  amount:number
+  storeId: number | string;
+  amount: number;
 }
 
 interface FormData {
@@ -34,9 +35,9 @@ export default function WithdrawalDialog({
   onClose,
   withdrawableAmount,
   storeId,
-  amount
+  amount,
 }: WithdrawalDialogProps) {
-  const {toast} = useToast()
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     accountNumber: "",
@@ -59,40 +60,49 @@ export default function WithdrawalDialog({
     setFormErrors({});
   };
 
-
-
-
   const handleWithdraw = async () => {
     try {
       setIsLoading(true);
 
       const data = {
         storeId,
-        accountNumber : formData.accountNumber, 
-        accountName: formData.accountName, 
-        bankName: formData.bankName, 
-        amount
-      } 
-
-      const res = await createWithDrawalReq(data)
-      if(!res.success){
-        throw Error(res.error)
+        accountNumber: formData.accountNumber,
+        accountName: formData.accountName,
+        bankName: formData.bankName,
+        amount,
+      };
+      validateWithZod(bankAccountSchema, data);
+      const res = await createWithDrawalReq(data);
+      if (!res.success) {
+        throw Error(res.error);
       }
       toast({
-        variant:'success',
-        description:res.message
-      })
-      onClose()
-      resetForm()
-    } catch (error:any) {
+        variant: "success",
+        description: res.message,
+      });
+      onClose();
+      resetForm();
+    } catch (error: any) {
+      console.log(error)
+      if (error.fieldErrors) {
+        const errorMessages = Object.values(error.fieldErrors)
+        .map(err => err.message)
+        .join(', ');
+      
       toast({
-        variant:'destructive',
-        description:error.error
-      })
+        variant: "destructive",
+        description: errorMessages,
+      });
+
+      } else {
+        toast({
+          variant: "destructive",
+          description: error.error,
+        });
+      }
     } finally {
       setIsLoading(false);
     }
-
   };
 
   const handleFormChange = (name: string, value: string) => {
