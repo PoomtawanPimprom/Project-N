@@ -10,6 +10,7 @@ export interface WithDrawalRequestInterface{
     amount:number
     createdAt?: Date
     updatedAt?: Date
+    message?:string
 
     statusId:number
     status?:WithDrawalStatusInterface
