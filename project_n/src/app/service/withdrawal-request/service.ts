@@ -75,9 +75,9 @@ export async function updateApproveStatusDrawal(storeId: number | string,adminId
   }
 }
 
-export async function updateRejectStatusDrawal(storeId: number | string,adminId:number|string) {
+export async function updateRejectStatusDrawal(storeId: number | string,adminId:number|string,message:string) {
   try {
-    const res = await axios.put(`${path}/${storeId}/approve?status=reject`,{approvedById:adminId}, {
+    const res = await axios.put(`${path}/${storeId}/approve?status=reject`,{approvedById:adminId,message}, {
       headers: { "Content-Type": "application/json" },
     });
     return res.data;
