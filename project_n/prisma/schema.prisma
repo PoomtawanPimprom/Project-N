@@ -343,6 +343,7 @@ model WithdrawalRequest {
   amount        Float // จำนวนเงินที่ขอเบิก
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  message       String? 
 
   // สถานะของการเบิก เช่น รออนุมัติ, อนุมัติแล้ว, ถูกปฏิเสธ
   status   WithdrawalStatus @relation(fields: [statusId], references: [id])
