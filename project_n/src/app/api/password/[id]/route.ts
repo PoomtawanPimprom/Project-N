@@ -23,8 +23,8 @@ export async function PUT(request: NextRequest, props: { params: Promise<{ id: s
         const isPasswordCorrect = bcrypt.compareSync(passwordCurrent, user.password!);
 
         if (!isPasswordCorrect) {
-            return NextResponse.json({ message: 'Invalid current password' }, { status: 400 });
-        }
+            return NextResponse.json({ error: 'รหัสผ่านปัจจุบันไม่ถูกต้อง' }, { status: 400 });
+        }        
 
         // ถ้า passwordCurrent ถูกต้อง ทำการ hash passwordNew
         const hashedPassword = bcrypt.hashSync(passwordNew, 10);
