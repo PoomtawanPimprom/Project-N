@@ -1,4 +1,10 @@
 import { z, ZodSchema } from "zod";
+import bankList from '@/json/bankList';
+
+// สร้าง array ของชื่อธนาคารในภาษาอังกฤษและไทยจาก bankList
+const engBankNames = bankList.map(bank => bank.engName);
+const thaiBankNames = bankList.map(bank => bank.thName);
+const allBankNames = [...engBankNames, ...thaiBankNames];
 
 
 export function validateWithZod<T>(schema: ZodSchema<T>, data: unknown) {
@@ -147,3 +153,27 @@ export const profileSchema = z.object({
       message: "โปรดกรอกวันเกิดให้ถูกต้อง และต้องเป็นวันที่ในอดีต",
   }),
 })
+
+
+export const bankAccountSchema = z.object({
+  // 1. เลขบัญชีต้องเป็นตัวเลขอย่างน้อย 10 หลัก และจำเป็นต้องกรอก
+  accountNumber: z
+    .string()
+    .min(10, { message: 'เลขบัญชีต้องมีอย่างน้อย 10 หลัก' })
+    .regex(/^\d+$/, { message: 'เลขบัญชีต้องเป็นตัวเลขเท่านั้น' })
+    .min(1, { message: 'กรุณากรอกเลขบัญชี' }),
+
+  // 2. ชื่อเจ้าของบัญชีต้องมีช่องว่าง และจำเป็นต้องกรอก
+  accountName: z
+    .string()
+    .regex(/\s/, { message: 'กรุณากรอกชื่อ-นามสกุลให้ครบถ้วน' })
+    .regex(/^[a-zA-Z\u0E00-\u0E7F\s]+$/, { message: 'กรุณากรอกชื่อเป็นภาษาไทยหรือภาษาอังกฤษเท่านั้น' })
+    .min(1, { message: 'กรุณากรอกชื่อเจ้าของบัญชี' }),
+
+  // 3. ชื่อธนาคารต้องเป็นชื่อที่มีอยู่ใน bankList
+  bankName: z
+    .string()
+    .refine(val => allBankNames.includes(val), {
+      message: 'กรุณาเลือกธนาคารจากรายการ'
+    })
+});
