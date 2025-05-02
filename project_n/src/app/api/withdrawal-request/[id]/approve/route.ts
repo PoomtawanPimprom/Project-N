@@ -16,8 +16,7 @@ export async function PUT(
   const requestId = Number(id);
   const searchparams = req.nextUrl.searchParams;
   const status = searchparams.get("status") || "";
-  console.log(id, status);
-  const { approvedById } = await req.json();
+  const { approvedById,message } = await req.json();
   try {
     if (status === `update`) {
       const data = await prisma.withdrawalRequest.update({
@@ -62,6 +61,7 @@ export async function PUT(
           statusId: 3, // สมมติว่า "3" คือ rejected
           approvedById,
           approvedAt: new Date(),
+          message:message
         },
       });
       await prisma.orderItem.updateMany({
