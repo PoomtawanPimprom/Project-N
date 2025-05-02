@@ -1,14 +1,16 @@
 "use client";
-import { WithdrawalRequestInterface } from "@/app/interface/withDrawalRequestInterface";
+import { WithDrawalRequestInterface } from "@/app/interface/withDrawalRequestInterface";
 import { getWithDrawalByStoreId } from "@/app/service/withdrawal-request/service";
 import { useEffect, useState } from "react";
 
 interface type {
-  storeId: number | string
+  storeId: number | string;
 }
 
 export default function WithdrawalRequestTable({ storeId }: type) {
-  const [withdrawals, setWithdrawals] = useState<WithdrawalRequestInterface[]>([]);
+  const [withdrawals, setWithdrawals] = useState<WithDrawalRequestInterface[]>(
+    []
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
 
@@ -61,10 +63,12 @@ export default function WithdrawalRequestTable({ storeId }: type) {
 
   // Format currency
   const formatCurrency = (amount?: number) => {
-    return amount?.toLocaleString("th-TH", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }) || "0.00";
+    return (
+      amount?.toLocaleString("th-TH", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }) || "0.00"
+    );
   };
 
   return (
@@ -127,7 +131,7 @@ export default function WithdrawalRequestTable({ storeId }: type) {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white dark:bg-zinc-800 rounded-lg">
+        <table className="min-w-full  table-fixed bg-white dark:bg-zinc-800 rounded-lg">
           <thead className="bg-gray-50 dark:bg-zinc-900 text-gray-500 dark:text-white">
             <tr>
               <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
@@ -154,12 +158,18 @@ export default function WithdrawalRequestTable({ storeId }: type) {
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                 วันที่อนุมัติ
               </th>
+              <th className="px-3 py-4 max-w-[250px] text-left text-xs font-medium uppercase tracking-wider">
+                หมายเหตุ
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-none">
             {sortedWithdrawals.length > 0 ? (
               sortedWithdrawals.map((item, index) => (
-                <tr key={`withdrawal-row-${index}`} className="hover:bg-gray-50 dark:hover:bg-zinc-300">
+                <tr
+                  key={`withdrawal-row-${index}`}
+                  className="hover:bg-gray-50 dark:hover:bg-zinc-300"
+                >
                   <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                     {index + 1}
                   </td>
@@ -184,7 +194,11 @@ export default function WithdrawalRequestTable({ storeId }: type) {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeClass(item.status?.name)}`}>
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeClass(
+                        item.status?.name
+                      )}`}
+                    >
                       {item.status?.name}
                     </span>
                   </td>
@@ -195,7 +209,7 @@ export default function WithdrawalRequestTable({ storeId }: type) {
                           month: "short",
                           year: "numeric",
                           hour: "2-digit",
-                          minute: "2-digit"
+                          minute: "2-digit",
                         })
                       : "-"}
                   </td>
@@ -206,15 +220,21 @@ export default function WithdrawalRequestTable({ storeId }: type) {
                           month: "short",
                           year: "numeric",
                           hour: "2-digit",
-                          minute: "2-digit"
+                          minute: "2-digit",
                         })
                       : "-"}
+                  </td>
+                  <td className="px-3 py-4 max-w-[250px]  text-sm text-gray-500 dark:text-gray-300">
+                    {item.message ? item.message : "-"}
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={8} className="px-6 py-4 text-center text-gray-500 dark:text-gray-300">
+                <td
+                  colSpan={8}
+                  className="px-3 py-4 text-center text-gray-500 dark:text-gray-300"
+                >
                   ไม่พบข้อมูลการถอนเงิน
                 </td>
               </tr>
