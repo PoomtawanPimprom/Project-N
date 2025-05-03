@@ -101,9 +101,9 @@ function cart() {
       };
 
       //create order
-      await CreateOrder(data);
+      const res = await CreateOrder(data);
 
-      router.push(`/payment`);
+      router.push(`/payment/${res.orderDetailId}`);
     } catch (error: any) {
       if (error.message) {
         toast({
