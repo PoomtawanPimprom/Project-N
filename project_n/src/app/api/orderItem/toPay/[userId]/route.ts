@@ -14,6 +14,7 @@ export async function GET(
     const allOrderDetail = await prisma.orderDetail.findMany({
       where: { userId: userId, orderStatusId: 1 },
       select: {
+        id:true,
         createdAt: true,
         OrderItem: {
           include: {
@@ -26,7 +27,7 @@ export async function GET(
         },
       },
     });
-    //
+    
     // const orderDetailIds = allOrderDetail.map(order => order.id);
     // //get all order item status complete
     // const allOrderItemsToPay = await prisma.orderItem.findMany({
