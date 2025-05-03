@@ -5,15 +5,19 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import { userAddressInterface } from "@/app/interface/userAddressInterface";
 //component
-import SelectAddress from "./selectAddress/SelectAddress";
-import ProductCart from "./productcart/ProductCart";
-import Payment from "./payment/Payment";
+import SelectAddress from "../selectAddress/SelectAddress";
+import ProductCart from "../productcart/ProductCart";
+import Payment from "../payment/Payment";
 
 import { orderDetailInterface } from "@/app/interface/orderDetailInterface";
 import { orderItemInterface } from "@/app/interface/orderItemInterface";
 
-export default async function PaymentPage() {
+export default async function PaymentPage(props: {params: Promise<{ id: number }>;}) {
   const session = await getServerSession(authOptions);
+  const params = await props.params;
+  const orderDatailId = Number(params.id);
+
+
   if (!session) {
     redirect("/login");
   }
@@ -35,9 +39,9 @@ export default async function PaymentPage() {
   })) as userAddressInterface[];
 
   const orderDetailData = await prisma.orderDetail.findFirst({
-    where: { userId: userId, orderStatusId: 1 },
+    where: {id:orderDatailId, userId: userId, orderStatusId: 1 },
     include: { transport: true, discount: true },
-  }) as orderDetailInterface | null; // ให้รองรับกรณีเป็น null
+  }) as orderDetailInterface 
   
   if (!orderDetailData) {
     redirect('/')
