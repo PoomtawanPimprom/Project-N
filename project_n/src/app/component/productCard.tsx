@@ -74,6 +74,7 @@ const ProductCard = ({ product }: prop) => {
     }
   
     try {
+      if(!session?.user.id) throw new Error(`โปรดทำการ log-in ก่อนกดเพิ่มตะกร้า`)
       await createCart({
         userId: Number(session?.user.id),
         productId: product.id,
@@ -140,10 +141,6 @@ const ProductCard = ({ product }: prop) => {
                   <DrawerTrigger asChild>
                     <button onClick={(e) => {
                       e.stopPropagation();
-                      if (!session) {
-                        router.push("/login");
-                        return null; // ป้องกันการ render อื่น ๆ
-                      }
                       fetchInventoryData()
                     }} className="p-2 rounded-full bg-primary text-white hover:bg-primary/10 transition-colors" >
                       <ShoppingCart className="w-5 h-5 font-bold" />
