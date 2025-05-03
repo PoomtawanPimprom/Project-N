@@ -1,20 +1,23 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import MenuLeft from "../menuleft";
 import { useSession } from "next-auth/react";
 import { getUserById } from "@/app/service/profile/service";
 import { userInterface } from "@/app/interface/userInterface";
+
+import MenuLeft from "../menuleft";
 import ToPay from "./components/toPay";
 import Complete from "./components/complete";
 import Cancelled from "./components/cancelled";
-import { orderItemInterface } from "@/app/interface/orderItemInterface";
-import { GetAllOrderDetailToPay } from "@/app/service/orderItem/service";
 import WaitforShip from "./components/waitforShip";
+
+import { GetAllOrderDetailToPay } from "@/app/service/orderItem/service";
+
+import { orderDetailInterface } from "@/app/interface/orderDetailInterface";
 
 export default function MyPurchase() {
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState("TO_PAY");
-  const [OrderItemsToPay, setOrderItemsToPay] = useState<orderItemInterface[]>(
+  const [OrderDetailToPay, setOrderDetailToPay] = useState<orderDetailInterface[]>(
     []
   );
   const [userData, setUserData] = useState<userInterface>({
@@ -42,7 +45,8 @@ export default function MyPurchase() {
   ];
   const fecthOrderDetailToPay = async () => {
     const data = await GetAllOrderDetailToPay(Number(session?.user.id));
-    setOrderItemsToPay(data);
+    setOrderDetailToPay(data);
+    console.log(data)
   };
 
   const fetchUserData = async () => {
@@ -52,7 +56,7 @@ export default function MyPurchase() {
   const renderContent = () => {
     switch (activeTab) {
       case "TO_PAY":
-        return <ToPay OrderDetailToPay={OrderItemsToPay} refesh={fecthOrderDetailToPay}/>;
+        return <ToPay OrderDetailToPay={OrderDetailToPay} refesh={fecthOrderDetailToPay}/>;
       case "WAIT_FOR_SHIP":
         return <WaitforShip />;
       case "COMPLETE":
@@ -82,7 +86,7 @@ export default function MyPurchase() {
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
               const isToPayTab = tab.id === "TO_PAY";
-              const hasOrdersToPay = OrderItemsToPay.length > 0;
+              const hasOrdersToPay = OrderDetailToPay.length > 0;
 
               return (
                 <button

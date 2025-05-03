@@ -1,7 +1,6 @@
 "use client";
 
 import { orderDetailInterface } from "@/app/interface/orderDetailInterface";
-import { orderItemInterface } from "@/app/interface/orderItemInterface";
 import { GetAllOrderItemsCancel } from "@/app/service/orderItem/service";
 import { generateKey } from "@/lib/utils";
 import { useSession } from "next-auth/react";

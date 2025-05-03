@@ -3,10 +3,10 @@
 import { orderItemInterface } from "@/app/interface/orderItemInterface";
 import { GetAllOrderItemsWaitToShip } from "@/app/service/orderItem/service";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
-import OrderItemCard from "./OrderItemCard";
+import  { useEffect, useState } from "react";
 import { ReportShippinpAction } from "../action/waitForShip-action";
 import { useToast } from "@/hooks/use-toast";
+import OrderItemCard_waitforship from "./OrderItemCard_waitforship";
 
 export default function WaitforShip() {
   const { toast } = useToast();
@@ -116,7 +116,7 @@ export default function WaitforShip() {
           <p className="font-bold text-2xl mb-2">{store.name}</p>
           {store.product.map((item, index) => (
             <div key={`${item.name} + ${index}`}>
-              <OrderItemCard product={item} />
+              <OrderItemCard_waitforship product={item} />
               <div className="flex justify-end">
                 <button
                   onClick={() => handleButtonClick(item.orderItemId)}

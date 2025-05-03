@@ -6,13 +6,12 @@ import {
 } from "@/app/service/orderItem/service";
 import { generateKey } from "@/lib/utils";
 import { NotebookPen, ReceiptText } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import OrderItemCard from "./OrderItemCard";
 import Link from "next/link";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import PrintReceipt from "@/app/(page)/test-print-pdf/receipt";
 import { useUser } from "@/app/context/userContext";
+import OrderItemCard from "./OrderItemCard";
 
 export default function Complete() {
   const {user} = useUser()

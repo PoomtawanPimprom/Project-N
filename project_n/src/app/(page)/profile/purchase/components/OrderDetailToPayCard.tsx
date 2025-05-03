@@ -13,11 +13,11 @@ export default function OrderDetailToPayCard({ orderDetails,cancel }: type) {
       {orderDetails.map((orderDetail, index) => (
         <div key={index}>
           {orderDetail.OrderItem?.map((orderItem, i) => (
-            <OrderItemCard orderItem={orderItem} />
+            <OrderItemCard orderItem={orderItem} key={`${i} + ${i+1}`}/>
           ))}
         </div>
       ))}
-      {OrderDetailToPay.length > 0 && (
+      {/* {OrderDetailToPay.length > 0 && (
         <div className="flex p-4 font-semibold border-gray-200 text-right justify-end gap-2">
           <button
             onClick={() => cancel(OrderDetailToPay[0].orderDetailId)}
@@ -32,7 +32,7 @@ export default function OrderDetailToPayCard({ orderDetails,cancel }: type) {
             ชำระเงิน
           </button>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
