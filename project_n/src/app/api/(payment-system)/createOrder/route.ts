@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
         })
 
 
-        return NextResponse.json({ message: "crate order success" }, { status: 200 });
+        return NextResponse.json({ message: "crate order success",orderDetailId:createOrderDetail.id }, { status: 200 });
     } catch (error:any) {
         console.log(error.message)
         return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
