@@ -182,6 +182,7 @@ function cart() {
                             className="text-base font-semibold text-gray-900 dark:text-white hover:cursor-pointer hover:text-gray-400">{cart.product?.name}</p>
                           <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">{cart.size}</p>
                           <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">{cart.color}</p>
+                          <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">{cart.product?.store?.name}</p>
                         </div>
 
                         <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
