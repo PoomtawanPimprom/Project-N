@@ -168,7 +168,7 @@ export default function WithdrawalRequestTable({ storeId }: type) {
               sortedWithdrawals.map((item, index) => (
                 <tr
                   key={`withdrawal-row-${index}`}
-                  className="hover:bg-gray-50 dark:hover:bg-zinc-300"
+                  className="hover:bg-gray-50 dark:hover:bg-zinc-900"
                 >
                   <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                     {index + 1}
