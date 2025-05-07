@@ -156,7 +156,7 @@ export default function WithdrawalRequestTable({ storeId }: type) {
                 วันที่ขอถอน
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                วันที่อนุมัติ
+                วันที่ดำเนินการ
               </th>
               <th className="px-3 py-4 max-w-[250px] text-left text-xs font-medium uppercase tracking-wider">
                 หมายเหตุ
