@@ -16,10 +16,10 @@ import { orderDetailInterface } from "@/app/interface/orderDetailInterface";
 
 export default function MyPurchase() {
   const { data: session } = useSession();
-  const [activeTab, setActiveTab] = useState("TO_PAY");
-  const [OrderDetailToPay, setOrderDetailToPay] = useState<orderDetailInterface[]>(
-    []
-  );
+  const [activeTab, setActiveTab] = useState("WAIT_FOR_SHIP");
+  // const [OrderDetailToPay, setOrderDetailToPay] = useState<orderDetailInterface[]>(
+  //   []
+  // );
   const [userData, setUserData] = useState<userInterface>({
     id: 0,
     name: "",
@@ -38,16 +38,16 @@ export default function MyPurchase() {
   });
 
   const tabs = [
-    { id: "TO_PAY", label: "ต้องชำระ" },
+    // { id: "TO_PAY", label: "ต้องชำระ" },
     { id: "WAIT_FOR_SHIP", label: "รอทางร้านจัดส่ง" },
     { id: "COMPLETE", label: "สินค้าได้จัดส่งแล้ว" },
     { id: "CANCELLED", label: "รายการที่ถูกยกเลิก" },
   ];
-  const fecthOrderDetailToPay = async () => {
-    const data = await GetAllOrderDetailToPay(Number(session?.user.id));
-    setOrderDetailToPay(data);
-    console.log(data)
-  };
+  // const fecthOrderDetailToPay = async () => {
+  //   const data = await GetAllOrderDetailToPay(Number(session?.user.id));
+  //   setOrderDetailToPay(data);
+  //   console.log(data)
+  // };
 
   const fetchUserData = async () => {
     const res = await getUserById(Number(session?.user.id));
@@ -55,8 +55,8 @@ export default function MyPurchase() {
   };
   const renderContent = () => {
     switch (activeTab) {
-      case "TO_PAY":
-        return <ToPay OrderDetailToPay={OrderDetailToPay} refesh={fecthOrderDetailToPay}/>;
+      // case "TO_PAY":
+      //   return <ToPay OrderDetailToPay={OrderDetailToPay} refesh={fecthOrderDetailToPay}/>;
       case "WAIT_FOR_SHIP":
         return <WaitforShip />;
       case "COMPLETE":
@@ -70,34 +70,32 @@ export default function MyPurchase() {
 
   useEffect(() => {
     fetchUserData();
-    fecthOrderDetailToPay();
+    // fecthOrderDetailToPay();
   }, [session]);
 
   return (
     <section id="profile">
-      <div className="container mx-auto flex flex-col lg:flex-row py-6 gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="container    mx-auto flex flex-col lg:flex-row py-6 gap-4 px-4 sm:px-6 lg:px-8">
         <MenuLeft
           checkCreatedStore={session?.user.storeId}
           profile={userData}
         />
 
-        <div className="flex flex-col lg:w-3/4 gap-4 bg-white border rounded-lg shadow-md p-4 sm:p-6 sm:shadow-none sm:border-black">
+        <div className="flex flex-col lg:w-3/4 gap-4 bg-white dark:bg-zinc-800  border rounded-lg shadow-md p-4 sm:p-6 sm:shadow-none sm:border-black">
           <div className="flex border-b">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
-              const isToPayTab = tab.id === "TO_PAY";
-              const hasOrdersToPay = OrderDetailToPay.length > 0;
 
               return (
                 <button
                   key={tab.id}
-                  className={`py-2 px-4 text-sm font-medium 
+                  className={`py-2 px-4 text-sm font-medium dark:text-white
           ${
             isActive
               ? "border-b-2 border-gray-500 text-gray-500"
               : "text-gray-500"
           } 
-          ${isToPayTab && hasOrdersToPay ? "text-red-500" : ""}`}
+          `}
                   onClick={() => setActiveTab(tab.id)}
                 >
                   {tab.label}

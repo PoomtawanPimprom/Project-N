@@ -29,11 +29,11 @@ export default function Cancelled() {
     <div className="max-w-7xl mx-auto p-2 space-y-2 ">
       {OrderDetailCannel.map((orderDetail) => (
         <div
-          className="bg-gray-50 shadow-lg hover:shadow-none rounded-lg "
+          className="bg-gray-50 shadow-lg hover:shadow-none rounded-lg   "
           key={generateKey()}
         >
           <div className="flex h-12 p-2 bg-red-500 rounded-t-lg">
-            <div className="flex items-center justify-center text-white font-bold text-xl">
+            <div className="flex items-center justify-center  font-bold text-xl">
               <p className="">รายการที่ยกเลิกแล้ว</p>
             </div>
             <div className=""></div>

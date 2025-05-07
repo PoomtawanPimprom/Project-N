@@ -1,12 +1,8 @@
-import { orderItemInterface } from "@/app/interface/orderItemInterface";
-
 interface prop {
   product: any;
 }
 
 export default function OrderItemCard_waitforship({ product }: prop) {
-
- 
   const renderWord = (status:number) =>{
     switch (status) {
       case 2:
@@ -22,7 +18,7 @@ export default function OrderItemCard_waitforship({ product }: prop) {
 
   return (
     <div
-      className="flex flex-col sm:flex-row sm:items-center sm:gap-4 p-4 hover:bg-zinc-200 border-gray-200"
+      className="flex flex-col sm:flex-row sm:items-center sm:gap-4 p-4  hover:bg-zinc-200 dark:hover:bg-zinc-700 border-gray-200"
     >
       {/* Image */}
       <div className="w-24 h-24 sm:w-32 sm:h-32">
@@ -35,16 +31,16 @@ export default function OrderItemCard_waitforship({ product }: prop) {
 
       {/* Product Info */}
       <div className="mt-3 sm:mt-0 flex-1">
-        <p className="text-lg font-semibold text-gray-800">
+        <p className="text-lg font-semibold text-gray-800 dark:text-zinc-50">
           {product.name}
         </p>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-zinc-300">
           {product.color ? "สีของสินค้า : " + product.color : ""}
         </p>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-zinc-300">
           {product.size ? "ไซส์ของสินค้า : " + product.size : ""}
         </p>
-        <p className="text-gray-600">จำนวน : {product.quantity}</p>
+        <p className="text-gray-600 dark:text-zinc-300">จำนวน : {product.quantity}</p>
         {renderWord(product.orderItemStatusId)}
         
         
@@ -52,7 +48,7 @@ export default function OrderItemCard_waitforship({ product }: prop) {
 
       {/* Price Info */}
       <div className="mt-3 sm:mt-0 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
-        <p className="text-lg font-semibold text-gray-800">
+        <p className="text-lg font-semibold text-gray-800 dark:text-zinc-100">
           ราคา: {product.quantity * product.price!} บาท
         </p>
       </div>

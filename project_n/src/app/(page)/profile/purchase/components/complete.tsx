@@ -33,7 +33,7 @@ export default function Complete() {
     <div className="max-w-7xl mx-auto p-2 space-y-2 ">
       {OrderDetailComplete.map((orderDetail) => (
         <div
-          className="bg-gray-50 shadow-lg hover:shadow-none rounded-lg "
+          className="bg-gray-50 dark:bg-zinc-900 shadow-lg hover:shadow-none rounded-lg "
           key={generateKey()}
         >
           <div className="flex h-12 p-2 bg-primary rounded-t-lg">
@@ -51,15 +51,16 @@ export default function Complete() {
                 new Date().getTime() - 3 * 24 * 60 * 60 * 1000 ? (
                   <></>
                 ) : (
-                  <Link
-                    href={`/review?pId=${orderItem.productId}`}
-                    className="flex justify-end gap-2 p-2"
+                  <div
+                    className="flex justify-end gap-2 p-2 bg-zinc-900 "
                   >
-                    <button className="flex rounded-lg px-4 py-2 text-white  bg-primary">
+                    <Link
+                    href={`/review?pId=${orderItem.productId}`}
+                    className="flex rounded-lg px-4 py-2 text-white  bg-primary">
                       <NotebookPen className="mr-1" />
                       รีวิวสินค้า
-                    </button>
-                  </Link>
+                    </Link>
+                  </div>
                 )}
               </div>
             ))}
