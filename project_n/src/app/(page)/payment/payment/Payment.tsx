@@ -99,7 +99,7 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
 
   const handleCancelOrder = async () => {
     await CancelOrder(orderDetailId)
-    router.push(`/`)
+    router.push(`/cart`)
   }
 
   const handleFileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
