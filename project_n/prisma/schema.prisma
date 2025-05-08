@@ -33,13 +33,13 @@ model User {
 
   approvedWithdrawals WithdrawalRequest[] @relation("ApprovedWithdrawals")
 
-  UserAddress       UserAddress[]
-  Favorite          Favorite[]
-  Report            Report[]
-  Store             Store[]
-  OrderDetail       OrderDetail[]
-  CartItem          CartItem[]
-  Review            Review[]
+  UserAddress UserAddress[]
+  Favorite    Favorite[]
+  Report      Report[]
+  Store       Store[]
+  OrderDetail OrderDetail[]
+  CartItem    CartItem[]
+  Review      Review[]
 }
 
 model Gender {
@@ -234,7 +234,7 @@ model OrderItem {
   updatedAt     DateTime  @updatedAt()
   createdAt     DateTime  @default(now())
   reportAt      DateTime?
-  
+
   Already_withdrawn Int @default(0)
 
   orderDetailId     Int
@@ -336,14 +336,15 @@ model CartItem {
 
 // เบิกเงิน
 model WithdrawalRequest {
-  id            Int      @id @default(autoincrement())
-  accountNumber String // เลขบัญชี
-  accountName   String // ชื่อเจ้าของบัญชี
-  bankName      String // ชื่อธนาคาร
-  amount        Float // จำนวนเงินที่ขอเบิก
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  message       String? 
+  id Int @id @default(autoincrement())
+
+  amount    Float // จำนวนเงินที่ขอเบิก
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  message   String?
+
+  bookBankId Int
+  bookBank   WithdrawalBookBank @relation(fields: [bookBankId], references: [id])
 
   // สถานะของการเบิก เช่น รออนุมัติ, อนุมัติแล้ว, ถูกปฏิเสธ
   status   WithdrawalStatus @relation(fields: [statusId], references: [id])
@@ -353,7 +354,7 @@ model WithdrawalRequest {
   storeId Int
   store   Store @relation(fields: [storeId], references: [id])
 
-  approvedById Int?     // Admin ที่อนุมัติ
+  approvedById Int? // Admin ที่อนุมัติ
   approvedBy   User?     @relation("ApprovedWithdrawals", fields: [approvedById], references: [id])
   approvedAt   DateTime? // เวลาอนุมัติ
 }
@@ -363,4 +364,23 @@ model WithdrawalStatus {
   name String
 
   requests WithdrawalRequest[]
+}
+
+model WithdrawalBookBank {
+  id            Int    @id @default(autoincrement())
+  accountNumber String // เลขบัญชี
+  accountName   String // ชื่อเจ้าของบัญชี
+  bankName      String // ชื่อธนาคาร
+  userId        Int
+
+  bookBankTypeId Int
+  bookBankType   BookBankType @relation(fields: [bookBankTypeId], references: [id])
+
+  WithdrawalRequest WithdrawalRequest[]
+}
+
+model BookBankType {
+  id                 Int                  @id @default(autoincrement())
+  BankName           String
+  WithdrawalBookBank WithdrawalBookBank[]
 }
