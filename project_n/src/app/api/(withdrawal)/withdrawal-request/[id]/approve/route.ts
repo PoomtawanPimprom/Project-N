@@ -14,9 +14,9 @@ export async function PUT(
   // const requestId  = Number(params.id);
   const { id } = await params;
   const requestId = Number(id);
+  const { approvedById,message } = await req.json();
   const searchparams = req.nextUrl.searchParams;
   const status = searchparams.get("status") || "";
-  const { approvedById,message } = await req.json();
   try {
     if (status === `update`) {
       const data = await prisma.withdrawalRequest.update({

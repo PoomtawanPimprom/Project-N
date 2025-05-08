@@ -6,16 +6,14 @@ const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { storeId, accountNumber, accountName, bankName, amount } = body;
+  const { storeId, bookBankId, amount } = body;
 
   try {
     await prisma.withdrawalRequest.create({
       data: {
         storeId,
-        accountNumber,
-        accountName,
-        bankName,
         amount,
+        bookBankId,
         statusId: 1, // รหัสสถานะ "pending"
       },
     });
