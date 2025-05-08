@@ -74,8 +74,24 @@ const WithdrawalStatus =[
     {name:"approved"},
     {name:"rejected"},
 ]
+
+const bookbank = [
+    {
+        id: 1,
+        BankName: "ธนาคารไทยพาณิชย์",
+      },
+      {
+        id: 2,
+        BankName: "ธนาคารกสิกรไทย",
+      },
+      {
+        id: 3,
+        BankName: "ธนาคารกรุงไทย",
+      },
+]
 async function main() {
     try {
+        await prisma.bookBankType.createMany({data:bookbank})
         await prisma.withdrawalStatus.createMany({data:WithdrawalStatus})
         await prisma.orderItemStatus.createMany({data:orderItemStatus})
         await prisma.orderStatus.createMany({ data: orderStatusData })
