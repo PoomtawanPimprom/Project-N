@@ -47,7 +47,9 @@ export async function GET(req: NextRequest) {
         approvedById: null,
         approvedAt: null,
       },
+      include:{bookBank:true}
     });
+
 
     return NextResponse.json({
       success: true,
