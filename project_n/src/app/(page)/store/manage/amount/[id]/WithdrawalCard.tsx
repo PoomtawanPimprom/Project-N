@@ -5,7 +5,7 @@ import WithdrawalDialog from "./WithdrawalDialog";
 import { getAmountByStoreId } from "@/app/service/withdrawal-request/service";
 
 interface prop {
-  storeId: number | string;
+  storeId: number ;
 }
 
 export default function WithdrawalCard({ storeId }: prop) {
@@ -31,7 +31,7 @@ export default function WithdrawalCard({ storeId }: prop) {
   }, []);
 
   const openWithdrawalDialog = () => {
-  if (!canWithdraw) return;
+    if (!canWithdraw) return;
     setDialogOpen(true);
   };
 
@@ -40,24 +40,24 @@ export default function WithdrawalCard({ storeId }: prop) {
   };
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-md ">
       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
         <div className="bg-blue-600 p-6 text-white">
-          <h1 className="text-2xl font-bold text-center">บริการเบิกเงิน</h1>
+          <h1 className="text-2xl font-bold text-center ">บริการเบิกเงิน</h1>
         </div>
 
-        <div className="p-6">
+        <div className="p-6 dark:bg-zinc-800">
           <div className="mb-6">
-            <p className="text-gray-600 text-sm mb-2">
+            <p className="text-gray-600 text-sm mb-2 dark:text-zinc-200 ">
               ยอดเงินที่สามารถเบิกได้
             </p>
-            <div className="text-3xl font-bold text-center text-blue-700">
+            <div className="text-3xl font-bold text-center text-blue-700 dark:text-blue-500">
               {withdrawableAmount.toLocaleString("th-TH", {
                 minimumFractionDigits: 2,
               })}{" "}
               บาท
             </div>
-            <p className="text-gray-500 text-xs text-center mt-1">
+            <p className="text-gray-500 text-xs text-center mt-1 dark:text-zinc-400">
               (80% ของยอดเงินจริง {actualBalance.toLocaleString("th-TH")} บาท)
             </p>
           </div>
@@ -83,7 +83,7 @@ export default function WithdrawalCard({ storeId }: prop) {
           </div>
         </div>
 
-        <div className="bg-gray-50 p-4 border-t">
+        <div className="bg-gray-50 dark:bg-zinc-800 p-4 border-t">
           <p className="text-xs text-gray-500 text-center">
             หากมีข้อสงสัยเกี่ยวกับการเบิกเงิน กรุณาติดต่อฝ่ายบริการลูกค้า
           </p>

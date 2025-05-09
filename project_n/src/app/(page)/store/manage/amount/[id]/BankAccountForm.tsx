@@ -9,14 +9,16 @@ interface BankAccountFormProps {
     accountName: string;
     bankName: string;
   };
-  onChange: (name: string, value: string) => void;
+  onChange: (name: string, value: string|number) => void;
 }
 
 export default function BankAccountForm({ formData, onChange }: BankAccountFormProps) {
   const [showBankDropdown, setShowBankDropdown] = useState(false);
 
-  const handleBankSelect = (bankName: string) => {
+  const handleBankSelect = (bankName: string,bankId:number) => {
     onChange('bankName', bankName);
+    onChange('bankId', bankId);
+    
     setShowBankDropdown(false);
   };
 
@@ -88,7 +90,7 @@ export default function BankAccountForm({ formData, onChange }: BankAccountFormP
                   <li 
                     key={index}
                     className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleBankSelect(bank.engName)}
+                    onClick={() => handleBankSelect(bank.engName,bank.id)}
                   >
                     {bank.logo && (
                       <div className="w-8 h-8 mr-3 flex-shrink-0">

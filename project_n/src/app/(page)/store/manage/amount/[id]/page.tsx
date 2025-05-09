@@ -6,7 +6,6 @@ export default async function AmountPage(props: {
 }) {
   const params = await props.params;
   const storeId = Number(params.id);
-
   
   return (
     <div className="min-h-screen flex relative">
