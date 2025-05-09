@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { accountNumber, accountName, bankName, userId,bookBankTypeId } = body;
+  const { accountNumber, accountName, bankName, userId, bookBankTypeId, Default } = body;
 
   try {
     await prisma.withdrawalBookBank.create({
@@ -15,7 +15,8 @@ export async function POST(req: NextRequest) {
         accountNumber,
         bankName,
         userId,
-        bookBankTypeId
+        bookBankTypeId,
+        default:Default ? Default : false
       },
     });
 

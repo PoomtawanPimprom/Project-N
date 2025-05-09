@@ -12,7 +12,7 @@ export async function GET(
   try {
     const bookBank = await prisma.withdrawalBookBank.findMany({
       where: { userId },
-      omit: { id: true },
+      // omit: { id: true },
     });
 
     return NextResponse.json({ success: true, bookBank });
@@ -31,7 +31,7 @@ export async function PUT(
 ) {
   const params = await props.params;
   const id = Number(params.id);
-  const { accountNumber, accountName, bankName } = await req.json();
+  const { accountNumber, accountName, bankName,bookBankTypeId } = await req.json();
   try {
     //already have?
     const book = await prisma.withdrawalBookBank.findFirst({
@@ -51,6 +51,7 @@ export async function PUT(
         accountNumber: accountNumber ? accountNumber : book.accountNumber,
         accountName: accountName ? accountName : book.accountName,
         bankName: bankName ? accountName : book.bankName,
+        bookBankTypeId: bookBankTypeId ? bookBankTypeId :book.bookBankTypeId,
       },
       where: { id },
       omit: { id: true },
