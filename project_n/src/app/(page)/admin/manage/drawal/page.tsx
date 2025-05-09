@@ -150,13 +150,13 @@ export default function DrawalPage() {
                         className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
                       >
                         <td className="py-2 px-4 border-b">
-                          {request.accountNumber}
+                          {request.bookBank!.accountNumber}
                         </td>
                         <td className="py-2 px-4 border-b">
-                          {request.accountName}
+                          {request.bookBank!.accountName}
                         </td>
                         <td className="py-2 px-4 border-b">
-                          {request.bankName}
+                          {request.bookBank!.bankName}
                         </td>
                         <td className="py-2 px-4 border-b">
                           {request.amount.toLocaleString()} บาท
@@ -218,18 +218,18 @@ export default function DrawalPage() {
               <div className="grid grid-cols-3 gap-2">
                 <div className="font-medium">เลขที่บัญชี:</div>
                 <div className="col-span-2">
-                  {selectedRequest.accountNumber}
+                  {selectedRequest.bookBank!.accountNumber}
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-2">
                 <div className="font-medium">ชื่อบัญชี:</div>
-                <div className="col-span-2">{selectedRequest.accountName}</div>
+                <div className="col-span-2">{selectedRequest.bookBank!.accountName}</div>
               </div>
 
               <div className="grid grid-cols-3 gap-2">
                 <div className="font-medium">ธนาคาร:</div>
-                <div className="col-span-2">{selectedRequest.bankName}</div>
+                <div className="col-span-2">{selectedRequest.bookBank!.bankName}</div>
               </div>
 
               <div className="grid grid-cols-3 gap-2">
