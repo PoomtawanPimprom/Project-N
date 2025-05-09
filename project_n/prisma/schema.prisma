@@ -367,11 +367,12 @@ model WithdrawalStatus {
 }
 
 model WithdrawalBookBank {
-  id            Int    @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   accountNumber String // เลขบัญชี
   accountName   String // ชื่อเจ้าของบัญชี
   bankName      String // ชื่อธนาคาร
   userId        Int
+  default       Boolean?
 
   bookBankTypeId Int
   bookBankType   BookBankType @relation(fields: [bookBankTypeId], references: [id])
