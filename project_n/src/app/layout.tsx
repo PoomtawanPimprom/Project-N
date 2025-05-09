@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/app/components/ui/toaster";
 import SessionProvider from "./component/SessionProvider";
@@ -8,7 +8,7 @@ import { authOptions } from "./api/auth/[...nextauth]/route";
 import { ThemeProvider } from "./component/ThemeProvider";
 import { CartProvider } from "@/app/context/cartContext";
 import { UserProvider } from "./context/userContext";
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Matter",
@@ -24,7 +24,8 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      {/* <body className={inter.className}> */}
+      <body >
         <main className="font-noto">
           <SessionProvider session={session}>
             <ThemeProvider
