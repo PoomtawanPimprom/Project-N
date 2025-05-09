@@ -177,3 +177,9 @@ export const bankAccountSchema = z.object({
       message: 'กรุณาเลือกธนาคารจากรายการ'
     })
 });
+
+export const withDrawalReqSchema =z.object({
+  storeId: z.number(),
+  amount: z.number(),
+  bookBankId: z.number()
+})
