@@ -5,6 +5,7 @@ export interface WithDrawalBookBankInterface{
     bankName:string
     userId:number
     default:boolean
+    delete?:boolean
     
     bookBankTypeId:number
 
