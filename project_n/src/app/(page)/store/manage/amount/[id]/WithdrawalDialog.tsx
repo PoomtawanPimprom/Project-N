@@ -1,13 +1,5 @@
 "use client";
 
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -20,13 +12,21 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
 import { createWithDrawalReq } from "@/app/service/withdrawal-request/service";
-import { getAllBookBankByUserId } from "@/app/service/withdrawal-bookBank/servive";
+import {
+  getAllBookBankByUserId,
+  updateDefaultBookBank,
+} from "@/app/service/withdrawal-bookBank/servive";
 
 import { WithDrawalBookBankInterface } from "@/app/interface/withDrawalBookBankInterface";
-import { bankAccountSchema, validateWithZod, withDrawalReqSchema } from "@/lib/zod/Schema";
+import {
+  validateWithZod,
+  withDrawalReqSchema,
+} from "@/lib/zod/Schema";
 
 import WithdrawalCreateDialog from "./WithdrawalCreateDialog";
 import bankList from "@/json/bankList";
+import EditBookBankDialog from "./EditBookBankDialog";
+import SelectBookBankDialog from "./SelectBookBankDialog";
 
 interface WithdrawalDialogProps {
   open: boolean;
@@ -50,11 +50,21 @@ export default function WithdrawalDialog({
   const [allBookBank, setAllBookBank] = useState<WithDrawalBookBankInterface[]>(
     []
   );
+
   const [selectBookBank, setselectBookBank] =
     useState<WithDrawalBookBankInterface>();
   const [isLoading, setIsLoading] = useState(false);
+  // dialog-create
   const [dialogCreateOpen, setDialogCreateOpen] = useState(false);
+  // dialog-edit
+  const [dialogEditOpen, setDialogEditOpen] = useState(false);
+  // dialog-select
+  const [dialogSelectOpen, setDialogSelectOpen] = useState(false);
 
+  // default status
+  const [defaultStatus, setDefaultStatus] = useState(false);
+
+  // dialog-create
   const openCreateDialog = () => {
     setDialogCreateOpen(true);
   };
@@ -62,7 +72,25 @@ export default function WithdrawalDialog({
   const closeCreateDialog = () => {
     setDialogCreateOpen(false);
   };
+  // dialog-select
+  const openSelectDialog = () => {
+    setDialogSelectOpen(true);
+  };
 
+  const closeSelectDialog = () => {
+    setDialogSelectOpen(false);
+  };
+
+  // dialog-edit
+  const openEditDialog = () => {
+    setDialogEditOpen(true);
+  };
+
+  const closeEditDialog = () => {
+    setDialogEditOpen(false);
+  };
+
+  // dialog
   const closeDialog = () => {
     onOpenChange(false);
   };
@@ -75,8 +103,13 @@ export default function WithdrawalDialog({
         amount,
         bookBankId: selectBookBank?.id,
       };
-      console.log(data)
       validateWithZod(withDrawalReqSchema, data);
+      if (defaultStatus) {
+        const currentBookbank = allBookBank.find(
+          (item) => item.default === true
+        );
+        await updateDefaultBookBank(currentBookbank?.id!, selectBookBank?.id!);
+      }
       const res = await createWithDrawalReq(data);
       if (!res.success) {
         throw Error(res.error);
@@ -110,28 +143,39 @@ export default function WithdrawalDialog({
 
   const renderImage = (bankname: string) => {
     const result = bankList.find((item) => item.engName === bankname);
-    return <img className="w-10 h-10 rounded-md" src={result?.logo} />;
+    return <img className="block w-10 h-10 rounded-md" src={result?.logo} />;
   };
-
 
   const fetchData = async () => {
     if (!session?.user.id) {
       return;
     }
     const res = await getAllBookBankByUserId(Number(session?.user.id));
-    
-
     setAllBookBank(res.bookBank);
+
+    const default_bookBank = res.bookBank.find(
+      (bookBank: any) => bookBank.default === true
+    );
+    localStorage.setItem("bbid",default_bookBank.id)
+    setselectBookBank(default_bookBank);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
-  
+
   useEffect(() => {
-    const default_bookBank = allBookBank.find((bookBank) => bookBank.default === true)
-    setselectBookBank(default_bookBank)
-  }, [allBookBank]);
+    const default_bookBank = allBookBank.find(
+      (bookBank) => bookBank.default === true
+    );
+    if(!default_bookBank){
+      setselectBookBank(default_bookBank);
+    }
+    else{
+      setselectBookBank(allBookBank[0])
+      setDefaultStatus(true)
+    }
+  }, [selectBookBank]);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
@@ -146,61 +190,69 @@ export default function WithdrawalDialog({
           </DialogDescription>
         </DialogHeader>
         <div className="my-4">
-          {/* <div 
-          className="flex justify-between border rounded-lg p-4">
-            <div className="flex">
-              <div className="flex"></div>
-              <div className="flex-col"></div>
-            </div>
-            <div>
-              <button>กดเพื่อเลือกบัญชี</button>
-            </div>
-          </div> */}
-
-          <label className="block text-sm font-medium text-zinc-900 dark:text-zinc-50 mb-2">
-            เลือกบัญชีธนาคาร
-          </label>
-          <Select
-            onValueChange={(value) => {
-              const selected = allBookBank.find(
-                (bank) => bank.accountNumber === value
-              );
-              setselectBookBank(selected);
-            }}
-            value={selectBookBank?.accountNumber || ""}
+          <div className="flex justify-between w-full">
+            <label className="flex text-sm font-medium text-zinc-900 dark:text-zinc-50 mb-2">
+              เลือกบัญชีธนาคาร
+            </label>
+            <button
+              onClick={openCreateDialog}
+              className=" text-sm text-primary hover:underline"
+              type="button"
+            >
+              + เพิ่มบัญชีธนาคาร
+            </button>
+          </div>
+          <div
+            onClick={openSelectDialog}
+            className="group relative flex mt-1 px-4 py-2 border rounded-lg w-full cursor-pointer hover:bg-gray-50 hover:border-blue-300  transition-all duration-200"
           >
-            <SelectTrigger className="w-full text-start py-6">
-              <SelectValue placeholder="-- กรุณาเลือกบัญชีธนาคาร --" />
-            </SelectTrigger>
-            <SelectContent>
-              {allBookBank.map((bank) => (
-                <SelectItem
-                  className="px-2 [&_[data-select-item-indicator]]:hidden"
-                  key={bank.accountNumber}
-                  value={bank.accountNumber}
-                >
-                  <div className="flex justify-between gap-2 w-full ">
-                    <div className="flex gap-2">
-                      <div>{renderImage(bank.bankName)}</div>
-                      <div className="flex flex-col ">
-                        <p className="font-medium ">{bank.accountName}</p>
-                        <p className="text-sm ">{bank.accountNumber}</p>
-                      </div>
-                    </div>
-                  </div>
-                </SelectItem>
-              ))}
-              <div className="px-2 py-2 border-t">
+            <div className="flex mr-2">
+              {renderImage(selectBookBank?.bankName!)}
+            </div>
+            <p className="absolute hidden group-hover:block text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-md top-0 right-0 mr-16 -mt-2">
+              กดเพื่อเลือกบัญชี
+            </p>
+            <div className="flex justify-between w-full">
+              <div className="flex flex-col">
+                <p className="text-base font-bold text-zinc-700">
+                  {selectBookBank?.accountName}
+                </p>
+                <p className=" text-sm text-zinc-500 text-wrap">
+                  {selectBookBank?.accountNumber}
+                </p>
+              </div>
+              <div className="flex">
                 <button
-                  onClick={openCreateDialog}
-                  className="w-full text-sm text-primary hover:underline"
                   type="button"
+                  className="text-sm text-blue-600 hover:text-blue-800 ml-16 sm:ml-64"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openEditDialog();
+                  }}
                 >
-                  + เพิ่มบัญชีธนาคาร
+                  แก้ไข
                 </button>
               </div>
-            </SelectContent>
-          </Select>
+            </div>
+          </div>
+        </div>
+        <div className="flex">
+          <input
+            type="checkbox"
+            name="default"
+            id="default"
+            checked={defaultStatus}
+            onChange={(e) => {
+              setDefaultStatus(e.target.checked);
+            }}
+            className="mr-2"
+          />
+          <label
+            htmlFor="default"
+            className="text-sm text-zinc-700 dark:text-zinc-200"
+          >
+            ตั้งค่าบัญชีนี้เป็นบัญชีหลัก
+          </label>
         </div>
 
         <DialogFooter className="flex justify-between sm:justify-between text-white">
@@ -246,11 +298,25 @@ export default function WithdrawalDialog({
         </DialogFooter>
       </DialogContent>
       <WithdrawalCreateDialog
-        fetchAllBook={fetchData}
         open={dialogCreateOpen}
         onClose={closeCreateDialog}
         onOpenChange={openCreateDialog}
+        fetchAllBook={fetchData}
       ></WithdrawalCreateDialog>
+      <EditBookBankDialog
+        bookBank={selectBookBank}
+        open={dialogEditOpen}
+        onClose={closeEditDialog}
+        onOpenChange={openEditDialog}
+        fetchAllBook={fetchData}
+      />
+      <SelectBookBankDialog
+        open={dialogSelectOpen}
+        onClose={closeSelectDialog}
+        onOpenChange={openSelectDialog}
+        selectBookBank={setselectBookBank}
+        AllBookBank={allBookBank}
+      />
     </Dialog>
   );
 }

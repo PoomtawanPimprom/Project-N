@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
 import bankList from "@/json/bankList";
-import Image from 'next/image';
 
 interface BankAccountFormProps {
   formData: {

@@ -10,21 +10,17 @@ import {
   DialogTitle,
 } from "@/app/components/ui/dialog";
 import BankAccountForm from "./BankAccountForm";
-import { createWithDrawalReq } from "@/app/service/withdrawal-request/service";
 import { useToast } from "@/hooks/use-toast";
 import { bankAccountSchema, validateWithZod } from "@/lib/zod/Schema";
 import { useSession } from "next-auth/react";
-import { createBookBank, getAllBookBankByUserId } from "@/app/service/withdrawal-bookBank/servive";
-import { WithDrawalBookBankInterface } from "@/app/interface/withDrawalBookBankInterface";
+import { createBookBank } from "@/app/service/withdrawal-bookBank/servive";
 
 interface WithdrawalDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onClose: () => void;
-  fetchAllBook:()=>void
+  fetchAllBook: () => void;
 }
-
-
 
 export default function WithdrawalCreateDialog({
   open,
@@ -32,16 +28,15 @@ export default function WithdrawalCreateDialog({
   onClose,
   fetchAllBook,
 }: WithdrawalDialogProps) {
-  const {data:session } = useSession()
+  const { data: session } = useSession();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  
-  
+
   const [formData, setFormData] = useState({
     accountNumber: "",
     accountName: "",
     bankName: "",
-    bankId: 0
+    bankId: 0,
   });
 
   const resetForm = () => {
@@ -49,16 +44,16 @@ export default function WithdrawalCreateDialog({
       accountNumber: "",
       accountName: "",
       bankName: "",
-      bankId:0    });
+      bankId: 0,
+    });
   };
 
   const handleWithdraw = async () => {
     try {
       setIsLoading(true);
-
       const data = {
-        userId:Number(session?.user.id),
-        bookBankTypeId:formData.bankId,
+        userId: Number(session?.user.id),
+        bookBankTypeId: formData.bankId,
         accountNumber: formData.accountNumber,
         accountName: formData.accountName,
         bankName: formData.bankName,
@@ -73,21 +68,20 @@ export default function WithdrawalCreateDialog({
         description: res.message,
       });
       resetForm();
-      fetchAllBook()
+      fetchAllBook();
       onClose();
     } catch (error: any) {
-      console.log(error)
-      let errorMessages = null
+      console.log(error);
+      let errorMessages = null;
       if (error.fieldErrors) {
-         errorMessages = Object.values(error.fieldErrors)
-        .map((err:any) => err.message)
-        .join(', ');
-      
-      toast({
-        variant: "destructive",
-        description: errorMessages,
-      });
+        errorMessages = Object.values(error.fieldErrors)
+          .map((err: any) => err.message)
+          .join(", ");
 
+        toast({
+          variant: "destructive",
+          description: errorMessages,
+        });
       } else {
         toast({
           variant: "destructive",
@@ -99,7 +93,7 @@ export default function WithdrawalCreateDialog({
     }
   };
 
-  const handleFormChange = (name: string, value: string|number) => {
+  const handleFormChange = (name: string, value: string | number) => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
