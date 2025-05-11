@@ -11,8 +11,8 @@ export async function GET(
   const userId = Number(params.id);
   try {
     const bookBank = await prisma.withdrawalBookBank.findMany({
-      where: { userId },
-      // omit: { id: true },
+      where: { userId, delete: false },
+      omit: { delete: true },
     });
 
     return NextResponse.json({ success: true, bookBank });
@@ -31,7 +31,8 @@ export async function PUT(
 ) {
   const params = await props.params;
   const id = Number(params.id);
-  const { accountNumber, accountName, bankName,bookBankTypeId } = await req.json();
+  const { accountNumber, accountName, bankName, bookBankTypeId } =
+    await req.json();
   try {
     //already have?
     const book = await prisma.withdrawalBookBank.findFirst({
@@ -46,18 +47,18 @@ export async function PUT(
       );
     }
 
-    const bookBank = await prisma.withdrawalBookBank.update({
+    await prisma.withdrawalBookBank.update({
       data: {
         accountNumber: accountNumber ? accountNumber : book.accountNumber,
         accountName: accountName ? accountName : book.accountName,
-        bankName: bankName ? accountName : book.bankName,
-        bookBankTypeId: bookBankTypeId ? bookBankTypeId :book.bookBankTypeId,
+        bankName: bankName ? bankName : book.bankName,
+        bookBankTypeId: bookBankTypeId ? bookBankTypeId : book.bookBankTypeId,
       },
       where: { id },
       omit: { id: true },
     });
 
-    return NextResponse.json({ success: true, bookBank });
+    return NextResponse.json({ success: true, message: `อัพเดทสำเร็จ` });
   } catch (err) {
     console.error(err);
     return NextResponse.json(
@@ -68,22 +69,26 @@ export async function PUT(
 }
 
 export async function DELETE(
-    req: NextRequest,
-    props: { params: Promise<{ id: string }> }
-  ) {
-    const params = await props.params;
-    const id = Number(params.id);
-    try {
-       await prisma.withdrawalBookBank.delete({
-        where:{id}
-       })
-       
-      return NextResponse.json({ success: true, message:`ลบข้อมูลสมุดบัญชีเสร็จสิ้น` });
-    } catch (err) {
-      console.error(err);
-      return NextResponse.json(
-        { success: false, error: "Approval failed" },
-        { status: 500 }
-      );
-    }
+  req: NextRequest,
+  props: { params: Promise<{ id: string }> }
+) {
+  const params = await props.params;
+  const id = Number(params.id);
+  try {
+    await prisma.withdrawalBookBank.update({
+      where: { id },
+      data: { delete: true },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: `ลบข้อมูลสมุดบัญชีเสร็จสิ้น`,
+    });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json(
+      { success: false, error: "Approval failed" },
+      { status: 500 }
+    );
   }
+}

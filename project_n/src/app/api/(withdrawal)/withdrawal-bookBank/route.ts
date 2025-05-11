@@ -33,24 +33,3 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest) {
-  try {
-    const data = await prisma.withdrawalRequest.findMany({
-      where: {
-        approvedById: null,
-        approvedAt: null,
-      },
-    });
-
-    return NextResponse.json({
-      success: true,
-      data: data,
-    });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json(
-      { success: false, error: "Create failed" },
-      { status: 500 }
-    );
-  }
-}
