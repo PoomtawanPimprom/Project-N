@@ -373,6 +373,7 @@ model WithdrawalBookBank {
   bankName      String // ชื่อธนาคาร
   userId        Int
   default       Boolean?
+  delete        Boolean @default(false)
 
   bookBankTypeId Int
   bookBankType   BookBankType @relation(fields: [bookBankTypeId], references: [id])
