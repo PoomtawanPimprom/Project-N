@@ -3,28 +3,6 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function GET(
-  req: NextRequest,
-  props: { params: Promise<{ id: string }> }
-) {
-  const params = await props.params;
-  const userId = Number(params.id);
-  try {
-    const bookBank = await prisma.withdrawalBookBank.findFirst({
-      where: { userId,default:true },
-      omit: { id: true },
-    });
-
-    return NextResponse.json({ success: true, bookBank });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json(
-      { success: false, error: "Approval failed" },
-      { status: 500 }
-    );
-  }
-}
-
 export async function PUT(
   req: NextRequest,
   props: { params: Promise<{ id: string }> }
@@ -37,7 +15,7 @@ export async function PUT(
     //check has Bookbank
     const book = await prisma.withdrawalBookBank.findFirst({
       where: {
-        id:old_id,
+        id: old_id,
       },
     });
     if (!book) {
@@ -49,22 +27,24 @@ export async function PUT(
 
     // remove default
     await prisma.withdrawalBookBank.update({
-        where:{id:book.id},
-        data:{
-            default:false
-        }
-    })
-    
+      where: { id: book.id },
+      data: {
+        default: false,
+      },
+    });
+
     // update new
     await prisma.withdrawalBookBank.update({
-        where:{id:new_id},
-        data:{
-            default:false
-        }
-    })
+      where: { id: new_id },
+      data: {
+        default: true,
+      },
+    });
 
-
-    return NextResponse.json({ success: true, message:'อัพเดทสถานะเสร็จสิ้น' });
+    return NextResponse.json({
+      success: true,
+      message: "อัพเดทสถานะเสร็จสิ้น",
+    });
   } catch (err) {
     console.error(err);
     return NextResponse.json(
