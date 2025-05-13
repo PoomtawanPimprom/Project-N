@@ -22,7 +22,7 @@ export default function WithdrawalCard({ storeId }: prop) {
     const withdrawable = balance.amount * 0.8;
     setWithdrawableAmount(withdrawable);
 
-    setCanWithdraw(withdrawable >= 10);
+    setCanWithdraw(withdrawable >= 1000);
   };
 
   // สมมติว่าเราดึงข้อมูลจาก API
