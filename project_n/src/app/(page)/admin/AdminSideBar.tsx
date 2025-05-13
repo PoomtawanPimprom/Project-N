@@ -19,16 +19,17 @@ const menuItems = [
     icon: <Truck className="w-6 h-6" />,
     label: "การขนส่ง",
   },
+    {
+    href: "/admin/manage/drawal",
+    icon: <HandCoins className="w-6 h-6" />,
+    label: "จัดการการเบิกเงิน",
+  },
   {
     href: "/admin/manage/admins",
     icon: <User className="w-6 h-6" />,
     label: "จัดการแอดมิน",
   },
-  {
-    href: "/admin/manage/drawal",
-    icon: <HandCoins className="w-6 h-6" />,
-    label: "จัดการการเบิกเงิน",
-  },
+
 ];
 export default function AdminSideBar() {
   const { data: session } = useSession();
