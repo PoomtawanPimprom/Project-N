@@ -14,6 +14,7 @@ export async function GET(req: NextRequest, props: { params: Promise<{ storeId: 
       omit:{id:true},
       include: {
         status: true,
+        bookBank:true,
         approvedBy: {
           select: {
             id: true,
