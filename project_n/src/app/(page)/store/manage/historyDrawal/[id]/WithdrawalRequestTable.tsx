@@ -17,9 +17,9 @@ export default function WithdrawalRequestTable({ storeId }: type) {
   // Filter withdrawals based on search term
   const filteredWithdrawals = withdrawals.filter(
     (item) =>
-      item.accountName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.accountNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.bankName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.bookBank!.accountName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.bookBank!.accountNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.bookBank!.bankName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.status?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -175,17 +175,17 @@ export default function WithdrawalRequestTable({ storeId }: type) {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                      {item.accountNumber}
+                      {item.bookBank!.accountNumber}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900 dark:text-gray-100">
-                      {item.accountName}
+                      {item.bookBank!.accountName}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900 dark:text-gray-100">
-                      {item.bankName}
+                      {item.bookBank!.bankName}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
