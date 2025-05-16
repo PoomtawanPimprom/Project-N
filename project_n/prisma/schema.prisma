@@ -90,7 +90,7 @@ model UserAddressStatus {
 model Store {
   id          Int     @id @default(autoincrement())
   name        String  @unique
-  description String?
+  description String? @db.LongText
 
   imageLogoURL       String?   @db.Text
   imageLogoFileName  String?
@@ -121,7 +121,7 @@ model StoreStatus {
 model Product {
   id              Int           @id @default(autoincrement())
   name            String
-  description     String
+  description     String        @db.LongText
   image           Json?
   price           Int           @default(0)
   sales           Int           @default(0)
@@ -373,7 +373,7 @@ model WithdrawalBookBank {
   bankName      String // ชื่อธนาคาร
   userId        Int
   default       Boolean?
-  delete        Boolean @default(false)
+  delete        Boolean  @default(false)
 
   bookBankTypeId Int
   bookBankType   BookBankType @relation(fields: [bookBankTypeId], references: [id])
