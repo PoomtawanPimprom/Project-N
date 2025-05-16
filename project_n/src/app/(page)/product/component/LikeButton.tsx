@@ -2,6 +2,7 @@
 
 import { favoriteInterface } from "@/app/interface/favoriteInterface";
 import { createFavorite, deleteFavoriteByid, getFavoriteByProductIdAndUserId } from "@/app/service/favorite/service";
+import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -15,6 +16,7 @@ interface propInterface {
 export default function LikeButtonProductPage(prop: propInterface) {
   const [isFavorite, setIsFavorite] = useState<boolean | null>(null);
   const [favoriteData, setFavoriteData] = useState<favoriteInterface | null>(null);
+  const {toast} = useToast()
   const router = useRouter()
   const {data:session} = useSession()
   const fetchData = async () => {
@@ -32,25 +34,36 @@ export default function LikeButtonProductPage(prop: propInterface) {
 
   const handleOnClick = async () => {
     if(!session){
-      router.push('/login')
+      toast({
+        variant:"destructive",
+        description:"โปรดลงชื่อผู้ใช้งาน"
+      })
       return
     }
     
-    if (isFavorite === null) return; // ป้องกันกรณีค่า null
+    if (isFavorite === null) return; 
     
-    setIsFavorite(!isFavorite); // อัปเดต UI ทันที
+    setIsFavorite(!isFavorite); 
     
     if (isFavorite) {
       await deleteFavoriteByid(favoriteData!.id);
+      toast({
+        variant:"success",
+        description:"ลบออกรายงานโปรดเรียบร้อย"
+      })
     } else {
       const data = {
         userId: prop.userId,
         productId: prop.productId,
       };
       await createFavorite(data);
+            toast({
+        variant:"success",
+        description:"เพิ่มเข้ารายงานโปรดเรียบร้อย"
+      })
     }
     
-    fetchData(); // รีเฟรชข้อมูลจากเซิร์ฟเวอร์
+    fetchData(); 
   };
 
   return (
