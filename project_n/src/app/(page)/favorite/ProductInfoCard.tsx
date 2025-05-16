@@ -5,7 +5,6 @@ import { format } from "date-fns";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
 import { deleteFavoriteByid } from "@/app/service/favorite/service";
-import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
 
 type ProductInfoCardprop = {
