@@ -11,7 +11,6 @@ import { createCart } from "@/app/service/cart/service";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/app/context/cartContext";
-import { useUser } from "@/app/context/userContext";
 import { useRouter } from "next/navigation";
 
 type SelectProp = {
