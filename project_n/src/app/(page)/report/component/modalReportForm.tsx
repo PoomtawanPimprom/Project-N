@@ -17,7 +17,7 @@ interface prop {
 
 const ModalReportForm = ({ productId, open, onClose }: prop) => {
   const {toast} =useToast()
-  const { data: session, status } = useSession();
+  const { data: session,  } = useSession();
   const [reportCate, setReportCate] = useState<reportCategoryInterface[]>([]);
 
   const [comment, setComment] = useState("");
@@ -33,17 +33,27 @@ const ModalReportForm = ({ productId, open, onClose }: prop) => {
     try {
       setLoading(true);
       validateWithZod(ReportSchema, { comment, selectCate });
+      if(!session?.user){
+        toast({
+          variant:"destructive",
+          description:"โปรดทำการลงชื่อเข้าใช้งานก่อนทำการรายงานสินค้า"
+        })
+        return
+      }
+
       const data = {
         comment,
-        userId: Number(session?.user.id),
+        userId: Number(session.user.id),
         productId: productId,
         reportCategoryId: Number(selectCate),
         reportStatusId: 1,
       };
       await createReport(data);
       toast({
+        variant:"success",
         description: "ส่งคำรายงานเรียบร้อย",
       });
+      setError(null)
       onClose()
     } catch (error: any) {
       console.log(error);
