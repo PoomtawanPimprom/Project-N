@@ -21,16 +21,16 @@ import { extractFileNameFromUrl, storage } from "@/lib/firebase/firebase";
 import { deleteObject, ref, uploadBytes } from "firebase/storage";
 import Form from "@/app/component/Form";
 import Input from "@/app/component/Input";
-import StoreSideBar from "../../../StoreSideBar";
 import { productSchema, validateWithZod } from "@/lib/zod/Schema";
 import { useSession } from "next-auth/react";
+import StoreSideBar from "../../../../StoreSideBar";
 
 interface ProductImage {
   [key: string]: string;
 }
 
 export default function editProductpage(props: {
-  params: Promise<{ productId: number }>;
+  params: Promise<{ productId: number ,storeId:number}>;
 }) {
   const {data:session} = useSession()
   const params = use(props.params);

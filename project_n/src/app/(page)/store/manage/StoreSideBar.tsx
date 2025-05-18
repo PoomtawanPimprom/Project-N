@@ -26,7 +26,7 @@ export default function StoreSideBar({storeId}:prop) {
       label: "คลังสินค้า",
     },
     {
-      href: `/store/manage/product/create/${storeId}`,
+      href: `/store/manage/product/${storeId}/create`,
       icon: <Plus  className="w-6 h-6" />,
       label: "สร้างสินค้า",
     },

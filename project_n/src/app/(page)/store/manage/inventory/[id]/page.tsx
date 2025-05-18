@@ -193,7 +193,7 @@ const inventoryByStoreIdPage = (props: { params: Promise<{ id: number }> }) => {
                 <TableData className="hidden md:table-cell px-4 py-4 text-center">{item.product?.price}</TableData>
                 <TableData className="px-4 py-4 text-right">
                   <button
-                    onClick={() => router.push(`/store/manage/product/edit/${item.product?.id}`)}
+                    onClick={() => router.push(`/store/manage/product/${storeId}/edit/${item.product?.id}`)}
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                   >
                     แก้ไข
