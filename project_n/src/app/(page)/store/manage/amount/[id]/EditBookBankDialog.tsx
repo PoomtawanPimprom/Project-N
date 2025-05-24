@@ -23,7 +23,7 @@ interface EditBookBankDialogProps {
   onOpenChange: (open: boolean) => void;
   onClose: () => void;
 
-  bookBank: WithDrawalBookBankInterface;
+  bookBank: WithDrawalBookBankInterface | any;
   fetchAllBook: () => void;
 }
 

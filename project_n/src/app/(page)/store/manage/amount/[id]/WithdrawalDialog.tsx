@@ -18,10 +18,7 @@ import {
 } from "@/app/service/withdrawal-bookBank/servive";
 
 import { WithDrawalBookBankInterface } from "@/app/interface/withDrawalBookBankInterface";
-import {
-  validateWithZod,
-  withDrawalReqSchema,
-} from "@/lib/zod/Schema";
+import { validateWithZod, withDrawalReqSchema } from "@/lib/zod/Schema";
 
 import WithdrawalCreateDialog from "./WithdrawalCreateDialog";
 import bankList from "@/json/bankList";
@@ -147,17 +144,23 @@ export default function WithdrawalDialog({
   };
 
   const fetchData = async () => {
-    if (!session?.user.id) {
+    if (!session?.user?.id) {
       return;
     }
-    const res = await getAllBookBankByUserId(Number(session?.user.id));
+
+    const res = await getAllBookBankByUserId(Number(session.user.id));
     setAllBookBank(res.bookBank);
 
     const default_bookBank = res.bookBank.find(
       (bookBank: any) => bookBank.default === true
     );
-    localStorage.setItem("bbid",default_bookBank.id)
-    setselectBookBank(default_bookBank);
+
+    if (default_bookBank && default_bookBank.id !== null) {
+      localStorage.setItem("bbid", default_bookBank.id);
+      setselectBookBank(default_bookBank);
+    }
+
+    return;
   };
 
   useEffect(() => {
@@ -168,12 +171,11 @@ export default function WithdrawalDialog({
     const default_bookBank = allBookBank.find(
       (bookBank) => bookBank.default === true
     );
-    if(!default_bookBank){
+    if (!default_bookBank) {
       setselectBookBank(default_bookBank);
-    }
-    else{
-      setselectBookBank(allBookBank[0])
-      setDefaultStatus(true)
+    } else {
+      setselectBookBank(allBookBank[0]);
+      setDefaultStatus(true);
     }
   }, [selectBookBank]);
   return (
