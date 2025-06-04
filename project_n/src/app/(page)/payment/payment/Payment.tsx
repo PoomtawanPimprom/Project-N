@@ -53,18 +53,25 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
 
       //create payment
       const createPayment = await CreatePayment(data);
-      //verify payment
 
-      // const formData = new FormData();
-      // formData.append('file', image); 
-      // const result = await verifySlip(formData);
-      // console.log(result);
-      // if(result.data.data.receiver.account.name.en !== "MR.POOMTAWAN P"){
-      //   toast({
-      //     description: "โปรดใส่สลิปที่ถูกต้อง",
-      //   });
-      //   throw new Error("incorrect payment")
-      // }
+      //verify payment
+      const formData = new FormData();
+      formData.append('file', image); 
+      const result = await verifySlip(formData);
+      console.log(result);
+      if(result.data.data.receiver.account.name.en !== "MR.POOMTAWAN P"){
+        toast({
+          description: "โปรดใส่สลิปให้ถูกต้อง",
+        });
+        throw new Error("โปรดใส่สลิปให้ถูกต้อง")
+      }
+      if(result.data.data.amount.amount !== amount){
+        toast({
+          description: "โปรดใส่สลิปให้ถูกต้อง",
+        });
+        throw new Error("โปรดใส่สลิปให้ถูกต้อง")
+      }
+      
 
       //check payment
       const dataupdate ={
