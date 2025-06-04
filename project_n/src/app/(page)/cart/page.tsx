@@ -19,14 +19,17 @@ function cart() {
   const router = useRouter();
   const { fetchCartAll } = useCart();
   const { data: session, status } = useSession();
-  if (status === "loading") {
-    return <Loading />; // แสดงข้อความระหว่างโหลด session
+
+  useEffect(() => {
+    if (status !== "loading" && !session) {
+      router.push("/login");
+    }
+  }, [status, session, router]);
+
+  if (status === "loading" || !session) {
+    return <Loading />;
   }
 
-  if (!session) {
-    router.push("/login");
-    return null; // ป้องกันการ render อื่น ๆ
-  }
   const { toast } = useToast();
   const [item, setItem] = useState<cartItemInterface[]>([]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
@@ -97,7 +100,7 @@ function cart() {
       //
       const data = {
         userId: Number(session?.user.id),
-        items: orderItems
+        items: orderItems,
       };
 
       //create order
@@ -110,14 +113,14 @@ function cart() {
           variant: "destructive",
           description: error.message,
         });
-        router.push(`/profile/purchase`)
+        router.push(`/profile/purchase`);
       }
     }
   };
 
   const goToProduct = (id: string | number) => {
-    router.push(`/product/${id}`)
-  }
+    router.push(`/product/${id}`);
+  };
 
   const deleteDataAddress = async (id: Number) => {
     await deleteCartById(id);
@@ -143,7 +146,9 @@ function cart() {
     <section className="h-screen sm:py-16 lg:py-20">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center">
-          <h1 className="dark:text-white text-2xl font-semibold text-gray-900">รถเข็น</h1>
+          <h1 className="dark:text-white text-2xl font-semibold text-gray-900">
+            รถเข็น
+          </h1>
         </div>
       </div>
 
@@ -151,15 +156,14 @@ function cart() {
         <div className="dark:bg-zinc-800 dark:border-zinc-600 bg-white border-4 border-black">
           <div className="px-4 py-6 sm:px-8 sm:py-10">
             <div className="flow-root">
-
               <ul className="-my-8 ">
                 {item.map((cart, index) => (
                   <li
                     key={cart.id}
-                    className={`flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0 ${isOutOfStock(cart) ? "opacity-50" : ""
-                      }`}
+                    className={`flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0 ${
+                      isOutOfStock(cart) ? "opacity-50" : ""
+                    }`}
                   >
-
                     <input
                       type="checkbox"
                       className="h-5 w-5 dark:bg-zinc-700 dark:border-zinc-600"
@@ -170,29 +174,40 @@ function cart() {
                     <div className="shrink-0">
                       <img
                         onClick={() => goToProduct(cart.product?.id!)}
-                        className="h-24 w-24 max-w-full rounded-lg object-cover hover:cursor-pointer" src={cart.product?.image!.image1} alt="" />
+                        className="h-24 w-24 max-w-full rounded-lg object-cover hover:cursor-pointer"
+                        src={cart.product?.image!.image1}
+                        alt=""
+                      />
                     </div>
 
                     <div className="relative flex flex-1 flex-col justify-between">
                       <div className="sm:col-gap-5 sm:grid sm:grid-cols-2">
-
                         <div className="pr-8 sm:pr-5">
                           <p
                             onClick={() => goToProduct(cart.product?.id!)}
-                            className="text-base font-semibold text-gray-900 dark:text-white hover:cursor-pointer hover:text-gray-400">{cart.product?.name}</p>
-                          <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">{cart.size}</p>
-                          <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">{cart.color}</p>
-                          <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">{cart.product?.store?.name}</p>
+                            className="text-base font-semibold text-gray-900 dark:text-white hover:cursor-pointer hover:text-gray-400"
+                          >
+                            {cart.product?.name}
+                          </p>
+                          <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">
+                            {cart.size}
+                          </p>
+                          <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">
+                            {cart.color}
+                          </p>
+                          <p className="mx-0 mt-1 mb-0 text-sm text-gray-400 dark:text-gray-300">
+                            {cart.product?.store?.name}
+                          </p>
                         </div>
 
                         <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
                           <p className="dark:text-white shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">
-                            ราคารวม ฿ {(cart.product?.price || 0) * (cart.quantity || 1)}
+                            ราคารวม ฿{" "}
+                            {(cart.product?.price || 0) * (cart.quantity || 1)}
                           </p>
 
                           <div className="sm:order-1">
                             <div className="dark:text-gray-300 mx-auto flex h-8 items-stretch text-gray-600">
-
                               {/* Decrease button
                               <button onClick={() => handleQuantityChange(index, -1)} className="dark:bg-zinc-700 flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white">
                                 -
@@ -209,39 +224,47 @@ function cart() {
                               <button
                                 onClick={() => handleQuantityChange(index, -1)}
                                 disabled={isOutOfStock(cart)}
-                                className={`dark:bg-zinc-700 flex items-center justify-center rounded-l-md px-4 transition ${isOutOfStock(cart)
-                                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                  : "bg-gray-200 hover:bg-black hover:text-white"
-                                  }`}
+                                className={`dark:bg-zinc-700 flex items-center justify-center rounded-l-md px-4 transition ${
+                                  isOutOfStock(cart)
+                                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                    : "bg-gray-200 hover:bg-black hover:text-white"
+                                }`}
                               >
                                 -
                               </button>
 
-                              <div className={`flex w-full items-center justify-center px-4 text-xs uppercase transition ${isOutOfStock(cart) ? "bg-gray-300 text-gray-500" : "bg-gray-100 dark:bg-zinc-600"
-                                }`}>
+                              <div
+                                className={`flex w-full items-center justify-center px-4 text-xs uppercase transition ${
+                                  isOutOfStock(cart)
+                                    ? "bg-gray-300 text-gray-500"
+                                    : "bg-gray-100 dark:bg-zinc-600"
+                                }`}
+                              >
                                 {cart.quantity || 1}
                               </div>
 
                               <button
                                 onClick={() => handleQuantityChange(index, 1)}
                                 disabled={isOutOfStock(cart)}
-                                className={`dark:bg-zinc-700 flex items-center justify-center rounded-r-md px-4 transition ${isOutOfStock(cart)
-                                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                  : "bg-gray-200 hover:bg-black hover:text-white"
-                                  }`}
+                                className={`dark:bg-zinc-700 flex items-center justify-center rounded-r-md px-4 transition ${
+                                  isOutOfStock(cart)
+                                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                    : "bg-gray-200 hover:bg-black hover:text-white"
+                                }`}
                               >
                                 +
                               </button>
-
-
                             </div>
                           </div>
-
                         </div>
                       </div>
 
                       <div className="absolute top-0 right-0 flex sm:bottom-0 sm:top-auto">
-                        <button onClick={(e) => deleteDataAddress(cart.id)} type="button" className="flex rounded p-2 text-center bg-red-600 hover:bg-red-500 text-white transition-all duration-200 ease-in-out  hover:text-gray-900">
+                        <button
+                          onClick={(e) => deleteDataAddress(cart.id)}
+                          type="button"
+                          className="flex rounded p-2 text-center bg-red-600 hover:bg-red-500 text-white transition-all duration-200 ease-in-out  hover:text-gray-900"
+                        >
                           <X />
                         </button>
                       </div>
@@ -252,9 +275,13 @@ function cart() {
             </div>
 
             <div className="mt-6 flex items-center justify-between">
-              <p className="dark:text-white text-sm font-medium text-gray-900">รวม</p>
+              <p className="dark:text-white text-sm font-medium text-gray-900">
+                รวม
+              </p>
               <p className="dark:text-white text-2xl font-semibold text-gray-900">
-                <span className="dark:text-gray-300 text-xs font-normal text-gray-400">฿</span>
+                <span className="dark:text-gray-300 text-xs font-normal text-gray-400">
+                  ฿
+                </span>
                 {item
                   .filter((cart) => selectedItems.includes(cart.id)) // กรองเฉพาะที่ถูกเลือก
                   .reduce(
@@ -267,7 +294,9 @@ function cart() {
             </div>
 
             <div className="mt-6 text-center">
-              <button onClick={handleCheckout} type="button"
+              <button
+                onClick={handleCheckout}
+                type="button"
                 className="group inline-flex w-full items-center justify-center rounded-md bg-gray-900 dark:bg-zinc-700 px-6 py-4 text-lg font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 dark:hover:bg-zinc-600"
               >
                 ชำระเงิน
