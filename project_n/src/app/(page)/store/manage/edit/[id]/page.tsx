@@ -28,7 +28,7 @@ const UpdateStorePage = (props: { params: Promise<{ id: number }> }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   //new image
-  const [imageLogo, setImageLogo] = useState<any>();
+  const [imageLogo, setImageLogo] = useState<any>(null);
   const [imageBackgroud, setImageBackgroud] = useState<any>();
 
   const [uploading, setUploading] = useState(false);
@@ -182,7 +182,6 @@ const UpdateStorePage = (props: { params: Promise<{ id: number }> }) => {
 
   const fetchStoreDataById = async () => {
     const data: storeInterface = await getStoreByID(storeID);
-    console.log(data);
     setDescription(data.description);
     setName(data.name);
     setOldLogo(data.imageLogoURL);
@@ -200,6 +199,13 @@ const UpdateStorePage = (props: { params: Promise<{ id: number }> }) => {
     console.log("oldBG", oldBgImageFileName);
     console.log("oldLogo", oldLogoImageFileName);
   }, [description]);
+
+  const checkImageLogo = () =>{
+    return !oldLogo && imageLogo === null
+  }
+  const checkImageBg = () =>{
+    return !oldBg && imageBackgroud === null
+  }
 
   return (
     <div className="min-h-screen relative  flex">
@@ -244,7 +250,7 @@ const UpdateStorePage = (props: { params: Promise<{ id: number }> }) => {
                       รูปโลโก้ร้านค้าของคุณ
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2  gap-4">
-                      {oldLogo == null && (
+                      {checkImageLogo()  && (
                         <div className="flex items-start justify-start  w-full">
                           <label
                             htmlFor="image-logo"
@@ -317,7 +323,7 @@ const UpdateStorePage = (props: { params: Promise<{ id: number }> }) => {
                       รูปพื้นหลังร้านค้าของคุณ
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {oldBg == null && (
+                      {checkImageBg() && (
                         <div className="flex items-start justify-start w-full">
                           <label
                             htmlFor="image-background"
