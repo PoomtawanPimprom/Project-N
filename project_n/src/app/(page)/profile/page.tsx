@@ -9,10 +9,12 @@ import Input from "@/app/component/Input";
 import { deleteUploadedImage, genarateImageName, uploadImageToFirebase } from "@/lib/firebase/firebase";
 import { useSession } from 'next-auth/react';
 import { profileSchema, validateWithZod } from "@/lib/zod/Schema";
+import { useRouter } from 'next/navigation';
 
 function Profile() {
     const { data: session } = useSession();
     const { toast } = useToast();
+    const router = useRouter();
     const [profileImage, setProfileImage] = useState<string>("");
     const [user, setUser] = useState<userInterface | null>(null);
     const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
@@ -79,6 +81,7 @@ function Profile() {
                     description: "Your profile image has been uploaded successfully.",
                     variant: "success",
                 });
+                router.refresh();
             } catch (error) {
                 console.error("Error uploading the image:", error);
                 toast({

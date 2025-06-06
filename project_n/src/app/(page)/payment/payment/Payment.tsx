@@ -59,7 +59,7 @@ export default function Payment({ orderDetailId,amount,userId }: prop) {
       formData.append('file', image); 
       const result = await verifySlip(formData);
       console.log(result);
-      if(result.data.data.receiver.account.name.en !== "MR.POOMTAWAN P"){
+      if(result.data.data.receiver.account.name.th !== "นายภูมิตะวัน พ"){
         toast({
           description: "โปรดใส่สลิปให้ถูกต้อง",
         });
