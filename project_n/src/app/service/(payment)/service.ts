@@ -64,11 +64,7 @@ export async function CancelOrder(orderDetailId: number): Promise<any> {
 // Verify Slip
 export async function verifySlip(formdata: any): Promise<any> {
     try {
-        const res = await axios.post("/api/verifySlip", formdata,{
-            headers: {
-                Authorization: `Bearer ${process.env.EASY_SLIP_TOKEN}`
-            }
-        });
+        const res = await axios.post("/api/verifySlip", formdata);
         return res.data;
     } catch (error: any) {
         throw new Error(error.response?.data?.message || "Failed to verify slip");
